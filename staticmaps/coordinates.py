@@ -1,13 +1,13 @@
 import typing
 
-import s2sphere as s2  # type: ignore
+import s2sphere  # type: ignore
 
 
-def latlng(lat: float, lng: float) -> s2.LatLng:
-    return s2.LatLng.from_degrees(lat, lng)
+def latlng(lat: float, lng: float) -> s2sphere.LatLng:
+    return s2sphere.LatLng.from_degrees(lat, lng)
 
 
-def parse_latlng(s: str) -> s2.LatLng:
+def parse_latlng(s: str) -> s2sphere.LatLng:
     a = s.split(",")
     if len(a) != 2:
         raise ValueError('Cannot parse coordinates string "{}" (not a comma-separated lat/lng pair)'.format(s))
@@ -24,7 +24,7 @@ def parse_latlng(s: str) -> s2.LatLng:
     return latlng(lat, lng)
 
 
-def parse_latlngs(s: str) -> typing.List[s2.LatLng]:
+def parse_latlngs(s: str) -> typing.List[s2sphere.LatLng]:
     res = []
     for c in s.split():
         c = c.strip()
