@@ -1,11 +1,11 @@
 import math
 import typing
 
-import cairo
 from geographiclib.geodesic import Geodesic  # type: ignore
-import s2sphere as s2  # type: ignore
+import s2sphere  # type: ignore
+import svgwrite  # type: ignore
 
-from .color import ColorT
+from .color import Color, RED
 from .transformer import Transformer
 from .object import Object, PixelBoundsT
 
@@ -13,22 +13,22 @@ from .object import Object, PixelBoundsT
 class Line(Object):
     def __init__(
         self,
-        latlngs: typing.List[s2.LatLng],
-        color: ColorT = (1, 0, 0),
+        latlngs: typing.List[s2sphere.LatLng],
+        color: Color = RED,
     ) -> None:
         Object.__init__(self)
         if latlngs is None or len(latlngs) < 2:
             raise ValueError("Trying to create line with less than 2 coordinates")
         self._latlngs = latlngs
         self.simplify()
-        self.color = color
-        self._interpolation_cache: typing.Optional[typing.List[s2.LatLng]] = None
+        self._color = color
+        self._interpolation_cache: typing.Optional[typing.List[s2sphere.LatLng]] = None
 
-    def bounds(self) -> s2.LatLngRect:
-        b = s2.LatLngRect()
+    def bounds(self) -> s2sphere.LatLngRect:
+        b = s2sphere.LatLngRect()
         for latlng in self.interpolate():
             latlng = latlng.normalized()
-            b = b.union(s2.LatLngRect.from_point(latlng))
+            b = b.union(s2sphere.LatLngRect.from_point(latlng))
         return b
 
     def extra_pixel_bounds(self) -> PixelBoundsT:
@@ -62,7 +62,7 @@ class Line(Object):
         res.append(self._latlngs[-1])
         self._latlngs = res
 
-    def interpolate(self) -> typing.List[s2.LatLng]:
+    def interpolate(self) -> typing.List[s2sphere.LatLng]:
         if self._interpolation_cache is not None:
             return self._interpolation_cache
         self._interpolation_cache = []
@@ -92,23 +92,20 @@ class Line(Object):
             for i in range(1, n):
                 a = (i * line.a13) / n
                 g = line.ArcPosition(a, Geodesic.LATITUDE | Geodesic.LONGITUDE | Geodesic.LONG_UNROLL)
-                self._interpolation_cache.append(s2.LatLng.from_degrees(g["lat2"], g["lon2"]))
+                self._interpolation_cache.append(s2sphere.LatLng.from_degrees(g["lat2"], g["lon2"]))
             self._interpolation_cache.append(current)
             last = current
         return self._interpolation_cache
 
-    def render(self, transformer: Transformer, cairo_context: cairo.Context) -> None:
+    def render(self, transformer: Transformer, draw: svgwrite.Drawing, group: svgwrite.container.Group) -> None:
         xys = [transformer.ll2pixel(latlng) for latlng in self.interpolate()]
-        cairo_context.save()
-        cairo_context.set_source_rgb(*self.color)
-        cairo_context.set_line_width(1)
         x_count = math.ceil(transformer.image_width() / (2 * transformer.world_width()))
         for p in range(-x_count, x_count + 1):
-            cairo_context.save()
-            cairo_context.translate(p * transformer.world_width(), 0)
-            cairo_context.new_path()
-            for x, y in xys:
-                cairo_context.line_to(x, y)
-            cairo_context.stroke()
-            cairo_context.restore()
-        cairo_context.restore()
+            group.add(
+                draw.polyline(
+                    [(x + p * transformer.world_width(), y) for x, y in xys],
+                    fill="none",
+                    stroke=self._color.hex_string(),
+                    stroke_width=2,
+                )
+            )

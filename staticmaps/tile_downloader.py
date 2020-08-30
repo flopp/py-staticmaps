@@ -10,7 +10,7 @@ from .version import __version__
 
 class TileDownloader:
     def __init__(self) -> None:
-        self._user_agent = f"Mozilla/5.0+(compatible; staticmaps/{__version__}; https://github.com/flopp/staticmaps)"
+        self._user_agent = f"Mozilla/5.0+(compatible; staticmaps/{__version__}; https://github.com/flopp/py-staticmaps)"
 
     def set_user_agent(self, user_agent: str) -> None:
         self._user_agent = user_agent

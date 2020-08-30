@@ -8,7 +8,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.7, 3.8]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -17,16 +17,14 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        sudo apt-get update -q
-        sudo apt-get install -y libcairo2-dev
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
     - name: Check formatting (black)
-      run: black --line-length 120 --check --diff staticmaps tests
-    - name: Lint (flake8)
-      run: flake8 --exclude staticmaps/__init__.py staticmaps tests
+      run: black --line-length 120 --check --diff staticmaps examples tests
+    - name: Lint (pylint)
+      run: pylint staticmaps examples tests
     - name: Check types (mypy)
-      run: mypy staticmaps tests
+      run: mypy staticmaps examples tests
     - name: Run tests (pytest)
       run: python -m pytest tests
