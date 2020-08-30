@@ -1,6 +1,7 @@
+import typing
+
 import cairo
 import s2sphere as s2  # type: ignore
-import typing
 from .transformer import Transformer
 
 PixelBoundsT = typing.Tuple[int, int, int, int]
@@ -17,4 +18,4 @@ class Object:
         return s2.LatLngRect()
 
     def render(self, transformer: Transformer, cairo_context: cairo.Context) -> None:
-        print("render object")
+        raise NotImplementedError("render is not implemented")

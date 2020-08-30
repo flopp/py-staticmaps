@@ -1,5 +1,6 @@
-import s2sphere as s2  # type: ignore
 import typing
+
+import s2sphere as s2  # type: ignore
 
 
 def latlng(lat: float, lng: float) -> s2.LatLng:
@@ -14,8 +15,8 @@ def parse_latlng(s: str) -> s2.LatLng:
     try:
         lat = float(a[0].strip())
         lng = float(a[1].strip())
-    except ValueError:
-        raise ValueError('Cannot parse coordinates string "{}" (non-numeric lat/lng values)'.format(s))
+    except ValueError as e:
+        raise ValueError('Cannot parse coordinates string "{}" (non-numeric lat/lng values)'.format(s)) from e
 
     if lat < -90 or lat > 90 or lng < -180 or lng > 180:
         raise ValueError('Cannot parse coordinates string "{}" (out of bounds lat/lng values)'.format(s))

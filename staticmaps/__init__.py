@@ -1,5 +1,5 @@
 from .context import Context
-from .color import parse_color, ColorT
+from .color import parse_color, random_color, ColorT
 from .object import Object, PixelBoundsT
 from .marker import Marker
 from .line import Line

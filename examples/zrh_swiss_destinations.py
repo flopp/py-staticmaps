@@ -156,15 +156,22 @@ destinations = [
     (36.750611, -6.064535),
     (44.83101, -0.70217),
     (43.441031, 5.221569),
-    (50.336011, 30.894331)]
+    (50.336011, 30.894331),
+]
 
 context = smm.Context()
 
-for d in destinations:
-    line = smm.Line([smm.latlng(*zurich), smm.latlng(*d)])
+colors = [smm.random_color() for _ in destinations]
+
+for index, d in enumerate(destinations):
+    line = smm.Line([smm.latlng(*zurich), smm.latlng(*d)], color=colors[index])
     context.add_object(line)
+
+for index, d in enumerate(destinations):
+    marker = smm.Marker(smm.latlng(*d), color=colors[index])
+    context.add_object(marker)
 
 for name, provider in smm.default_tile_providers.items():
     context.set_tile_provider(provider)
     image = context.render(800, 500)
-    image.write_to_png(f'{name}_zrh_swiss_destinations.png')
+    image.write_to_png(f"{name}_zrh_swiss_destinations.png")

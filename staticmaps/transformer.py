@@ -1,6 +1,7 @@
 import math
-import s2sphere as s2  # type: ignore
 import typing
+
+import s2sphere as s2  # type: ignore
 
 
 class Transformer:

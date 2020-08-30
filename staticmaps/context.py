@@ -1,11 +1,13 @@
-import appdirs  # type: ignore
-import cairo
 import io
 import math
 import os
+import typing
+
+import appdirs  # type: ignore
+import cairo
 from PIL import Image  # type: ignore
 import s2sphere as s2  # type: ignore
-import typing
+
 from .tile_downloader import TileDownloader
 from .tile_provider import TileProvider, tile_provider_OSM
 from .transformer import Transformer
@@ -34,8 +36,8 @@ class Context:
     def set_background_color(self, color: ColorT) -> None:
         self._background_color = color
 
-    def set_cache_dir(self, dir: str) -> None:
-        self._cache_dir = dir
+    def set_cache_dir(self, directory: str) -> None:
+        self._cache_dir = directory
 
     def set_tile_downloader(self, downloader: TileDownloader) -> None:
         self._tile_downloader = downloader
@@ -100,8 +102,8 @@ class Context:
 
         return surface
 
-    def add_object(self, object: Object) -> None:
-        self._objects.append(object)
+    def add_object(self, obj: Object) -> None:
+        self._objects.append(obj)
 
     def object_bounds(self) -> typing.Optional[s2.LatLngRect]:
         if len(self._objects) == 0:
@@ -119,10 +121,21 @@ class Context:
         font_size = 12
         while True:
             cairo_context.set_font_size(font_size)
-            (f_ascent, f_descent, f_height, f_max_x_adv, f_max_y_adv,) = cairo_context.font_extents()
-            (t_x_bearing, t_y_bearing, t_width, t_height, t_x_advance, t_y_advance,) = cairo_context.text_extents(
-                attribution
-            )
+            (
+                f_ascent,
+                f_descent,
+                f_height,
+                f_max_x_adv,
+                f_max_y_adv,
+            ) = cairo_context.font_extents()
+            (
+                t_x_bearing,
+                t_y_bearing,
+                t_width,
+                t_height,
+                t_x_advance,
+                t_y_advance,
+            ) = cairo_context.text_extents(attribution)
             if t_width < width - 4:
                 break
             font_size = font_size - 0.25
@@ -153,16 +166,14 @@ class Context:
         margin = 4
         w = (width - 2.0 * margin) / tile_size
         h = (height - 2.0 * margin) / tile_size
-        minX = (b.lng_lo().degrees + 180.0) / 360.0
-        maxX = (b.lng_hi().degrees + 180.0) / 360.0
-        minY = (1.0 - math.log(math.tan(b.lat_lo().radians) + (1.0 / math.cos(b.lat_lo().radians))) / math.pi) / 2.0
-        maxY = (1.0 - math.log(math.tan(b.lat_hi().radians) + (1.0 / math.cos(b.lat_hi().radians))) / math.pi) / 2.0
-        dx = maxX - minX
+        min_y = (1.0 - math.log(math.tan(b.lat_lo().radians) + (1.0 / math.cos(b.lat_lo().radians))) / math.pi) / 2.0
+        max_y = (1.0 - math.log(math.tan(b.lat_hi().radians) + (1.0 / math.cos(b.lat_hi().radians))) / math.pi) / 2.0
+        dx = (b.lng_hi().degrees - b.lng_lo().degrees) / 360.0
         if dx < 0:
             dx += math.ceil(math.fabs(dx))
         if dx > 1:
             dx -= math.floor(dx)
-        dy = math.fabs(maxY - minY)
+        dy = math.fabs(max_y - min_y)
         for zoom in range(1, self._tile_provider.max_zoom()):
             tiles = 2 ** zoom
             if (dx * tiles > w) or (dy * tiles > h):

@@ -1,21 +1,27 @@
 import math
-import s2sphere as s2  # type: ignore
-from geographiclib.geodesic import Geodesic  # type: ignore
-import cairo
 import typing
+
+import cairo
+from geographiclib.geodesic import Geodesic  # type: ignore
+import s2sphere as s2  # type: ignore
+
 from .color import ColorT
 from .transformer import Transformer
 from .object import Object, PixelBoundsT
 
 
 class Line(Object):
-    def __init__(self, latlngs: typing.List[s2.LatLng], color: typing.Optional[ColorT] = None,) -> None:
+    def __init__(
+        self,
+        latlngs: typing.List[s2.LatLng],
+        color: ColorT = (1, 0, 0),
+    ) -> None:
         Object.__init__(self)
         if latlngs is None or len(latlngs) < 2:
             raise ValueError("Trying to create line with less than 2 coordinates")
         self._latlngs = latlngs
         self.simplify()
-        self.color = (1, 0, 0) if color is None else color
+        self.color = color
         self._interpolation_cache: typing.Optional[typing.List[s2.LatLng]] = None
 
     def bounds(self) -> s2.LatLngRect:
@@ -77,7 +83,10 @@ class Line(Object):
                 continue
             # geodesic interpolation
             line = geod.InverseLine(
-                last.lat().degrees, last.lng().degrees, current.lat().degrees, current.lng().degrees,
+                last.lat().degrees,
+                last.lng().degrees,
+                current.lat().degrees,
+                current.lng().degrees,
             )
             n = 2 + math.ceil(line.a13)
             for i in range(1, n):

@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
-import click
-import staticmaps as smm
 import typing
+
+import click
+
+import staticmaps as smm
 
 
 @click.command()
@@ -14,7 +16,9 @@ import typing
 @click.option("--marker", type=str, multiple=True)
 @click.option("--line", type=str, multiple=True)
 @click.option(
-    "--tiles", type=click.Choice(smm.default_tile_providers.keys()), default=smm.tile_provider_OSM.name(),
+    "--tiles",
+    type=click.Choice(smm.default_tile_providers.keys()),
+    default=smm.tile_provider_OSM.name(),
 )
 @click.argument("file_name", type=str, required=True)
 def main(

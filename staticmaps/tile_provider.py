@@ -7,7 +7,7 @@ class TileProvider:
         self,
         name: str,
         url_pattern: str,
-        shards: typing.List[str] = [],
+        shards: typing.Optional[typing.List[str]] = None,
         api_key: typing.Optional[str] = None,
         attribution: typing.Optional[str] = None,
         max_zoom: int = 24,
@@ -28,7 +28,8 @@ class TileProvider:
     def attribution(self) -> typing.Optional[str]:
         return self._attribution
 
-    def tile_size(self) -> int:
+    @staticmethod
+    def tile_size() -> int:
         return 256
 
     def max_zoom(self) -> int:

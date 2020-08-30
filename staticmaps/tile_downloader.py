@@ -1,16 +1,16 @@
 import os
 import pathlib
-import requests
 import typing
+
+import requests
+
 from .tile_provider import TileProvider
 from .version import __version__
 
 
 class TileDownloader:
     def __init__(self) -> None:
-        self._user_agent = (
-            f"Mozilla/5.0+(compatible; staticmaps/{__version__}; https://github.com/flopp/staticmaps)"
-        )
+        self._user_agent = f"Mozilla/5.0+(compatible; staticmaps/{__version__}; https://github.com/flopp/staticmaps)"
 
     def set_user_agent(self, user_agent: str) -> None:
         self._user_agent = user_agent
@@ -38,5 +38,6 @@ class TileDownloader:
                 f.write(data)
         return data
 
-    def cache_file_name(self, provider: TileProvider, cache_dir: str, zoom: int, x: int, y: int) -> str:
+    @staticmethod
+    def cache_file_name(provider: TileProvider, cache_dir: str, zoom: int, x: int, y: int) -> str:
         return os.path.join(cache_dir, provider.name(), str(zoom), str(x), "{}.png".format(y))

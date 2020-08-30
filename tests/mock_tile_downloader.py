@@ -1,11 +1,14 @@
 import io
-import cairo
 import typing
+
+import cairo
+
 import staticmaps
 
 
 class MockTileDownloader(staticmaps.TileDownloader):
     def __init__(self) -> None:
+        super().__init__()
         self._dummy_image_data: typing.Optional[bytes] = None
 
     def set_user_agent(self, user_agent: str) -> None:

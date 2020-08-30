@@ -15,23 +15,25 @@ install: setup
 .PHONY: lint
 lint:
 	.env/bin/pylint \
-	    airports
+	    staticmaps examples tests
 	.env/bin/mypy \
-	    airports
+	    staticmaps examples tests
 	.env/bin/black \
 	    --line-length 120 \
 	    --check \
 	    --diff \
-	    airports
+	    staticmaps examples tests
 
 .PHONY: format
 format:
 	.env/bin/black \
 	    --line-length 120 \
-	    airports
+	    staticmaps examples tests
 
-.PHONY: run
-run: setup
-	PYTHONPATH=. .env/bin/python airports/cli.py \
-		--config config-example.py \
-		--verbose
+.PHONY: run-examples
+run-examples:
+	PYTHONPATH=. .env/bin/python examples/zrh_swiss_destinations.py
+
+.PHONY: test
+test:
+	PYTHONPATH=. .env/bin/python -m pytest tests
