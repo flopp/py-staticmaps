@@ -11,17 +11,17 @@ from .object import Object, PixelBoundsT
 
 
 class Line(Object):
-    def __init__(
-        self,
-        latlngs: typing.List[s2sphere.LatLng],
-        color: Color = RED,
-    ) -> None:
+    def __init__(self, latlngs: typing.List[s2sphere.LatLng], color: Color = RED, width: int = 2) -> None:
         Object.__init__(self)
         if latlngs is None or len(latlngs) < 2:
             raise ValueError("Trying to create line with less than 2 coordinates")
+        if width < 1:
+            raise ValueError(f"'width' must be >= 1: {width}")
+
         self._latlngs = latlngs
         self.simplify()
         self._color = color
+        self._width = width
         self._interpolation_cache: typing.Optional[typing.List[s2sphere.LatLng]] = None
 
     def bounds(self) -> s2sphere.LatLngRect:
@@ -32,7 +32,7 @@ class Line(Object):
         return b
 
     def extra_pixel_bounds(self) -> PixelBoundsT:
-        return 1, 1, 1, 1
+        return self._width, self._width, self._width, self._width
 
     def simplify(self) -> None:
         last = self._latlngs[0]
@@ -106,6 +106,6 @@ class Line(Object):
                     [(x + p * transformer.world_width(), y) for x, y in xys],
                     fill="none",
                     stroke=self._color.hex_string(),
-                    stroke_width=2,
+                    stroke_width=self._width,
                 )
             )

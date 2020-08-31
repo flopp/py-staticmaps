@@ -61,7 +61,7 @@ def parse_color(s: str) -> Color:
     if s in color_map:
         return color_map[s]
 
-    raise ValueError("Cannot parse color string: {}".format(s))
+    raise ValueError(f"Cannot parse color string: {s}")
 
 
 def random_color() -> Color:

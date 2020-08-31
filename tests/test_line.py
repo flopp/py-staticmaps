@@ -10,6 +10,9 @@ def test_bad_creation() -> None:
     with pytest.raises(ValueError):
         staticmaps.Line([s2sphere.LatLng.from_degrees(48, 8)])
 
+    with pytest.raises(ValueError):
+        staticmaps.Line([s2sphere.LatLng.from_degrees(48, 8), s2sphere.LatLng.from_degrees(49, 9)], width=-123)
+
 
 def test_creation() -> None:
     staticmaps.Line(

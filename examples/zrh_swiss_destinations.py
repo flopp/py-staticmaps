@@ -175,4 +175,4 @@ for name, provider in smm.default_tile_providers.items():
     context.set_tile_provider(provider)
     image = context.render(800, 500)
     with open(f"{name}_zrh_swiss_destinations.svg", "w", encoding="utf-8") as f:
-        image.write(f)
+        image.write(f, pretty=True)

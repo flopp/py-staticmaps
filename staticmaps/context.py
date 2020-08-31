@@ -64,7 +64,9 @@ class Context:
         if center is None or zoom is None:
             raise RuntimeError("Cannot render map without center/zoom.")
 
-        draw = svgwrite.Drawing(size=(f"{width}px", f"{height}px"))
+        draw = svgwrite.Drawing(size=(f"{width}px", f"{height}px"), viewBox=f"0 0 {width} {height}")
+        clip = draw.defs.add(draw.clipPath(id="page"))
+        clip.add(draw.rect(insert=(0, 0), size=(width, height)))
         trans = Transformer(width, height, zoom, center, self._tile_provider.tile_size())
 
         self.render_background(draw, trans)
@@ -73,7 +75,7 @@ class Context:
         self.render_attribution(draw, trans)
 
         return draw
-
+        
     def add_object(self, obj: Object) -> None:
         self._objects.append(obj)
 
@@ -101,7 +103,7 @@ class Context:
     def render_background(self, draw: svgwrite.Drawing, trans: Transformer) -> None:
         if self._background_color is None:
             return
-        group = draw.g()
+        group = draw.g(clip_path="url(#page)")
         group.add(
             draw.rect(
                 insert=(0, 0), size=trans.image_size(), rx=None, ry=None, fill=self._background_color.hex_string()
@@ -109,8 +111,8 @@ class Context:
         )
         draw.add(group)
 
-    def render_tiles(self, draw: svgwrite.Drawing, trans: Transformer) -> None:
-        group = draw.g()
+    def render_tiles(self, draw: svgwrite.Drawing,trans: Transformer) -> None:
+        group = draw.g(clip_path="url(#page)")
         for yy in range(0, trans.tiles_y()):
             y = trans.first_tile_y() + yy
             if y < 0 or y >= trans.number_of_tiles():
@@ -136,7 +138,7 @@ class Context:
         draw.add(group)
 
     def render_objects(self, draw: svgwrite.Drawing, trans: Transformer) -> None:
-        group = draw.g()
+        group = draw.g(clip_path="url(#page)")
         for obj in self._objects:
             obj.render(trans, draw, group)
         draw.add(group)
@@ -145,7 +147,7 @@ class Context:
         attribution = self._tile_provider.attribution()
         if (attribution is None) or (attribution == ""):
             return
-        group = draw.g()
+        group = draw.g(clip_path="url(#page)")
         group.add(
             draw.rect(
                 insert=(0, trans.image_height() - 12),

@@ -10,16 +10,16 @@ def latlng(lat: float, lng: float) -> s2sphere.LatLng:
 def parse_latlng(s: str) -> s2sphere.LatLng:
     a = s.split(",")
     if len(a) != 2:
-        raise ValueError('Cannot parse coordinates string "{}" (not a comma-separated lat/lng pair)'.format(s))
+        raise ValueError(f'Cannot parse coordinates string "{s}" (not a comma-separated lat/lng pair)')
 
     try:
         lat = float(a[0].strip())
         lng = float(a[1].strip())
     except ValueError as e:
-        raise ValueError('Cannot parse coordinates string "{}" (non-numeric lat/lng values)'.format(s)) from e
+        raise ValueError(f'Cannot parse coordinates string "{s}" (non-numeric lat/lng values)') from e
 
     if lat < -90 or lat > 90 or lng < -180 or lng > 180:
-        raise ValueError('Cannot parse coordinates string "{}" (out of bounds lat/lng values)'.format(s))
+        raise ValueError(f'Cannot parse coordinates string "{s}" (out of bounds lat/lng values)')
 
     return latlng(lat, lng)
 
