@@ -75,7 +75,7 @@ class Context:
         self.render_attribution(draw, trans)
 
         return draw
-        
+
     def add_object(self, obj: Object) -> None:
         self._objects.append(obj)
 
@@ -111,7 +111,7 @@ class Context:
         )
         draw.add(group)
 
-    def render_tiles(self, draw: svgwrite.Drawing,trans: Transformer) -> None:
+    def render_tiles(self, draw: svgwrite.Drawing, trans: Transformer) -> None:
         group = draw.g(clip_path="url(#page)")
         for yy in range(0, trans.tiles_y()):
             y = trans.first_tile_y() + yy
