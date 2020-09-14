@@ -1,14 +1,12 @@
 import math
 import typing
 
-import cairo  # type: ignore
 from geographiclib.geodesic import Geodesic  # type: ignore
 import s2sphere  # type: ignore
-import svgwrite  # type: ignore
 
 from .color import Color, RED
-from .transformer import Transformer
 from .object import Object, PixelBoundsT
+from .renderer import Renderer
 
 
 class Line(Object):
@@ -24,6 +22,12 @@ class Line(Object):
         self._color = color
         self._width = width
         self._interpolation_cache: typing.Optional[typing.List[s2sphere.LatLng]] = None
+
+    def color(self) -> Color:
+        return self._color
+
+    def width(self) -> int:
+        return self._width
 
     def bounds(self) -> s2sphere.LatLngRect:
         b = s2sphere.LatLngRect()
@@ -98,31 +102,5 @@ class Line(Object):
             last = current
         return self._interpolation_cache
 
-    def render_image(self, transformer: Transformer, cairo_context: cairo.Context) -> None:
-        xys = [transformer.ll2pixel(latlng) for latlng in self.interpolate()]
-        cairo_context.save()
-        cairo_context.set_source_rgba(*self._color.cairo_rgba())
-        cairo_context.set_line_width(self._width)
-        x_count = math.ceil(transformer.image_width() / (2 * transformer.world_width()))
-        for p in range(-x_count, x_count + 1):
-            cairo_context.save()
-            cairo_context.translate(p * transformer.world_width(), 0)
-            cairo_context.new_path()
-            for x, y in xys:
-                cairo_context.line_to(x, y)
-            cairo_context.stroke()
-            cairo_context.restore()
-        cairo_context.restore()
-
-    def render_svg(self, transformer: Transformer, draw: svgwrite.Drawing, group: svgwrite.container.Group) -> None:
-        xys = [transformer.ll2pixel(latlng) for latlng in self.interpolate()]
-        x_count = math.ceil(transformer.image_width() / (2 * transformer.world_width()))
-        for p in range(-x_count, x_count + 1):
-            group.add(
-                draw.polyline(
-                    [(x + p * transformer.world_width(), y) for x, y in xys],
-                    fill="none",
-                    stroke=self._color.hex_string(),
-                    stroke_width=self._width,
-                )
-            )
+    def render(self, renderer: Renderer) -> None:
+        renderer.render_line_object(self)

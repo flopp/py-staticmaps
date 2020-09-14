@@ -178,5 +178,5 @@ for name, provider in staticmaps.default_tile_providers.items():
     with open(f"{name}_zrh_swiss_destinations.svg", "w", encoding="utf-8") as f:
         svg_image.write(f, pretty=True)
 
-    image = context.render_image(800, 500)
+    image = context.render_cairo(800, 500)
     image.write_to_png(f"{name}_zrh_swiss_destinations.png")

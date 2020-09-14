@@ -66,6 +66,9 @@ class Transformer:
     def tile_offset_y(self) -> float:
         return self._tile_offset_y
 
+    def tile_size(self) -> int:
+        return self._tile_size
+
     def ll2t(self, latlng: s2sphere.LatLng) -> typing.Tuple[float, float]:
         lat = latlng.lat().radians
         lng = latlng.lng().radians

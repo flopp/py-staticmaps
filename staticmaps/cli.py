@@ -53,7 +53,7 @@ def main(
     if file_format == "guess":
         file_format = guess_file_format(file_name)
     if file_format == "png":
-        image = context.render_image(width, height)
+        image = context.render_cairo(width, height)
         image.write_to_png(file_name)
     else:
         svg_image = context.render_svg(width, height)

@@ -1,10 +1,11 @@
 .cache
 .env
-__pycache__
-*.pyc
-*.svg
-build
-dist
-*.egg-info
 .mypy_cache
 .pytest_cache
+*.egg-info
+*.pyc
+*.png
+*.svg
+__pycache__
+build
+dist
