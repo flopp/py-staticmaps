@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import staticmaps as smm
+import staticmaps
 
 zurich = (47.465318, 8.551364)
 destinations = [
@@ -159,20 +159,24 @@ destinations = [
     (50.336011, 30.894331),
 ]
 
-context = smm.Context()
+context = staticmaps.Context()
 
-colors = [smm.random_color() for _ in destinations]
+colors = [staticmaps.random_color() for _ in destinations]
 
 for index, d in enumerate(destinations):
-    line = smm.Line([smm.latlng(*zurich), smm.latlng(*d)], color=colors[index])
+    line = staticmaps.Line([staticmaps.latlng(*zurich), staticmaps.latlng(*d)], color=colors[index])
     context.add_object(line)
 
 for index, d in enumerate(destinations):
-    marker = smm.Marker(smm.latlng(*d), color=colors[index], size=6)
+    marker = staticmaps.Marker(staticmaps.latlng(*d), color=colors[index], size=6)
     context.add_object(marker)
 
-for name, provider in smm.default_tile_providers.items():
+for name, provider in staticmaps.default_tile_providers.items():
     context.set_tile_provider(provider)
-    image = context.render(800, 500)
+
+    svg_image = context.render_svg(800, 500)
     with open(f"{name}_zrh_swiss_destinations.svg", "w", encoding="utf-8") as f:
-        image.write(f, pretty=True)
+        svg_image.write(f, pretty=True)
+
+    image = context.render_image(800, 500)
+    image.write_to_png(f"{name}_zrh_swiss_destinations.png")

@@ -1,6 +1,8 @@
 appdirs
 click
 geographiclib
+PILLOW
+pycairo
 requests
 s2sphere
 svgwrite

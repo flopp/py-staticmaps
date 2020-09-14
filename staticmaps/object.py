@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import typing
 
+import cairo  # type: ignore
 import svgwrite  # type: ignore
 import s2sphere  # type: ignore
 from .transformer import Transformer
@@ -21,5 +22,9 @@ class Object(ABC):
         return s2sphere.LatLngRect()
 
     @abstractmethod
-    def render(self, transformer: Transformer, draw: svgwrite.Drawing, group: svgwrite.container.Group) -> None:
-        pass
+    def render_image(self, transformer: Transformer, cairo_context: cairo.Context) -> None:
+        raise NotImplementedError("render_image is not implemented")
+
+    @abstractmethod
+    def render_svg(self, transformer: Transformer, draw: svgwrite.Drawing, group: svgwrite.container.Group) -> None:
+        raise NotImplementedError("render_svg is not implemented")

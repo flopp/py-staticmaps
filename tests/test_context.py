@@ -29,7 +29,7 @@ def test_bounds() -> None:
 def test_render_empty() -> None:
     context = staticmaps.Context()
     with pytest.raises(RuntimeError):
-        context.render(200, 100)
+        context.render_svg(200, 100)
 
 
 def test_render_center_zoom() -> None:
@@ -37,4 +37,4 @@ def test_render_center_zoom() -> None:
     context.set_tile_downloader(MockTileDownloader())
     context.set_center(s2sphere.LatLng.from_degrees(48, 8))
     context.set_zoom(15)
-    context.render(200, 100)
+    context.render_svg(200, 100)

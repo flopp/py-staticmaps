@@ -1,5 +1,6 @@
 import random
 import re
+import typing
 
 
 class Color:
@@ -20,6 +21,9 @@ class Color:
 
     def hex_string(self) -> str:
         return f"#{self._r:02x}{self._g:02x}{self._b:02x}"
+
+    def cairo_rgba(self) -> typing.Tuple[float, float, float, float]:
+        return self._r / 255.0, self._g / 255.0, self._b / 255.0, 1.0
 
 
 BLACK = Color(0x00, 0x00, 0x00)
