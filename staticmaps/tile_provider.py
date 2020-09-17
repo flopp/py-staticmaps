@@ -1,4 +1,4 @@
-from string import Template
+import string
 import typing
 
 
@@ -13,7 +13,7 @@ class TileProvider:
         max_zoom: int = 24,
     ) -> None:
         self._name = name
-        self._url_pattern = Template(url_pattern)
+        self._url_pattern = string.Template(url_pattern)
         self._shards = shards
         self._api_key = api_key
         self._attribution = attribution

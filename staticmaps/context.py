@@ -14,6 +14,7 @@ from .svg_renderer import SvgRenderer
 from .tile_downloader import TileDownloader
 from .tile_provider import TileProvider, tile_provider_OSM
 from .transformer import Transformer
+from .version import __lib_name__
 
 
 class Context:
@@ -24,7 +25,7 @@ class Context:
         self._zoom: typing.Optional[int] = None
         self._tile_provider = tile_provider_OSM
         self._tile_downloader = TileDownloader()
-        self._cache_dir = os.path.join(appdirs.user_cache_dir("py-staticmaps"), "tiles")
+        self._cache_dir = os.path.join(appdirs.user_cache_dir(__lib_name__), "tiles")
 
     def set_zoom(self, zoom: int) -> None:
         if zoom < 0 or zoom > 30:

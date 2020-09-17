@@ -3,14 +3,16 @@ import pathlib
 import typing
 
 import requests
+import slugify  # type: ignore
 
 from .tile_provider import TileProvider
-from .version import __version__
+from .version import __github_url__, __lib_name__, __version__
 
 
 class TileDownloader:
     def __init__(self) -> None:
-        self._user_agent = f"Mozilla/5.0+(compatible; staticmaps/{__version__}; https://github.com/flopp/py-staticmaps)"
+        self._user_agent = f"Mozilla/5.0+(compatible; {__lib_name__}/{__version__}; {__github_url__})"
+        self._sanitized_name_cache: typing.Dict[str, str] = {}
 
     def set_user_agent(self, user_agent: str) -> None:
         self._user_agent = user_agent
@@ -38,6 +40,14 @@ class TileDownloader:
                 f.write(data)
         return data
 
-    @staticmethod
-    def cache_file_name(provider: TileProvider, cache_dir: str, zoom: int, x: int, y: int) -> str:
-        return os.path.join(cache_dir, provider.name(), str(zoom), str(x), "{}.png".format(y))
+    def sanitized_name(self, name: str) -> str:
+        if name in self._sanitized_name_cache:
+            return self._sanitized_name_cache[name]
+        sanitized = slugify.slugify(name)
+        if sanitized is None:
+            sanitized = "_"
+        self._sanitized_name_cache[name] = sanitized
+        return sanitized
+
+    def cache_file_name(self, provider: TileProvider, cache_dir: str, zoom: int, x: int, y: int) -> str:
+        return os.path.join(cache_dir, self.sanitized_name(provider.name()), str(zoom), str(x), "{}.png".format(y))

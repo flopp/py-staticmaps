@@ -164,11 +164,11 @@ context = staticmaps.Context()
 colors = [staticmaps.random_color() for _ in destinations]
 
 for index, d in enumerate(destinations):
-    line = staticmaps.Line([staticmaps.latlng(*zurich), staticmaps.latlng(*d)], color=colors[index])
+    line = staticmaps.Line([staticmaps.create_latlng(*zurich), staticmaps.create_latlng(*d)], color=colors[index])
     context.add_object(line)
 
 for index, d in enumerate(destinations):
-    marker = staticmaps.Marker(staticmaps.latlng(*d), color=colors[index], size=6)
+    marker = staticmaps.Marker(staticmaps.create_latlng(*d), color=colors[index], size=6)
     context.add_object(marker)
 
 for name, provider in staticmaps.default_tile_providers.items():

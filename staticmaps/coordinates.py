@@ -3,7 +3,7 @@ import typing
 import s2sphere  # type: ignore
 
 
-def latlng(lat: float, lng: float) -> s2sphere.LatLng:
+def create_latlng(lat: float, lng: float) -> s2sphere.LatLng:
     return s2sphere.LatLng.from_degrees(lat, lng)
 
 
@@ -21,7 +21,7 @@ def parse_latlng(s: str) -> s2sphere.LatLng:
     if lat < -90 or lat > 90 or lng < -180 or lng > 180:
         raise ValueError(f'Cannot parse coordinates string "{s}" (out of bounds lat/lng values)')
 
-    return latlng(lat, lng)
+    return create_latlng(lat, lng)
 
 
 def parse_latlngs(s: str) -> typing.List[s2sphere.LatLng]:

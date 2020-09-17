@@ -5,6 +5,7 @@ from geographiclib.geodesic import Geodesic  # type: ignore
 import s2sphere  # type: ignore
 
 from .color import Color, RED
+from .coordinates import create_latlng
 from .object import Object, PixelBoundsT
 from .renderer import Renderer
 
@@ -32,14 +33,14 @@ class Line(Object):
     def bounds(self) -> s2sphere.LatLngRect:
         b = s2sphere.LatLngRect()
         for latlng in self.interpolate():
-            latlng = latlng.normalized()
-            b = b.union(s2sphere.LatLngRect.from_point(latlng))
+            b = b.union(s2sphere.LatLngRect.from_point(latlng.normalized()))
         return b
 
     def extra_pixel_bounds(self) -> PixelBoundsT:
         return self._width, self._width, self._width, self._width
 
     def simplify(self) -> None:
+        assert len(self._latlngs) >= 2
         last = self._latlngs[0]
         min_lat = last.lat().radians
         max_lat = min_lat
@@ -70,6 +71,7 @@ class Line(Object):
     def interpolate(self) -> typing.List[s2sphere.LatLng]:
         if self._interpolation_cache is not None:
             return self._interpolation_cache
+        assert len(self._latlngs) >= 2
         self._interpolation_cache = []
         threshold = 2 * math.pi / 360
         last = self._latlngs[0]
@@ -97,7 +99,7 @@ class Line(Object):
             for i in range(1, n):
                 a = (i * line.a13) / n
                 g = line.ArcPosition(a, Geodesic.LATITUDE | Geodesic.LONGITUDE | Geodesic.LONG_UNROLL)
-                self._interpolation_cache.append(s2sphere.LatLng.from_degrees(g["lat2"], g["lon2"]))
+                self._interpolation_cache.append(create_latlng(g["lat2"], g["lon2"]))
             self._interpolation_cache.append(current)
             last = current
         return self._interpolation_cache
