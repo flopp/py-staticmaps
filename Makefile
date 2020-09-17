@@ -15,20 +15,20 @@ install: setup
 .PHONY: lint
 lint:
 	.env/bin/pylint \
-	    staticmaps examples tests
+	    setup.py staticmaps examples tests
 	.env/bin/mypy \
-	    staticmaps examples tests
+	    setup.py staticmaps examples tests
 	.env/bin/black \
 	    --line-length 120 \
 	    --check \
 	    --diff \
-	    staticmaps examples tests
+	    setup.py staticmaps examples tests
 
 .PHONY: format
 format:
 	.env/bin/black \
 	    --line-length 120 \
-	    staticmaps examples tests
+	    setup.py staticmaps examples tests
 
 .PHONY: run-examples
 run-examples:

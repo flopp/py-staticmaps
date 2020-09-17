@@ -5,13 +5,13 @@ import typing
 import requests
 import slugify  # type: ignore
 
+from .meta import GITHUB_URL, LIB_NAME, VERSION
 from .tile_provider import TileProvider
-from .version import __github_url__, __lib_name__, __version__
 
 
 class TileDownloader:
     def __init__(self) -> None:
-        self._user_agent = f"Mozilla/5.0+(compatible; {__lib_name__}/{__version__}; {__github_url__})"
+        self._user_agent = f"Mozilla/5.0+(compatible; {LIB_NAME}/{VERSION}; {GITHUB_URL})"
         self._sanitized_name_cache: typing.Dict[str, str] = {}
 
     def set_user_agent(self, user_agent: str) -> None:

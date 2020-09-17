@@ -3,6 +3,7 @@ from .color import parse_color, random_color, Color, BLACK, BLUE, BROWN, GREEN, 
 from .coordinates import create_latlng, parse_latlng, parse_latlngs
 from .line import Line
 from .marker import Marker
+from .meta import GITHUB_URL, LIB_NAME, VERSION
 from .object import Object, PixelBoundsT
 from .tile_downloader import TileDownloader
 from .tile_provider import (
@@ -14,4 +15,3 @@ from .tile_provider import (
     tile_provider_ArcGISWorldImagery,
 )
 from .transformer import Transformer
-from .version import __github_url__, __lib_name__, __version__
