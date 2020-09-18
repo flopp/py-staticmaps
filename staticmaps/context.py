@@ -1,3 +1,6 @@
+# py-staticmaps
+# Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
+
 import math
 import os
 import typing
@@ -7,9 +10,9 @@ import cairo  # type: ignore
 import s2sphere  # type: ignore
 import svgwrite  # type: ignore
 
+from . import LIB_NAME
 from .cairo_renderer import CairoRenderer
 from .color import Color
-from .meta import LIB_NAME
 from .object import Object, PixelBoundsT
 from .svg_renderer import SvgRenderer
 from .tile_downloader import TileDownloader

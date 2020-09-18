@@ -1,3 +1,6 @@
+# py-staticmaps
+# Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
+
 import os
 import re
 import typing
@@ -31,11 +34,12 @@ def _read_reqs(rel_path: str) -> typing.List[str]:
 PACKAGE = "staticmaps"
 
 setuptools.setup(
-    name=_read_meta(f"{PACKAGE}/meta.py", "LIB_NAME"),
-    version=_read_meta(f"{PACKAGE}/meta.py", "VERSION"),
+    name=_read_meta(f"{PACKAGE}/__init__.py", "LIB_NAME"),
+    version=_read_meta(f"{PACKAGE}/__init__.py", "VERSION"),
     description="Create static map images (SVG, PNG) with markers, geodesic lines, ...",
     long_description=_read_descr("README.md"),
-    url=_read_meta(f"{PACKAGE}/meta.py", "GITHUB_URL"),
+    long_description_content_type="text/markdown",
+    url=_read_meta(f"{PACKAGE}/__init__.py", "GITHUB_URL"),
     author="Florian Pigorsch",
     author_email="mail@florian-pigorsch.de",
     classifiers=[

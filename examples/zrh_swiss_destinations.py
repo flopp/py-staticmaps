@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 
+# py-staticmaps
+# Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
+
 import staticmaps
+
 
 zurich = (47.465318, 8.551364)
 destinations = [

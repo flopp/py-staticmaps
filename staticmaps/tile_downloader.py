@@ -1,3 +1,6 @@
+# py-staticmaps
+# Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
+
 import os
 import pathlib
 import typing
@@ -5,7 +8,7 @@ import typing
 import requests
 import slugify  # type: ignore
 
-from .meta import GITHUB_URL, LIB_NAME, VERSION
+from . import GITHUB_URL, LIB_NAME, VERSION
 from .tile_provider import TileProvider
 
 

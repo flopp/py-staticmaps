@@ -1,3 +1,6 @@
+# py-staticmaps
+# Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
+
 import string
 import typing
 
@@ -48,7 +51,7 @@ tile_provider_OSM = TileProvider(
     "osm",
     url_pattern="https://$s.tile.openstreetmap.org/$z/$x/$y.png",
     shards=["a", "b", "c"],
-    attribution="Maps & Data © OpenStreetMap.org contributors",
+    attribution="Maps & Data (C) OpenStreetMap.org contributors",
     max_zoom=19,
 )
 
@@ -56,7 +59,7 @@ tile_provider_StamenTerrain = TileProvider(
     "stamen-terrain",
     url_pattern="http://$s.tile.stamen.com/terrain/$z/$x/$y.png",
     shards=["a", "b", "c", "d"],
-    attribution="Maps © Stamen, Data © OpenStreetMap.org contributors",
+    attribution="Maps (C) Stamen, Data (C) OpenStreetMap.org contributors",
     max_zoom=18,
 )
 
@@ -64,7 +67,7 @@ tile_provider_StamenToner = TileProvider(
     "stamen-toner",
     url_pattern="http://$s.tile.stamen.com/toner/$z/$x/$y.png",
     shards=["a", "b", "c", "d"],
-    attribution="Maps © Stamen, Data © OpenStreetMap.org contributors",
+    attribution="Maps (C) Stamen, Data (C) OpenStreetMap.org contributors",
     max_zoom=20,
 )
 

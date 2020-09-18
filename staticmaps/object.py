@@ -1,9 +1,13 @@
+# py-staticmaps
+# Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
+
 from abc import ABC, abstractmethod
 import typing
 
 import s2sphere  # type: ignore
 
 from .renderer import Renderer
+
 
 PixelBoundsT = typing.Tuple[int, int, int, int]
 

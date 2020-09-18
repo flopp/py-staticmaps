@@ -1,7 +1,11 @@
+# py-staticmaps
+# Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
+
 import math
 import typing
 
 import s2sphere  # type: ignore
+
 
 # pylint: disable=too-many-instance-attributes
 class Transformer:

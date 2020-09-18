@@ -1,9 +1,11 @@
-from .context import Context
+# py-staticmaps
+# Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
+
 from .color import parse_color, random_color, Color, BLACK, BLUE, BROWN, GREEN, ORANGE, PURPLE, RED, YELLOW, WHITE
+from .context import Context
 from .coordinates import create_latlng, parse_latlng, parse_latlngs
 from .line import Line
 from .marker import Marker
-from .meta import GITHUB_URL, LIB_NAME, VERSION
 from .object import Object, PixelBoundsT
 from .tile_downloader import TileDownloader
 from .tile_provider import (
@@ -15,3 +17,8 @@ from .tile_provider import (
     tile_provider_ArcGISWorldImagery,
 )
 from .transformer import Transformer
+
+
+GITHUB_URL = "https://github.com/flopp/py-staticmaps"
+LIB_NAME = "py-staticmaps"
+VERSION = "0.0.1"

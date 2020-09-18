@@ -37,3 +37,13 @@ run-examples:
 .PHONY: test
 test:
 	PYTHONPATH=. .env/bin/python -m pytest tests
+
+.PHONY: build-package
+build-package:
+	PYTHONPATH=. .env/bin/python setup.py sdist
+	PYTHONPATH=. .env/bin/twine check dist/*
+
+.PHONY: upload-package-test
+upload-package-test:
+	PYTHONPATH=. .env/bin/twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+

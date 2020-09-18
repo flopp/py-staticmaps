@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# py-staticmaps
+# Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
+
 import os
 import typing
 

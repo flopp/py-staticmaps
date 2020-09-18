@@ -1,6 +1,11 @@
+# py-staticmaps
+# Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
+
 import pytest  # type: ignore
 import s2sphere  # type: ignore
+
 import staticmaps
+
 from .mock_tile_downloader import MockTileDownloader
 
 
