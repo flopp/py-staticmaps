@@ -11,7 +11,6 @@ from PIL import Image  # type: ignore
 from .color import Color, BLACK, WHITE
 from .line import Line
 from .marker import Marker
-from .object import Object
 from .renderer import Renderer
 from .transformer import Transformer
 
@@ -101,10 +100,6 @@ class CairoRenderer(Renderer):
                 self._context.line_to(x, y)
             self._context.stroke()
             self._context.restore()
-
-    def render_objects(self, objects: typing.List[Object]) -> None:
-        for obj in objects:
-            obj.render(self)
 
     def render_attribution(self, attribution: typing.Optional[str]) -> None:
         if (attribution is None) or (attribution == ""):

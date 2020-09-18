@@ -8,7 +8,7 @@ import typing
 import requests
 import slugify  # type: ignore
 
-from . import GITHUB_URL, LIB_NAME, VERSION
+from .meta import GITHUB_URL, LIB_NAME, VERSION
 from .tile_provider import TileProvider
 
 

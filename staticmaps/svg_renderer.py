@@ -10,7 +10,6 @@ import svgwrite  # type: ignore
 from .color import Color, BLACK, WHITE
 from .line import Line
 from .marker import Marker
-from .object import Object
 from .renderer import Renderer
 from .transformer import Transformer
 
@@ -88,10 +87,6 @@ class SvgRenderer(Renderer):
                 stroke=line.color().hex_string(),
                 stroke_width=line.width(),
             )
-
-    def render_objects(self, objects: typing.List[Object]) -> None:
-        for obj in objects:
-            obj.render(self)
 
     def render_attribution(self, attribution: typing.Optional[str]) -> None:
         if (attribution is None) or (attribution == ""):

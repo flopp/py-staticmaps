@@ -10,9 +10,9 @@ import cairo  # type: ignore
 import s2sphere  # type: ignore
 import svgwrite  # type: ignore
 
-from . import LIB_NAME
 from .cairo_renderer import CairoRenderer
 from .color import Color
+from .meta import LIB_NAME
 from .object import Object, PixelBoundsT
 from .svg_renderer import SvgRenderer
 from .tile_downloader import TileDownloader
@@ -62,7 +62,7 @@ class Context:
 
         renderer = CairoRenderer(trans)
         renderer.render_background(self._background_color)
-        renderer.render_tiles(self.fetch_tile)
+        renderer.render_tiles(self._fetch_tile)
         renderer.render_objects(self._objects)
         renderer.render_attribution(self._tile_provider.attribution())
 
@@ -77,14 +77,11 @@ class Context:
 
         renderer = SvgRenderer(trans)
         renderer.render_background(self._background_color)
-        renderer.render_tiles(self.fetch_tile)
+        renderer.render_tiles(self._fetch_tile)
         renderer.render_objects(self._objects)
         renderer.render_attribution(self._tile_provider.attribution())
 
         return renderer.drawing()
-
-    def fetch_tile(self, z: int, x: int, y: int) -> typing.Optional[bytes]:
-        return self._tile_downloader.get(self._tile_provider, self._cache_dir, z, x, y)
 
     def object_bounds(self) -> typing.Optional[s2sphere.LatLngRect]:
         if len(self._objects) == 0:
@@ -110,12 +107,12 @@ class Context:
     def determine_center_zoom(self, width: int, height: int) -> typing.Tuple[s2sphere.LatLng, typing.Optional[int]]:
         if self._center is not None:
             if self._zoom is not None:
-                return self._center, self.clamp_zoom(self._zoom)
+                return self._center, self._clamp_zoom(self._zoom)
         b = self.object_bounds()
         if b is None:
-            return self._center, self.clamp_zoom(self._zoom)
+            return self._center, self._clamp_zoom(self._zoom)
         if self._zoom is not None:
-            return b.get_center(), self.clamp_zoom(self._zoom)
+            return b.get_center(), self._clamp_zoom(self._zoom)
         if self._center is not None:
             b = b.union(s2sphere.LatLngRect(self._center, self._center))
         if b.is_point():
@@ -137,7 +134,10 @@ class Context:
                 return b.get_center(), zoom - 1
         return b.get_center(), self._tile_provider.max_zoom()
 
-    def clamp_zoom(self, zoom: typing.Optional[int]) -> typing.Optional[int]:
+    def _fetch_tile(self, z: int, x: int, y: int) -> typing.Optional[bytes]:
+        return self._tile_downloader.get(self._tile_provider, self._cache_dir, z, x, y)
+
+    def _clamp_zoom(self, zoom: typing.Optional[int]) -> typing.Optional[int]:
         if zoom is None:
             return None
         if zoom < 0:
