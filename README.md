@@ -1,4 +1,5 @@
 [![CI](https://github.com/flopp/py-staticmaps/workflows/CI/badge.svg)](https://github.com/flopp/py-staticmaps/actions?query=workflow%3ACI)
+[![PyPI Package](https://img.shields.io/pypi/v/py-staticmaps.svg)](https://pypi.org/project/py-staticmaps/)
 [![Format](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 [![License MIT](https://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)](LICENSE)
 

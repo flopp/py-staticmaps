@@ -50,4 +50,4 @@ upload-package-test:
 
 .PHONY: upload-package
 upload-package:
-	PYTHONPATH=. .env/bin/twine --repository py-staticmaps upload dist/*
+	PYTHONPATH=. .env/bin/twine upload --repository py-staticmaps dist/*
