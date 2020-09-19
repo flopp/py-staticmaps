@@ -2,9 +2,9 @@
 setup:
 	python3 -m venv .env
 	.env/bin/pip install --upgrade pip
-	.env/bin/pip install -r requirements.txt
-	.env/bin/pip install -r requirements-dev.txt
-	.env/bin/pip install -r requirements-examples.txt
+	.env/bin/pip install --upgrade --requirement requirements.txt
+	.env/bin/pip install --upgrade --requirement requirements-dev.txt
+	.env/bin/pip install --upgrade --requirement requirements-examples.txt
 
 .PHONY: install
 install: setup
@@ -40,6 +40,7 @@ test:
 
 .PHONY: build-package
 build-package:
+	rm -rf dist
 	PYTHONPATH=. .env/bin/python setup.py sdist
 	PYTHONPATH=. .env/bin/twine check dist/*
 
@@ -47,3 +48,6 @@ build-package:
 upload-package-test:
 	PYTHONPATH=. .env/bin/twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
+.PHONY: upload-package
+upload-package:
+	PYTHONPATH=. .env/bin/twine --repository py-staticmaps upload dist/*

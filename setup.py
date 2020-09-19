@@ -21,8 +21,15 @@ def _read_meta(rel_path: str, identifier: str) -> str:
 
 def _read_descr(rel_path: str) -> str:
     abs_path = os.path.join(os.path.dirname(__file__), rel_path)
+    re_image = re.compile(r"^.*!\[.*\]\(.*\).*$")
+    lines: typing.List[str] = []
     with open(abs_path) as f:
-        return f.read()
+        for line in f:
+            if re_image.match(line):
+                continue
+            lines.append(line)
+    print("".join(lines))
+    return "".join(lines)
 
 
 def _read_reqs(rel_path: str) -> typing.List[str]:
