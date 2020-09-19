@@ -1,6 +1,6 @@
 [![CI](https://github.com/flopp/py-staticmaps/workflows/CI/badge.svg)](https://github.com/flopp/py-staticmaps/actions?query=workflow%3ACI)
 [![Format](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
-[![License MIT](https://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)]((https://github.com/flopp/py-staticmaps/blob/master/LICENSE))
+[![License MIT](https://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)](LICENSE)
 
 # py-staticmaps
 A python module to create static map images (PNG, SVG) with markers, geodesic lines, etc.
@@ -92,4 +92,4 @@ image.write_to_png("us_capitals.png")
 
 ## License
 
-[MIT](https://github.com/flopp/py-staticmaps/blob/master/LICENSE) &copy; 2016-2020 Florian Pigorsch
+[MIT](LICENSE) &copy; 2020 Florian Pigorsch
