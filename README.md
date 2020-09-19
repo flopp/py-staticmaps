@@ -8,7 +8,7 @@ A python module to create static map images (PNG, SVG) with markers, geodesic li
 
 ## Installation
 
-```
+```shell
 pip install py-staticmaps
 ```
 
@@ -18,7 +18,7 @@ pip install py-staticmaps
 
 ### Markers and Geodesic Lines
 
-```
+```python
 import staticmaps
 
 context = staticmaps.Context()
@@ -35,12 +35,12 @@ image = context.render_cairo(800, 500)
 image.write_to_png("frankfurt_newyork.png")
 ```
 
-![franfurt_newyork](../assets/franfurt_newyork.png?raw=true)
+![franfurt_newyork](../assets/frankfurt_newyork.png?raw=true)
 
 
 ### Drawing a GPX Track
 
-```
+```python
 import sys
 
 import gpxpy
@@ -66,7 +66,7 @@ image.write_to_png("draw_gpx.png")
 
 ### US State Capitals
 
-```
+```python
 import json
 import requests
 import staticmaps
