@@ -3,10 +3,8 @@ setup:
 	python3 -m venv .env
 	.env/bin/pip install --upgrade pip
 	.env/bin/pip install -r requirements.txt
-
-.PHONY: setup-dev
-setup-dev: setup
 	.env/bin/pip install -r requirements-dev.txt
+	.env/bin/pip install -r requirements-examples.txt
 
 .PHONY: install
 install: setup
@@ -32,7 +30,9 @@ format:
 
 .PHONY: run-examples
 run-examples:
-	PYTHONPATH=. .env/bin/python examples/zrh_swiss_destinations.py
+	(cd examples && PYTHONPATH=.. ../.env/bin/python frankfurt_newyork.py)
+	(cd examples && PYTHONPATH=.. ../.env/bin/python draw_gpx.py running.gpx)
+	(cd examples && PYTHONPATH=.. ../.env/bin/python us_capitals.py)
 
 .PHONY: test
 test:

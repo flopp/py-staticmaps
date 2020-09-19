@@ -57,6 +57,7 @@ setuptools.setup(
     install_requires=_read_reqs("requirements.txt"),
     extras_require={
         "dev": _read_reqs("requirements-dev.txt"),
+        "examples": _read_reqs("requirements-examples.txt"),
     },
     entry_points={
         "console_scripts": [
