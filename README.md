@@ -5,9 +5,18 @@
 # py-staticmaps
 A python module to create static map images (PNG, SVG) with markers, geodesic lines, etc.
 
-# Examples
 
-## Markers and Geodesic Lines
+## Installation
+
+```
+pip install py-staticmaps
+```
+
+
+## Examples
+
+
+### Markers and Geodesic Lines
 
 ```
 import staticmaps
@@ -26,7 +35,10 @@ image = context.render_cairo(800, 500)
 image.write_to_png("frankfurt_newyork.png")
 ```
 
-## Drawing a GPX Track
+![franfurt_newyork](../assets/franfurt_newyork.png?raw=true)
+
+
+### Drawing a GPX Track
 
 ```
 import sys
@@ -49,7 +61,10 @@ image = context.render_cairo(800, 500)
 image.write_to_png("draw_gpx.png")
 ```
 
-## US State Capitals
+![draw_gpx](../assets/draw_gpx.png?raw=true)
+
+
+### US State Capitals
 
 ```
 import json
@@ -72,6 +87,9 @@ image = context.render_cairo(800, 500)
 image.write_to_png("us_capitals.png")
 ```
 
-# License
+![us_capitals](../assets/us_capitals.png?raw=true)
+
+
+## License
 
 [MIT](https://github.com/flopp/py-staticmaps/blob/master/LICENSE) &copy; 2016-2020 Florian Pigorsch
