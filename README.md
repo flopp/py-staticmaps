@@ -91,6 +91,11 @@ image.write_to_png("us_capitals.png")
 ![us_capitals](../assets/us_capitals.png?raw=true)
 
 
+### Other Examples
+
+Please take a look at the command line program which uses the `staticmaps` package: `staticmaps/cli.py`
+
+
 ## License
 
 [MIT](LICENSE) &copy; 2020 Florian Pigorsch
