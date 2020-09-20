@@ -13,6 +13,8 @@ A python module to create static map images (PNG, SVG) with markers, geodesic li
 pip install py-staticmaps
 ```
 
+`py-staticmaps` uses `pycairo` for creating antialiased raster-graphics, so make sure `libcairo2` is installed on your system (on Ubuntu just install the `libcairo2-dev` package, i.e. `sudo apt install ibcairo2-dev`).
+
 
 ## Examples
 
@@ -137,6 +139,18 @@ image.write_to_png("us_capitals.png")
 ### Other Examples
 
 Please take a look at the command line program which uses the `staticmaps` package: `staticmaps/cli.py`
+
+
+### Dependencies
+
+`py-staticmaps` uses
+
+- `pycairo` for rendering antialiased raster-graphics
+- `svgwrite` for writing SVG files
+- `s2sphere` for geo coordinates handling
+- `geographiclib` for geodesic computations
+- `appdirs` for finding the user's default cache directory
+- `requests` for downloading tile files
 
 
 ## License
