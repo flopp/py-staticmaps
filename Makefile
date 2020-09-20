@@ -14,6 +14,8 @@ install: setup
 lint:
 	.env/bin/pylint \
 	    setup.py staticmaps examples tests
+	.env/bin/flake8 \
+	    setup.py staticmaps examples tests
 	.env/bin/mypy \
 	    setup.py staticmaps examples tests
 	.env/bin/black \

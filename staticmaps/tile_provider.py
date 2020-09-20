@@ -75,7 +75,7 @@ tile_provider_ArcGISWorldImagery = TileProvider(
     "arcgis-worldimagery",
     url_pattern="https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/$z/$y/$x",
     attribution="Source: Esri, Maxar, GeoEye, Earthstar Geographics, "
-    + "CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community",
+    "CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community",
     max_zoom=24,
 )
 

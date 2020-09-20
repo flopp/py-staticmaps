@@ -25,6 +25,8 @@ jobs:
       run: black --line-length 120 --check --diff staticmaps examples tests
     - name: Lint (pylint)
       run: pylint staticmaps examples tests
+    - name: Lint (flake8)
+      run: flake8 staticmaps examples tests
     - name: Check types (mypy)
       run: mypy staticmaps examples tests
     - name: Run tests (pytest)
