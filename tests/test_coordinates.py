@@ -31,7 +31,7 @@ def test_parse_latlng() -> None:
 
 
 def test_parse_latlngs() -> None:
-    good = [("", 0), ("48,8", 1), ("48,8 47,7", 2), ("   48,8    47,7   ", 2)]
+    good = [("", 0), ("48,8", 1), ("48,8 47,7", 2), ("   48,8    47,7   ", 2), ("48,7 48,8 47,7", 3)]
     for s, expected_len in good:
         a = staticmaps.parse_latlngs(s)
         assert len(a) == expected_len

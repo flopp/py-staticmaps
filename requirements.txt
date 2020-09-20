@@ -1,5 +1,4 @@
 appdirs
-click
 geographiclib
 PILLOW
 pycairo

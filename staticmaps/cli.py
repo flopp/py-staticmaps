@@ -3,69 +3,116 @@
 # py-staticmaps
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
+import argparse
 import os
-import typing
-
-import click
 
 import staticmaps
 
 
-@click.command()
-@click.option("--center", type=str, default=None)
-@click.option("--zoom", type=int, default=None)
-@click.option("--width", type=int, required=True)
-@click.option("--height", type=int, required=True)
-@click.option("--background", type=str, default=None)
-@click.option("--marker", type=str, multiple=True)
-@click.option("--line", type=str, multiple=True)
-@click.option(
-    "--tiles",
-    type=click.Choice(staticmaps.default_tile_providers.keys()),
-    default=staticmaps.tile_provider_OSM.name(),
-)
-@click.option("--file_format", type=click.Choice(["png", "svg", "guess"]), default="guess")
-@click.argument("file_name", type=str, required=True)
-def main(
-    center: typing.Optional[str],
-    zoom: typing.Optional[int],
-    width: int,
-    height: int,
-    background: typing.Optional[str],
-    marker: typing.List[str],
-    line: typing.List[str],
-    tiles: str,
-    file_format: str,
-    file_name: str,
-) -> None:
+def main() -> None:
+    args_parser = argparse.ArgumentParser(prog="createstaticmap")
+    args_parser.add_argument(
+        "--center",
+        metavar="LAT,LNG",
+        type=str,
+    )
+    args_parser.add_argument(
+        "--zoom",
+        metavar="ZOOM",
+        type=int,
+    )
+    args_parser.add_argument(
+        "--width",
+        metavar="WIDTH",
+        type=int,
+        required=True,
+    )
+    args_parser.add_argument(
+        "--height",
+        metavar="HEIGHT",
+        type=int,
+        required=True,
+    )
+    args_parser.add_argument(
+        "--background",
+        metavar="COLOR",
+        type=str,
+    )
+    args_parser.add_argument(
+        "--marker",
+        metavar="LAT,LNG",
+        type=str,
+        action="append",
+    )
+    args_parser.add_argument(
+        "--line",
+        metavar="LAT,LNG LAT,LNG ...",
+        type=str,
+        action="append",
+    )
+    args_parser.add_argument(
+        "--area",
+        metavar="LAT,LNG LAT,LNG ...",
+        type=str,
+        action="append",
+    )
+    args_parser.add_argument(
+        "--tiles",
+        metavar="TILEPROVIDER",
+        type=str,
+        choices=staticmaps.default_tile_providers.keys(),
+        default=staticmaps.tile_provider_OSM.name(),
+    )
+    args_parser.add_argument(
+        "--file-format",
+        metavar="FORMAT",
+        type=str,
+        choices=["png", "svg", "guess"],
+        default="guess",
+    )
+    args_parser.add_argument(
+        "filename",
+        metavar="FILE",
+        type=str,
+        nargs=1,
+    )
+
+    args = args_parser.parse_args()
+
     context = staticmaps.Context()
 
-    context.set_tile_provider(staticmaps.default_tile_providers[tiles])
+    context.set_tile_provider(staticmaps.default_tile_providers[args.tiles])
 
-    if center is not None:
-        context.set_center(staticmaps.parse_latlng(center))
-    if zoom is not None:
-        context.set_zoom(zoom)
-    if background is not None:
-        context.set_background_color(staticmaps.parse_color(background))
-    for coords in line:
-        context.add_object(staticmaps.Line(staticmaps.parse_latlngs(coords)))
-    for coords in marker:
-        context.add_object(staticmaps.Marker(staticmaps.parse_latlng(coords)))
+    if args.center is not None:
+        context.set_center(staticmaps.parse_latlng(args.center))
+    if args.zoom is not None:
+        context.set_zoom(args.zoom)
+    if args.background is not None:
+        context.set_background_color(staticmaps.parse_color(args.background))
+    if args.area:
+        for coords in args.area:
+            context.add_object(staticmaps.Area(staticmaps.parse_latlngs(coords)))
+    if args.line:
+        for coords in args.line:
+            context.add_object(staticmaps.Line(staticmaps.parse_latlngs(coords)))
+    if args.marker:
+        for coords in args.marker:
+            context.add_object(staticmaps.Marker(staticmaps.parse_latlng(coords)))
 
-    if file_format == "guess":
-        file_format = guess_file_format(file_name)
-    if file_format == "png":
-        image = context.render_cairo(width, height)
+    file_name = args.filename[0]
+    if determine_file_format(args.file_format, file_name) == "png":
+        image = context.render_cairo(args.width, args.height)
         image.write_to_png(file_name)
     else:
-        svg_image = context.render_svg(width, height)
+        svg_image = context.render_svg(args.width, args.height)
         with open(file_name, "w", encoding="utf-8") as f:
             svg_image.write(f, pretty=True)
-    click.echo("wrote result image to {}".format(file_name))
+    print(f"wrote result image to {file_name}")
 
 
-def guess_file_format(file_name: str) -> str:
+def determine_file_format(file_format: str, file_name: str) -> str:
+    if file_format != "guess":
+        return file_format
     extension = os.path.splitext(file_name)[1]
     if extension == ".png":
         return "png"
