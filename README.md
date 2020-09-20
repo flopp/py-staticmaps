@@ -15,7 +15,7 @@ A python module to create static map images (PNG, SVG) with markers, geodesic li
 - Proper attributions display
 - On disc caching of map tile images for faster drawing and reduced load on the tle servers
 - Anti-aliased drawing via `pycairo`
-- SVG creating viaa `svgwrite`
+- SVG creating via `svgwrite`
 
 
 ## Installation
