@@ -32,11 +32,54 @@ context.add_object(staticmaps.Line([frankfurt, newyork], color=staticmaps.BLUE, 
 context.add_object(staticmaps.Marker(frankfurt, color=staticmaps.GREEN, size=12))
 context.add_object(staticmaps.Marker(newyork, color=staticmaps.RED, size=12))
 
+# render png
 image = context.render_cairo(800, 500)
 image.write_to_png("frankfurt_newyork.png")
+
+# render svg
+svg_image = context.render_svg(800, 500)
+with open("frankfurt_newyork.svg", "w", encoding="utf-8") as f:
+    svg_image.write(f, pretty=True)
 ```
 
 ![franfurt_newyork](../assets/frankfurt_newyork.png?raw=true)
+
+
+### Transparent Polygons
+
+```python
+import staticmaps
+
+context = staticmaps.Context()
+context.set_tile_provider(staticmaps.tile_provider_OSM)
+
+freiburg_polygon = [
+    (47.96881, 7.79045),
+    (47.96866, 7.78610),
+    (47.97134, 7.77874),
+    ...
+]
+
+context.add_object(
+    staticmaps.Area(
+        [staticmaps.create_latlng(lat, lng) for lat, lng in freiburg_polygon],
+        fill_color=staticmaps.parse_color("#00FF003F"),
+        width=2,
+        color=staticmaps.BLUE,
+    )
+)
+
+# render png
+image = context.render_cairo(800, 500)
+image.write_to_png("freiburg_area.png")
+
+# render svg
+svg_image = context.render_svg(800, 500)
+with open("freiburg_area.svg", "w", encoding="utf-8") as f:
+    svg_image.write(f, pretty=True)
+```
+
+![draw_gpx](../assets/freiburg_area.png?raw=true)
 
 
 ### Drawing a GPX Track

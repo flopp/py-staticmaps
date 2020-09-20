@@ -19,5 +19,11 @@ for track in gpx.tracks:
         line = [staticmaps.create_latlng(p.latitude, p.longitude) for p in segment.points]
         context.add_object(staticmaps.Line(line))
 
+# render png
 image = context.render_cairo(800, 500)
-image.write_to_png("draw_gpx.png")
+image.write_to_png("running.png")
+
+# render svg
+svg_image = context.render_svg(800, 500)
+with open("running.svg", "w", encoding="utf-8") as f:
+    svg_image.write(f, pretty=True)

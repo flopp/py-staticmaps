@@ -10,6 +10,7 @@ from .transformer import Transformer
 
 if typing.TYPE_CHECKING:
     # avoid circlic import
+    from .area import Area  # pylint: disable=cyclic-import
     from .line import Line  # pylint: disable=cyclic-import
     from .marker import Marker  # pylint: disable=cyclic-import
     from .object import Object  # pylint: disable=cyclic-import
@@ -37,6 +38,10 @@ class Renderer(ABC):
 
     @abstractmethod
     def render_line_object(self, line: "Line") -> None:
+        pass
+
+    @abstractmethod
+    def render_area_object(self, area: "Area") -> None:
         pass
 
     @abstractmethod

@@ -18,8 +18,8 @@ class Line(Object):
         Object.__init__(self)
         if latlngs is None or len(latlngs) < 2:
             raise ValueError("Trying to create line with less than 2 coordinates")
-        if width < 1:
-            raise ValueError(f"'width' must be >= 1: {width}")
+        if width < 0:
+            raise ValueError(f"'width' must be >= 0: {width}")
 
         self._latlngs = latlngs
         self.simplify()

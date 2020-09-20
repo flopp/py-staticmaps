@@ -15,5 +15,11 @@ context.add_object(staticmaps.Line([frankfurt, newyork], color=staticmaps.BLUE, 
 context.add_object(staticmaps.Marker(frankfurt, color=staticmaps.GREEN, size=12))
 context.add_object(staticmaps.Marker(newyork, color=staticmaps.RED, size=12))
 
+# render png
 image = context.render_cairo(800, 500)
 image.write_to_png("frankfurt_newyork.png")
+
+# render svg
+svg_image = context.render_svg(800, 500)
+with open("frankfurt_newyork.svg", "w", encoding="utf-8") as f:
+    svg_image.write(f, pretty=True)

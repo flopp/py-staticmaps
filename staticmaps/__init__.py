@@ -1,7 +1,22 @@
 # py-staticmaps
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
-from .color import parse_color, random_color, Color, BLACK, BLUE, BROWN, GREEN, ORANGE, PURPLE, RED, YELLOW, WHITE
+from .area import Area
+from .color import (
+    parse_color,
+    random_color,
+    Color,
+    BLACK,
+    BLUE,
+    BROWN,
+    GREEN,
+    ORANGE,
+    PURPLE,
+    RED,
+    YELLOW,
+    WHITE,
+    TRANSPARENT,
+)
 from .context import Context
 from .coordinates import create_latlng, parse_latlng, parse_latlngs
 from .line import Line

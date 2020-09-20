@@ -8,6 +8,7 @@ import typing
 import cairo  # type: ignore
 from PIL import Image  # type: ignore
 
+from .area import Area
 from .color import Color, BLACK, WHITE
 from .line import Line
 from .marker import Marker
@@ -88,18 +89,34 @@ class CairoRenderer(Renderer):
             self._context.restore()
 
     def render_line_object(self, line: Line) -> None:
+        if line.width() == 0:
+            return
         xys = [self._trans.ll2pixel(latlng) for latlng in line.interpolate()]
         x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
         for p in range(-x_count, x_count + 1):
             self._context.save()
             self._context.translate(p * self._trans.world_width(), 0)
-            self._context.set_source_rgb(*line.color().float_rgb())
+            self._context.set_source_rgba(*line.color().float_rgba())
             self._context.set_line_width(line.width())
             self._context.new_path()
             for x, y in xys:
                 self._context.line_to(x, y)
             self._context.stroke()
             self._context.restore()
+
+    def render_area_object(self, area: Area) -> None:
+        xys = [self._trans.ll2pixel(latlng) for latlng in area.interpolate()]
+        x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
+        for p in range(-x_count, x_count + 1):
+            self._context.save()
+            self._context.translate(p * self._trans.world_width(), 0)
+            self._context.new_path()
+            for x, y in xys:
+                self._context.line_to(x, y)
+            self._context.set_source_rgba(*area.fill_color().float_rgba())
+            self._context.fill()
+            self._context.restore()
+        self.render_line_object(area)
 
     def render_attribution(self, attribution: typing.Optional[str]) -> None:
         if (attribution is None) or (attribution == ""):
