@@ -7,6 +7,17 @@
 A python module to create static map images (PNG, SVG) with markers, geodesic lines, etc.
 
 
+## Features
+
+- Map objects: pin-style markers, polylines, polygons
+- Automatic computation of best center + zoom from the added map objects
+- Several pre-configured map tile providers
+- Proper attributions display
+- On disc caching of map tile images for faster drawing and reduced load on the tle servers
+- Anti-aliased drawing via `pycairo`
+- SVG creating viaa `svgwrite`
+
+
 ## Installation
 
 ```shell
