@@ -137,7 +137,7 @@ class Context:
 
         for zoom in range(1, self._tile_provider.max_zoom()):
             tiles = 2 ** zoom
-            if (dx * tiles > w) or(dy * tiles > h):
+            if (dx * tiles > w) or (dy * tiles > h):
                 return center, zoom - 1
         return center, self._tile_provider.max_zoom()
 
