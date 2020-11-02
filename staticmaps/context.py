@@ -120,19 +120,26 @@ class Context:
         pixel_margin = self.extra_pixel_bounds()
         w = (width - 2.0 * max(pixel_margin[0], pixel_margin[2])) / self._tile_provider.tile_size()
         h = (height - 2.0 * max(pixel_margin[1], pixel_margin[3])) / self._tile_provider.tile_size()
-        min_y = (1.0 - math.log(math.tan(b.lat_lo().radians) + (1.0 / math.cos(b.lat_lo().radians))) / math.pi) / 2.0
-        max_y = (1.0 - math.log(math.tan(b.lat_hi().radians) + (1.0 / math.cos(b.lat_hi().radians))) / math.pi) / 2.0
+        min_y = (1.0 - math.log(math.tan(b.lat_lo().radians) + (1.0 / math.cos(b.lat_lo().radians)))) / (2 * math.pi)
+        max_y = (1.0 - math.log(math.tan(b.lat_hi().radians) + (1.0 / math.cos(b.lat_hi().radians)))) / (2 * math.pi)
         dx = (b.lng_hi().degrees - b.lng_lo().degrees) / 360.0
         if dx < 0:
             dx += math.ceil(math.fabs(dx))
         if dx > 1:
             dx -= math.floor(dx)
         dy = math.fabs(max_y - min_y)
+
+        y1 = math.log((1 + math.sin(b.lat_lo().radians)) / (1 - math.sin(b.lat_lo().radians))) / 2
+        y2 = math.log((1 + math.sin(b.lat_hi().radians)) / (1 - math.sin(b.lat_hi().radians))) / 2
+        lat = math.atan(math.sinh((y1 + y2) / 2)) * 180.0 / math.pi
+        lng = b.get_center().lng().degrees
+        center = s2sphere.LatLng.from_degrees(lat, lng)
+
         for zoom in range(1, self._tile_provider.max_zoom()):
             tiles = 2 ** zoom
-            if (dx * tiles > w) or (dy * tiles > h):
-                return b.get_center(), zoom - 1
-        return b.get_center(), self._tile_provider.max_zoom()
+            if (dx * tiles > w) or(dy * tiles > h):
+                return center, zoom - 1
+        return center, self._tile_provider.max_zoom()
 
     def _fetch_tile(self, z: int, x: int, y: int) -> typing.Optional[bytes]:
         return self._tile_downloader.get(self._tile_provider, self._cache_dir, z, x, y)

@@ -3,6 +3,7 @@
 
 # flake8: noqa
 from .area import Area
+from .circle import Circle
 from .color import (
     parse_color,
     random_color,
