@@ -129,17 +129,19 @@ class Context:
             dx -= math.floor(dx)
         dy = math.fabs(max_y - min_y)
 
-        y1 = math.log((1 + math.sin(b.lat_lo().radians)) / (1 - math.sin(b.lat_lo().radians))) / 2
-        y2 = math.log((1 + math.sin(b.lat_hi().radians)) / (1 - math.sin(b.lat_hi().radians))) / 2
-        lat = math.atan(math.sinh((y1 + y2) / 2)) * 180.0 / math.pi
-        lng = b.get_center().lng().degrees
-        center = s2sphere.LatLng.from_degrees(lat, lng)
-
         for zoom in range(1, self._tile_provider.max_zoom()):
             tiles = 2 ** zoom
             if (dx * tiles > w) or (dy * tiles > h):
-                return center, zoom - 1
-        return center, self._tile_provider.max_zoom()
+                return self._determine_center(b), zoom - 1
+        return self._determine_center(b), self._tile_provider.max_zoom()
+
+    @staticmethod
+    def _determine_center(b: s2sphere.LatLngRect) -> s2sphere.LatLng:
+        y1 = math.log((1 + math.sin(b.lat_lo().radians)) / (1 - math.sin(b.lat_lo().radians))) / 2
+        y2 = math.log((1 + math.sin(b.lat_hi().radians)) / (1 - math.sin(b.lat_hi().radians))) / 2
+        lat = math.atan(math.sinh((y1 + y2) / 2)) * 180 / math.pi
+        lng = b.get_center().lng().degrees
+        return s2sphere.LatLng.from_degrees(lat, lng)
 
     def _fetch_tile(self, z: int, x: int, y: int) -> typing.Optional[bytes]:
         return self._tile_downloader.get(self._tile_provider, self._cache_dir, z, x, y)
