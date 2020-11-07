@@ -51,7 +51,7 @@ class Line(Object):
         self._interpolation_cache.append(last)
         geod = Geodesic.WGS84
         for current in self._latlngs[1:]:
-            # don't perform geodesic interpolation if the langitudinal distance is < threshold = 1°
+            # don't perform geodesic interpolation if the longitudinal distance is < threshold = 1°
             dlng = current.lng().radians - last.lng().radians
             while dlng < 0:
                 dlng += 2 * math.pi
