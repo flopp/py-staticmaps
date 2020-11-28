@@ -125,7 +125,7 @@ class SvgRenderer(Renderer):
                 rx=None,
                 ry=None,
                 fill=WHITE.hex_rgb(),
-                fill_opacity="0.6",
+                fill_opacity="0.8",
             )
         )
         group.add(
