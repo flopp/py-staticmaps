@@ -73,11 +73,14 @@ class Transformer:
     def tile_size(self) -> int:
         return self._tile_size
 
-    def ll2t(self, latlng: s2sphere.LatLng) -> typing.Tuple[float, float]:
+    @staticmethod
+    def mercator(latlng: s2sphere.LatLng) -> typing.Tuple[float, float]:
         lat = latlng.lat().radians
         lng = latlng.lng().radians
-        x = (lng + math.pi) / (2 * math.pi)
-        y = (1 - math.log(math.tan(lat) + (1 / math.cos(lat))) / math.pi) / 2
+        return lng / (2 * math.pi) + 0.5, (1 - math.log(math.tan(lat) + (1 / math.cos(lat))) / math.pi) / 2
+
+    def ll2t(self, latlng: s2sphere.LatLng) -> typing.Tuple[float, float]:
+        x, y = self.mercator(latlng)
         return self._number_of_tiles * x, self._number_of_tiles * y
 
     def ll2pixel(self, latlng: s2sphere.LatLng) -> typing.Tuple[float, float]:
