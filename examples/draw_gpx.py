@@ -19,6 +19,13 @@ for track in gpx.tracks:
         line = [staticmaps.create_latlng(p.latitude, p.longitude) for p in segment.points]
         context.add_object(staticmaps.Line(line))
 
+# add an image marker to the first track point
+for p in gpx.walk(only_points=True):
+    pos = staticmaps.create_latlng(p.latitude, p.longitude)
+    marker = staticmaps.ImageMarker(pos, "start.png", origin_x=27, origin_y=35)
+    context.add_object(marker)
+    break
+
 # render png
 image = context.render_cairo(800, 500)
 image.write_to_png("running.png")

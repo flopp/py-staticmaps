@@ -10,6 +10,7 @@ from PIL import Image  # type: ignore
 
 from .area import Area
 from .color import Color, BLACK, WHITE
+from .image_marker import ImageMarker
 from .line import Line
 from .marker import Marker
 from .renderer import Renderer
@@ -85,6 +86,19 @@ class CairoRenderer(Renderer):
             self._context.line_to(x + dx * (r - 1), y - 2 * r + dy * (r - 1))
             self._context.close_path()
             self._context.fill()
+
+            self._context.restore()
+
+    def render_image_marker_object(self, marker: ImageMarker) -> None:
+        x, y = self._trans.ll2pixel(marker.latlng())
+        image = cairo.ImageSurface.create_from_png(io.BytesIO(marker.image_data()))
+        x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
+        for p in range(-x_count, x_count + 1):
+            self._context.save()
+
+            self._context.translate(p * self._trans.world_width() + x - marker.origin_x(), y - marker.origin_y())
+            self._context.set_source_surface(image)
+            self._context.paint()
 
             self._context.restore()
 

@@ -9,7 +9,7 @@ A python module to create static map images (PNG, SVG) with markers, geodesic li
 
 ## Features
 
-- Map objects: pin-style markers, polylines, polygons, (geodesic) circles
+- Map objects: pin-style markers, image (PNG) markers, polylines, polygons, (geodesic) circles
 - Automatic computation of best center + zoom from the added map objects
 - Several pre-configured map tile providers
 - Proper tile provider attributions display
@@ -95,7 +95,7 @@ with open("freiburg_area.svg", "w", encoding="utf-8") as f:
 ![draw_gpx](../assets/freiburg_area.png?raw=true)
 
 
-### Drawing a GPX Track
+### Drawing a GPX Track + Image Marker (PNG)
 
 ```python
 import sys
@@ -113,6 +113,12 @@ for track in gpx.tracks:
     for segment in track.segments:
         line = [staticmaps.create_latlng(p.latitude, p.longitude) for p in segment.points]
         context.add_object(staticmaps.Line(line))
+
+for p in gpx.walk(only_points=True):
+    pos = staticmaps.create_latlng(p.latitude, p.longitude)
+    marker = staticmaps.ImageMarker(pos, "start.png", origin_x=27, origin_y=35)
+    context.add_object(marker)
+    break
 
 image = context.render_cairo(800, 500)
 image.write_to_png("draw_gpx.png")

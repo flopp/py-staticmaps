@@ -21,6 +21,7 @@ from .color import (
 )
 from .context import Context
 from .coordinates import create_latlng, parse_latlng, parse_latlngs
+from .image_marker import ImageMarker
 from .line import Line
 from .marker import Marker
 from .meta import GITHUB_URL, LIB_NAME, VERSION

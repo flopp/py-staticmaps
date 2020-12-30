@@ -9,6 +9,7 @@ import svgwrite  # type: ignore
 
 from .area import Area
 from .color import Color, BLACK, WHITE
+from .image_marker import ImageMarker
 from .line import Line
 from .marker import Marker
 from .renderer import Renderer
@@ -80,6 +81,23 @@ class SvgRenderer(Renderer):
             path.push(f" a {r} {r} 0 1 1 {2 * r * dx} 0")
             path.push("Z")
             group.add(path)
+        self._draw.add(group)
+
+    def render_image_marker_object(self, marker: ImageMarker) -> None:
+        group = self._draw.g(clip_path="url(#page)")
+        image_data = marker.image_data()
+        image_type = self.guess_image_mime_type(image_data)
+        image = f"data:{image_type};base64,{base64.b64encode(image_data).decode('utf-8')}"
+        x, y = self._trans.ll2pixel(marker.latlng())
+        x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
+        for p in range(-x_count, x_count + 1):
+            group.add(
+                self._draw.image(
+                    image,
+                    insert=(p * self._trans.world_width() + x - marker.origin_x(), y - marker.origin_y()),
+                    size=(marker.width(), marker.height()),
+                )
+            )
         self._draw.add(group)
 
     def render_line_object(self, line: Line) -> None:

@@ -11,6 +11,7 @@ from .transformer import Transformer
 if typing.TYPE_CHECKING:
     # avoid circlic import
     from .area import Area  # pylint: disable=cyclic-import
+    from .image_marker import ImageMarker  # pylint: disable=cyclic-import
     from .line import Line  # pylint: disable=cyclic-import
     from .marker import Marker  # pylint: disable=cyclic-import
     from .object import Object  # pylint: disable=cyclic-import
@@ -34,6 +35,10 @@ class Renderer(ABC):
 
     @abstractmethod
     def render_marker_object(self, marker: "Marker") -> None:
+        pass
+
+    @abstractmethod
+    def render_image_marker_object(self, marker: "ImageMarker") -> None:
         pass
 
     @abstractmethod
