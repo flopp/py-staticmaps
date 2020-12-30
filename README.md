@@ -153,6 +153,29 @@ image.write_to_png("us_capitals.png")
 ![us_capitals](../assets/us_capitals.png?raw=true)
 
 
+### Geodesic Circles
+
+```python
+import staticmaps
+
+context = staticmaps.Context()
+context.set_tile_provider(staticmaps.tile_provider_StamenToner)
+
+center1 = staticmaps.create_latlng(66, 0)
+center2 = staticmaps.create_latlng(0, 0)
+
+context.add_object(staticmaps.Circle(center1, 2000, fill_color=staticmaps.TRANSPARENT, color=staticmaps.RED, width=2))
+context.add_object(staticmaps.Circle(center2, 2000, fill_color=staticmaps.TRANSPARENT, color=staticmaps.GREEN, width=2))
+context.add_object(staticmaps.Marker(center1, color=staticmaps.RED))
+context.add_object(staticmaps.Marker(center2, color=staticmaps.GREEN))
+
+image = context.render_cairo(800, 600)
+image.write_to_png("geodesic_circles.png")
+```
+
+![geodesic_circles](../assets/geodesic_circles.png?raw=true)
+
+
 ### Other Examples
 
 Please take a look at the command line program which uses the `staticmaps` package: `staticmaps/cli.py`
