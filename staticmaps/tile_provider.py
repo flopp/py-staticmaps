@@ -39,6 +39,8 @@ class TileProvider:
         return self._max_zoom
 
     def url(self, zoom: int, x: int, y: int) -> typing.Optional[str]:
+        if len(self._url_pattern.template) == 0:
+            return None
         if (zoom < 0) or (zoom > self._max_zoom):
             return None
         shard = None
@@ -79,9 +81,17 @@ tile_provider_ArcGISWorldImagery = TileProvider(
     max_zoom=24,
 )
 
+tile_provider_None = TileProvider(
+    "none",
+    url_pattern="",
+    attribution=None,
+    max_zoom=99,
+)
+
 default_tile_providers = {
     tile_provider_OSM.name(): tile_provider_OSM,
     tile_provider_StamenTerrain.name(): tile_provider_StamenTerrain,
     tile_provider_StamenToner.name(): tile_provider_StamenToner,
     tile_provider_ArcGISWorldImagery.name(): tile_provider_ArcGISWorldImagery,
+    tile_provider_None.name(): tile_provider_None,
 }

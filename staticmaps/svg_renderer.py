@@ -85,9 +85,7 @@ class SvgRenderer(Renderer):
 
     def render_image_marker_object(self, marker: ImageMarker) -> None:
         group = self._draw.g(clip_path="url(#page)")
-        image_data = marker.image_data()
-        image_type = self.guess_image_mime_type(image_data)
-        image = f"data:{image_type};base64,{base64.b64encode(image_data).decode('utf-8')}"
+        image = SvgRenderer.create_inline_image(marker.image_data())
         x, y = self._trans.ll2pixel(marker.latlng())
         x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
         for p in range(-x_count, x_count + 1):
@@ -163,8 +161,7 @@ class SvgRenderer(Renderer):
         image_data = download(self._trans.zoom(), x, y)
         if image_data is None:
             return None
-        image_type = self.guess_image_mime_type(image_data)
-        return f"data:{image_type};base64,{base64.b64encode(image_data).decode('utf-8')}"
+        return SvgRenderer.create_inline_image(image_data)
 
     @staticmethod
     def guess_image_mime_type(data: bytes) -> str:
@@ -173,3 +170,8 @@ class SvgRenderer(Renderer):
         if data[1:4] == b"PNG":
             return "image/png"
         return "image/png"
+
+    @staticmethod
+    def create_inline_image(image_data: bytes) -> str:
+        image_type = SvgRenderer.guess_image_mime_type(image_data)
+        return f"data:{image_type};base64,{base64.b64encode(image_data).decode('utf-8')}"
