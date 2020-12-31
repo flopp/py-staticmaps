@@ -36,6 +36,7 @@ run-examples:
 	(cd examples && PYTHONPATH=.. ../.env/bin/python frankfurt_newyork.py)
 	(cd examples && PYTHONPATH=.. ../.env/bin/python freiburg_area.py)
 	(cd examples && PYTHONPATH=.. ../.env/bin/python geodesic_circles.py)
+	(cd examples && PYTHONPATH=.. ../.env/bin/python tile_providers.py)
 	(cd examples && PYTHONPATH=.. ../.env/bin/python us_capitals.py)
 
 .PHONY: test
