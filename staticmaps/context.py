@@ -108,18 +108,40 @@ class Context:
         if self._center is not None:
             if self._zoom is not None:
                 return self._center, self._clamp_zoom(self._zoom)
+            b = self.object_bounds()
+            return self._center, self._determine_zoom(width, height, b, self._center)
+
         b = self.object_bounds()
         if b is None:
-            return self._center, self._clamp_zoom(self._zoom)
-        if self._zoom is not None:
-            return b.get_center(), self._clamp_zoom(self._zoom)
-        if self._center is not None:
-            b = b.union(s2sphere.LatLngRect(self._center, self._center))
+            return None, None
+
+        c = self._determine_center(b)
+        z = self._zoom
+        if z is None:
+            z = self._determine_zoom(width, height, b, c)
+        if z is None:
+            return None, None
+        return self._adjust_center(width, height, c, z), z
+
+    def _determine_zoom(
+        self, width: int, height: int, b: typing.Optional[s2sphere.LatLngRect], c: s2sphere.LatLngRect
+    ) -> typing.Optional[int]:
+        if b is None:
+            b = s2sphere.LatLngRect(c, c)
+        else:
+            b = b.union(s2sphere.LatLngRect(c, c))
         if b.is_point():
-            return b.get_center(), None
+            return self._clamp_zoom(15)
+
         pixel_margin = self.extra_pixel_bounds()
-        w = (width - 2.0 * max(pixel_margin[0], pixel_margin[2])) / self._tile_provider.tile_size()
-        h = (height - 2.0 * max(pixel_margin[1], pixel_margin[3])) / self._tile_provider.tile_size()
+
+        w = (width - pixel_margin[0] - pixel_margin[2]) / self._tile_provider.tile_size()
+        h = (height - pixel_margin[1] - pixel_margin[3]) / self._tile_provider.tile_size()
+        # margins are bigger than target image size => ignore them
+        if w <= 0 or h <= 0:
+            w = width / self._tile_provider.tile_size()
+            h = height / self._tile_provider.tile_size()
+
         min_y = (1.0 - math.log(math.tan(b.lat_lo().radians) + (1.0 / math.cos(b.lat_lo().radians)))) / (2 * math.pi)
         max_y = (1.0 - math.log(math.tan(b.lat_hi().radians) + (1.0 / math.cos(b.lat_hi().radians)))) / (2 * math.pi)
         dx = (b.lng_hi().degrees - b.lng_lo().degrees) / 360.0
@@ -132,8 +154,8 @@ class Context:
         for zoom in range(1, self._tile_provider.max_zoom()):
             tiles = 2 ** zoom
             if (dx * tiles > w) or (dy * tiles > h):
-                return self._determine_center(b), zoom - 1
-        return self._determine_center(b), self._tile_provider.max_zoom()
+                return self._clamp_zoom(zoom - 1)
+        return self._clamp_zoom(15)
 
     @staticmethod
     def _determine_center(b: s2sphere.LatLngRect) -> s2sphere.LatLng:
@@ -142,6 +164,39 @@ class Context:
         lat = math.atan(math.sinh((y1 + y2) / 2)) * 180 / math.pi
         lng = b.get_center().lng().degrees
         return s2sphere.LatLng.from_degrees(lat, lng)
+
+    def _adjust_center(self, width: int, height: int, center: s2sphere.LatLng, zoom: int) -> s2sphere.LatLng:
+        if len(self._objects) == 0:
+            return center
+
+        trans = Transformer(width, height, zoom, center, self._tile_provider.tile_size())
+
+        min_x = None
+        max_x = None
+        min_y = None
+        max_y = None
+        for obj in self._objects:
+            l, t, r, b = obj.pixel_rect(trans)
+            if min_x is None:
+                min_x = l
+                max_x = r
+                min_y = t
+                max_y = b
+            else:
+                min_x = min(min_x, l)
+                max_x = max(max_x, r)
+                min_y = min(min_y, t)
+                max_y = max(max_y, b)
+        assert min_x is not None
+        assert max_x is not None
+        assert min_y is not None
+        assert max_y is not None
+
+        # margins are bigger than the image => ignore
+        if (max_x - min_x) > width or (max_y - min_y) > height:
+            return center
+
+        return trans.pixel2ll((max_x + min_x) * 0.5, (max_y + min_y) * 0.5)
 
     def _fetch_tile(self, z: int, x: int, y: int) -> typing.Optional[bytes]:
         return self._tile_downloader.get(self._tile_provider, self._cache_dir, z, x, y)

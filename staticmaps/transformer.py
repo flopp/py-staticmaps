@@ -79,9 +79,19 @@ class Transformer:
         lng = latlng.lng().radians
         return lng / (2 * math.pi) + 0.5, (1 - math.log(math.tan(lat) + (1 / math.cos(lat))) / math.pi) / 2
 
+    @staticmethod
+    def mercator_inv(x: float, y: float) -> s2sphere.LatLng:
+        x = 2 * math.pi * (x - 0.5)
+        k = math.exp(4 * math.pi * (0.5 - y))
+        y = math.asin((k - 1) / (k + 1))
+        return s2sphere.LatLng(y, x)
+
     def ll2t(self, latlng: s2sphere.LatLng) -> typing.Tuple[float, float]:
         x, y = self.mercator(latlng)
         return self._number_of_tiles * x, self._number_of_tiles * y
+
+    def t2ll(self, x: float, y: float) -> s2sphere.LatLng:
+        return self.mercator_inv(x / self._number_of_tiles, y / self._number_of_tiles)
 
     def ll2pixel(self, latlng: s2sphere.LatLng) -> typing.Tuple[float, float]:
         x, y = self.ll2t(latlng)
@@ -89,3 +99,9 @@ class Transformer:
         x = self._width / 2 + (x - self._tile_center_x) * s
         y = self._height / 2 + (y - self._tile_center_y) * s
         return x, y
+
+    def pixel2ll(self, x: float, y: float) -> s2sphere.LatLng:
+        s = self._tile_size
+        x = (x - self._width / 2) / s + self._tile_center_x
+        y = (y - self._height / 2) / s + self._tile_center_y
+        return self.t2ll(x, y)
