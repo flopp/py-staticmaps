@@ -79,7 +79,7 @@ tile_provider_StamenTonerLite = TileProvider(
     shards=["a", "b", "c", "d"],
     attribution="Maps (C) Stamen, Data (C) OpenStreetMap.org contributors",
     max_zoom=20,
-    )
+)
 
 tile_provider_ArcGISWorldImagery = TileProvider(
     "arcgis-worldimagery",
@@ -95,7 +95,7 @@ tile_provider_CartoNoLabels = TileProvider(
     shards=["a", "b", "c", "d"],
     attribution="Maps (C) CARTO (C) OpenStreetMap.org contributors",
     max_zoom=20,
-    )
+)
 
 tile_provider_CartoDarkNoLabels = TileProvider(
     "carto_darknolabels",
@@ -103,7 +103,7 @@ tile_provider_CartoDarkNoLabels = TileProvider(
     shards=["a", "b", "c", "d"],
     attribution="Maps (C) CARTO (C) OpenStreetMap.org contributors",
     max_zoom=20,
-    )
+)
 
 tile_provider_None = TileProvider(
     "none",
