@@ -10,7 +10,8 @@ import s2sphere  # type: ignore
 from .color import Color, RED
 from .coordinates import create_latlng
 from .object import Object, PixelBoundsT
-from .renderer import Renderer
+from .cairo_renderer import CairoRenderer
+from .svg_renderer import SvgRenderer
 
 
 class Line(Object):
@@ -77,5 +78,26 @@ class Line(Object):
             last = current
         return self._interpolation_cache
 
-    def render(self, renderer: Renderer) -> None:
-        renderer.render_line_object(self)
+    def render_svg(self, renderer: SvgRenderer) -> None:
+        if self.width() == 0:
+            return
+        xys = [renderer.transformer().ll2pixel(latlng) for latlng in self.interpolate()]
+        polyline = renderer.drawing().polyline(
+            xys,
+            fill="none",
+            stroke=self.color().hex_rgb(),
+            stroke_width=self.width(),
+            opacity=self.color().float_a(),
+        )
+        renderer.group().add(polyline)
+
+    def render_cairo(self, renderer: CairoRenderer) -> None:
+        if self.width() == 0:
+            return
+        xys = [renderer.transformer().ll2pixel(latlng) for latlng in self.interpolate()]
+        renderer.context().set_source_rgba(*self.color().float_rgba())
+        renderer.context().set_line_width(self.width())
+        renderer.context().new_path()
+        for x, y in xys:
+            renderer.context().line_to(x, y)
+        renderer.context().stroke()

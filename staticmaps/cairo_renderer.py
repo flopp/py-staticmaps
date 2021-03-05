@@ -8,13 +8,13 @@ import typing
 import cairo  # type: ignore
 from PIL import Image  # type: ignore
 
-from .area import Area
 from .color import Color, BLACK, WHITE
-from .image_marker import ImageMarker
-from .line import Line
-from .marker import Marker
 from .renderer import Renderer
 from .transformer import Transformer
+
+if typing.TYPE_CHECKING:
+    # avoid circlic import
+    from .object import Object  # pylint: disable=cyclic-import
 
 
 class CairoRenderer(Renderer):
@@ -26,6 +26,29 @@ class CairoRenderer(Renderer):
 
     def image_surface(self) -> cairo.ImageSurface:
         return self._surface
+
+    def context(self) -> cairo.Context:
+        return self._context
+
+    @staticmethod
+    def create_image(image_data: bytes) -> cairo.ImageSurface:
+        image = Image.open(io.BytesIO(image_data))
+        if image.format == "PNG":
+            return cairo.ImageSurface.create_from_png(io.BytesIO(image_data))
+        png_bytes = io.BytesIO()
+        image.save(png_bytes, format="PNG")
+        png_bytes.flush()
+        png_bytes.seek(0)
+        return cairo.ImageSurface.create_from_png(png_bytes)
+
+    def render_objects(self, objects: typing.List["Object"]) -> None:
+        x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
+        for obj in objects:
+            for p in range(-x_count, x_count + 1):
+                self._context.save()
+                self._context.translate(p * self._trans.world_width(), 0)
+                obj.render_cairo(self)
+                self._context.restore()
 
     def render_background(self, color: typing.Optional[Color]) -> None:
         if color is None:
@@ -56,82 +79,6 @@ class CairoRenderer(Renderer):
                 except RuntimeError:
                     pass
 
-    def render_marker_object(self, marker: Marker) -> None:
-        x, y = self._trans.ll2pixel(marker.latlng())
-        r = marker.size()
-        dx = math.sin(math.pi / 3.0)
-        dy = math.cos(math.pi / 3.0)
-        x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
-        for p in range(-x_count, x_count + 1):
-            self._context.save()
-
-            self._context.translate(p * self._trans.world_width(), 0)
-
-            self._context.set_source_rgb(*marker.color().text_color().float_rgb())
-            self._context.arc(x, y - 2 * r, r, 0, 2 * math.pi)
-            self._context.fill()
-            self._context.new_path()
-            self._context.line_to(x, y)
-            self._context.line_to(x - dx * r, y - 2 * r + dy * r)
-            self._context.line_to(x + dx * r, y - 2 * r + dy * r)
-            self._context.close_path()
-            self._context.fill()
-
-            self._context.set_source_rgb(*marker.color().float_rgb())
-            self._context.arc(x, y - 2 * r, r - 1, 0, 2 * math.pi)
-            self._context.fill()
-            self._context.new_path()
-            self._context.line_to(x, y - 1)
-            self._context.line_to(x - dx * (r - 1), y - 2 * r + dy * (r - 1))
-            self._context.line_to(x + dx * (r - 1), y - 2 * r + dy * (r - 1))
-            self._context.close_path()
-            self._context.fill()
-
-            self._context.restore()
-
-    def render_image_marker_object(self, marker: ImageMarker) -> None:
-        x, y = self._trans.ll2pixel(marker.latlng())
-        image = cairo.ImageSurface.create_from_png(io.BytesIO(marker.image_data()))
-        x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
-        for p in range(-x_count, x_count + 1):
-            self._context.save()
-
-            self._context.translate(p * self._trans.world_width() + x - marker.origin_x(), y - marker.origin_y())
-            self._context.set_source_surface(image)
-            self._context.paint()
-
-            self._context.restore()
-
-    def render_line_object(self, line: Line) -> None:
-        if line.width() == 0:
-            return
-        xys = [self._trans.ll2pixel(latlng) for latlng in line.interpolate()]
-        x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
-        for p in range(-x_count, x_count + 1):
-            self._context.save()
-            self._context.translate(p * self._trans.world_width(), 0)
-            self._context.set_source_rgba(*line.color().float_rgba())
-            self._context.set_line_width(line.width())
-            self._context.new_path()
-            for x, y in xys:
-                self._context.line_to(x, y)
-            self._context.stroke()
-            self._context.restore()
-
-    def render_area_object(self, area: Area) -> None:
-        xys = [self._trans.ll2pixel(latlng) for latlng in area.interpolate()]
-        x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
-        for p in range(-x_count, x_count + 1):
-            self._context.save()
-            self._context.translate(p * self._trans.world_width(), 0)
-            self._context.new_path()
-            for x, y in xys:
-                self._context.line_to(x, y)
-            self._context.set_source_rgba(*area.fill_color().float_rgba())
-            self._context.fill()
-            self._context.restore()
-        self.render_line_object(area)
-
     def render_attribution(self, attribution: typing.Optional[str]) -> None:
         if (attribution is None) or (attribution == ""):
             return
@@ -160,11 +107,4 @@ class CairoRenderer(Renderer):
         image_data = download(self._trans.zoom(), x, y)
         if image_data is None:
             return None
-        image = Image.open(io.BytesIO(image_data))
-        if image.format == "PNG":
-            return cairo.ImageSurface.create_from_png(io.BytesIO(image_data))
-        png_bytes = io.BytesIO()
-        image.save(png_bytes, format="PNG")
-        png_bytes.flush()
-        png_bytes.seek(0)
-        return cairo.ImageSurface.create_from_png(png_bytes)
+        return self.create_image(image_data)

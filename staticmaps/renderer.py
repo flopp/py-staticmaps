@@ -21,9 +21,12 @@ class Renderer(ABC):
     def __init__(self, transformer: Transformer) -> None:
         self._trans = transformer
 
+    def transformer(self) -> Transformer:
+        return self._trans
+
+    @abstractmethod
     def render_objects(self, objects: typing.List["Object"]) -> None:
-        for obj in objects:
-            obj.render(self)
+        pass
 
     @abstractmethod
     def render_background(self, color: typing.Optional[Color]) -> None:
@@ -33,19 +36,15 @@ class Renderer(ABC):
     def render_tiles(self, download: typing.Callable[[int, int, int], typing.Optional[bytes]]) -> None:
         pass
 
-    @abstractmethod
     def render_marker_object(self, marker: "Marker") -> None:
         pass
 
-    @abstractmethod
     def render_image_marker_object(self, marker: "ImageMarker") -> None:
         pass
 
-    @abstractmethod
     def render_line_object(self, line: "Line") -> None:
         pass
 
-    @abstractmethod
     def render_area_object(self, area: "Area") -> None:
         pass
 

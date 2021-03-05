@@ -8,7 +8,8 @@ import s2sphere  # type: ignore
 from PIL import Image  # type: ignore
 
 from .object import Object, PixelBoundsT
-from .renderer import Renderer
+from .cairo_renderer import CairoRenderer
+from .svg_renderer import SvgRenderer
 
 
 class ImageMarker(Object):
@@ -58,8 +59,25 @@ class ImageMarker(Object):
             max(0, self.height() - self._origin_y),
         )
 
-    def render(self, renderer: Renderer) -> None:
-        renderer.render_image_marker_object(self)
+    def render_svg(self, renderer: SvgRenderer) -> None:
+        x, y = renderer.transformer().ll2pixel(self.latlng())
+        image = renderer.create_inline_image(self.image_data())
+
+        renderer.group().add(
+            renderer.drawing().image(
+                image,
+                insert=(x - self.origin_x(), y - self.origin_y()),
+                size=(self.width(), self.height()),
+            )
+        )
+
+    def render_cairo(self, renderer: CairoRenderer) -> None:
+        x, y = renderer.transformer().ll2pixel(self.latlng())
+        image = renderer.create_image(self.image_data())
+
+        renderer.context().translate(x - self.origin_x(), y - self.origin_y())
+        renderer.context().set_source_surface(image)
+        renderer.context().paint()
 
     def load_image_data(self) -> None:
         with open(self._png_file, "rb") as f:

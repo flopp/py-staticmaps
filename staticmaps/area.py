@@ -5,9 +5,10 @@ import typing
 
 import s2sphere  # type: ignore
 
+from .cairo_renderer import CairoRenderer
 from .color import Color, RED, TRANSPARENT
 from .line import Line
-from .renderer import Renderer
+from .svg_renderer import SvgRenderer
 
 
 class Area(Line):
@@ -23,5 +24,39 @@ class Area(Line):
     def fill_color(self) -> Color:
         return self._fill_color
 
-    def render(self, renderer: Renderer) -> None:
-        renderer.render_area_object(self)
+    def render_svg(self, renderer: SvgRenderer) -> None:
+        xys = [renderer.transformer().ll2pixel(latlng) for latlng in self.interpolate()]
+
+        polygon = renderer.drawing().polygon(
+            xys,
+            fill=self.fill_color().hex_rgb(),
+            opacity=self.fill_color().float_a(),
+        )
+        renderer.group().add(polygon)
+
+        if self.width() > 0:
+            polyline = renderer.drawing().polyline(
+                xys,
+                fill="none",
+                stroke=self.color().hex_rgb(),
+                stroke_width=self.width(),
+                opacity=self.color().float_a(),
+            )
+            renderer.group().add(polyline)
+
+    def render_cairo(self, renderer: CairoRenderer) -> None:
+        xys = [renderer.transformer().ll2pixel(latlng) for latlng in self.interpolate()]
+
+        renderer.context().set_source_rgba(*self.fill_color().float_rgba())
+        renderer.context().new_path()
+        for x, y in xys:
+            renderer.context().line_to(x, y)
+        renderer.context().fill()
+
+        if self.width() > 0:
+            renderer.context().set_source_rgba(*self.color().float_rgba())
+            renderer.context().set_line_width(self.width())
+            renderer.context().new_path()
+            for x, y in xys:
+                renderer.context().line_to(x, y)
+            renderer.context().stroke()

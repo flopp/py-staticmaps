@@ -53,6 +53,7 @@ confidence=
 # --disable=W"
 disable=
     bad-continuation,
+    duplicate-code,
     missing-docstring,
     no-init,
     no-member,
@@ -107,13 +108,13 @@ notes=FIXME,XXX,TODO
 min-similarity-lines=5
 
 # Ignore comments when computing similarities.
-ignore-comments=no
+ignore-comments=yes
 
 # Ignore docstrings when computing similarities.
 ignore-docstrings=no
 
 # Ignore imports when computing similarities.
-ignore-imports=no
+ignore-imports=yes
 
 
 [VARIABLES]

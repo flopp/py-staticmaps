@@ -3,6 +3,7 @@
 
 import math
 import os
+import sys
 import typing
 
 import appdirs  # type: ignore
@@ -54,6 +55,9 @@ class Context:
         self._objects.append(obj)
 
     def render_cairo(self, width: int, height: int) -> cairo.ImageSurface:
+        if "cairo" not in sys.modules:
+            raise RuntimeError('You need to install the "cairo" module to enable "render_cairo".')
+
         center, zoom = self.determine_center_zoom(width, height)
         if center is None or zoom is None:
             raise RuntimeError("Cannot render map without center/zoom.")

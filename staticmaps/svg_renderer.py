@@ -7,13 +7,13 @@ import typing
 
 import svgwrite  # type: ignore
 
-from .area import Area
 from .color import Color, BLACK, WHITE
-from .image_marker import ImageMarker
-from .line import Line
-from .marker import Marker
 from .renderer import Renderer
 from .transformer import Transformer
+
+if typing.TYPE_CHECKING:
+    # avoid circlic import
+    from .object import Object  # pylint: disable=cyclic-import
 
 
 class SvgRenderer(Renderer):
@@ -25,9 +25,25 @@ class SvgRenderer(Renderer):
         )
         clip = self._draw.defs.add(self._draw.clipPath(id="page"))
         clip.add(self._draw.rect(insert=(0, 0), size=(self._trans.image_width(), self._trans.image_height())))
+        self._group: typing.Optional[svgwrite.container.Group] = None
 
     def drawing(self) -> svgwrite.Drawing:
         return self._draw
+
+    def group(self) -> svgwrite.container.Group:
+        assert self._group is not None
+        return self._group
+
+    def render_objects(self, objects: typing.List["Object"]) -> None:
+        x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
+        for obj in objects:
+            for p in range(-x_count, x_count + 1):
+                self._group = self._draw.g(
+                    clip_path="url(#page)", transform=f"translate({p * self._trans.world_width()}, 0)"
+                )
+                obj.render_svg(self)
+                self._draw.add(self._group)
+                self._group = None
 
     def render_background(self, color: typing.Optional[Color]) -> None:
         if color is None:
@@ -61,74 +77,6 @@ class SvgRenderer(Renderer):
                 except RuntimeError:
                     pass
         self._draw.add(group)
-
-    def render_marker_object(self, marker: Marker) -> None:
-        group = self._draw.g(clip_path="url(#page)")
-        x, y = self._trans.ll2pixel(marker.latlng())
-        r = marker.size()
-        dx = math.sin(math.pi / 3.0)
-        dy = math.cos(math.pi / 3.0)
-        x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
-        for p in range(-x_count, x_count + 1):
-            path = self._draw.path(
-                fill=marker.color().hex_rgb(),
-                stroke=marker.color().text_color().hex_rgb(),
-                stroke_width=1,
-                opacity=marker.color().float_a(),
-            )
-            path.push(f"M {x + p * self._trans.world_width()} {y}")
-            path.push(f" l {- dx * r} {- 2 * r + dy * r}")
-            path.push(f" a {r} {r} 0 1 1 {2 * r * dx} 0")
-            path.push("Z")
-            group.add(path)
-        self._draw.add(group)
-
-    def render_image_marker_object(self, marker: ImageMarker) -> None:
-        group = self._draw.g(clip_path="url(#page)")
-        image = SvgRenderer.create_inline_image(marker.image_data())
-        x, y = self._trans.ll2pixel(marker.latlng())
-        x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
-        for p in range(-x_count, x_count + 1):
-            group.add(
-                self._draw.image(
-                    image,
-                    insert=(p * self._trans.world_width() + x - marker.origin_x(), y - marker.origin_y()),
-                    size=(marker.width(), marker.height()),
-                )
-            )
-        self._draw.add(group)
-
-    def render_line_object(self, line: Line) -> None:
-        if line.width() == 0:
-            return
-        group = self._draw.g(clip_path="url(#page)")
-        xys = [self._trans.ll2pixel(latlng) for latlng in line.interpolate()]
-        x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
-        for p in range(-x_count, x_count + 1):
-            polyline = self._draw.polyline(
-                [(x + p * self._trans.world_width(), y) for x, y in xys],
-                fill="none",
-                stroke=line.color().hex_rgb(),
-                stroke_width=line.width(),
-                opacity=line.color().float_a(),
-            )
-            group.add(polyline)
-        self._draw.add(group)
-
-    def render_area_object(self, area: Area) -> None:
-        group = self._draw.g(clip_path="url(#page)")
-        self._draw.add(group)
-        xys = [self._trans.ll2pixel(latlng) for latlng in area.interpolate()]
-        x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
-        for p in range(-x_count, x_count + 1):
-            polygon = self._draw.polygon(
-                [(x + p * self._trans.world_width(), y) for x, y in xys],
-                fill=area.fill_color().hex_rgb(),
-                opacity=area.fill_color().float_a(),
-            )
-            group.add(polygon)
-        self._draw.add(group)
-        self.render_line_object(area)
 
     def render_attribution(self, attribution: typing.Optional[str]) -> None:
         if (attribution is None) or (attribution == ""):

@@ -9,7 +9,6 @@ import s2sphere  # type: ignore
 from .area import Area
 from .color import Color, RED, TRANSPARENT
 from .coordinates import create_latlng
-from .renderer import Renderer
 
 
 class Circle(Area):
@@ -22,9 +21,6 @@ class Circle(Area):
         width: int = 0,
     ) -> None:
         Area.__init__(self, list(Circle.compute_circle(center, radius_km)), fill_color, color, width)
-
-    def render(self, renderer: Renderer) -> None:
-        renderer.render_area_object(self)
 
     @staticmethod
     def compute_circle(center: s2sphere.LatLng, radius_km: float) -> typing.Iterator[s2sphere.LatLng]:
