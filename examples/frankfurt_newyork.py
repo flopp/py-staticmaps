@@ -16,8 +16,9 @@ context.add_object(staticmaps.Marker(frankfurt, color=staticmaps.GREEN, size=12)
 context.add_object(staticmaps.Marker(newyork, color=staticmaps.RED, size=12))
 
 # render png
-image = context.render_cairo(800, 500)
-image.write_to_png("frankfurt_newyork.png")
+if staticmaps.cairo_is_supported():
+    image = context.render_cairo(800, 500)
+    image.write_to_png("frankfurt_newyork.png")
 
 # render svg
 svg_image = context.render_svg(800, 500)

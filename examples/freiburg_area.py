@@ -445,8 +445,9 @@ context.add_object(
 )
 
 # render png
-image = context.render_cairo(800, 500)
-image.write_to_png("freiburg_area.png")
+if staticmaps.cairo_is_supported():
+    image = context.render_cairo(800, 500)
+    image.write_to_png("freiburg_area.png")
 
 # render svg
 svg_image = context.render_svg(800, 500)

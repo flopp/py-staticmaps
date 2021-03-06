@@ -20,8 +20,9 @@ for _, data in json.loads(response.text).items():
     context.add_object(staticmaps.Marker(capital, size=5))
 
 # render png
-image = context.render_cairo(800, 500)
-image.write_to_png("us_capitals.png")
+if staticmaps.cairo_is_supported():
+    image = context.render_cairo(800, 500)
+    image.write_to_png("us_capitals.png")
 
 # render svg
 svg_image = context.render_svg(800, 500)

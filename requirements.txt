@@ -1,7 +1,6 @@
 appdirs
 geographiclib
 PILLOW
-pycairo
 python-slugify
 requests
 s2sphere

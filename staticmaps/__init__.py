@@ -3,7 +3,7 @@
 
 # flake8: noqa
 from .area import Area
-from .cairo_renderer import CairoRenderer
+from .cairo_renderer import CairoRenderer, cairo_is_supported
 from .circle import Circle
 from .color import (
     parse_color,

@@ -2,6 +2,7 @@
 .env
 .mypy_cache
 .pytest_cache
+.vscode
 *.egg-info
 *.pyc
 *.png

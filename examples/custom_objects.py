@@ -3,7 +3,10 @@
 # py-staticmaps
 # Copyright (c) 2021 Florian Pigorsch; see /LICENSE for licensing information
 
-import cairo  # type: ignore
+try:
+    import cairo  # type: ignore
+except ImportError:
+    pass
 import s2sphere  # type: ignore
 import staticmaps
 
@@ -125,8 +128,9 @@ context.add_object(TextLabel(p3, "This is a very long text label"))
 context.set_tile_provider(staticmaps.tile_provider_CartoDarkNoLabels)
 
 # render png
-image = context.render_cairo(800, 500)
-image.write_to_png("custom_objects.png")
+if staticmaps.cairo_is_supported():
+    image = context.render_cairo(800, 500)
+    image.write_to_png("custom_objects.png")
 
 # render svg
 svg_image = context.render_svg(800, 500)

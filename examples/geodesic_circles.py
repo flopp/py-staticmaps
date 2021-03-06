@@ -15,9 +15,11 @@ context.add_object(staticmaps.Circle(center1, 2000, fill_color=staticmaps.TRANSP
 context.add_object(staticmaps.Circle(center2, 2000, fill_color=staticmaps.TRANSPARENT, color=staticmaps.GREEN, width=2))
 context.add_object(staticmaps.Marker(center1, color=staticmaps.RED))
 context.add_object(staticmaps.Marker(center2, color=staticmaps.GREEN))
+
 # render png
-image = context.render_cairo(800, 600)
-image.write_to_png("geodesic_circles.png")
+if staticmaps.cairo_is_supported():
+    image = context.render_cairo(800, 600)
+    image.write_to_png("geodesic_circles.png")
 
 # render svg
 svg_image = context.render_svg(800, 600)

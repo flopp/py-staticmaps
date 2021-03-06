@@ -3,9 +3,14 @@
 
 import io
 import math
+import sys
 import typing
 
-import cairo  # type: ignore
+try:
+    import cairo  # type: ignore
+except ImportError:
+    pass
+
 from PIL import Image  # type: ignore
 
 from .color import Color, BLACK, WHITE
@@ -17,21 +22,33 @@ if typing.TYPE_CHECKING:
     from .object import Object  # pylint: disable=cyclic-import
 
 
+def cairo_is_supported() -> bool:
+    return "cairo" in sys.modules
+
+
+# Dummy types, so that type annotation works if cairo is missing.
+cairo_Context = typing.Any
+cairo_ImageSurface = typing.Any
+
+
 class CairoRenderer(Renderer):
     def __init__(self, transformer: Transformer) -> None:
         Renderer.__init__(self, transformer)
 
+        if not cairo_is_supported():
+            raise RuntimeError("Cannot render to Cairo since the 'cairo' module could not be imported.")
+
         self._surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, *self._trans.image_size())
         self._context = cairo.Context(self._surface)
 
-    def image_surface(self) -> cairo.ImageSurface:
+    def image_surface(self) -> cairo_ImageSurface:
         return self._surface
 
-    def context(self) -> cairo.Context:
+    def context(self) -> cairo_Context:
         return self._context
 
     @staticmethod
-    def create_image(image_data: bytes) -> cairo.ImageSurface:
+    def create_image(image_data: bytes) -> cairo_ImageSurface:
         image = Image.open(io.BytesIO(image_data))
         if image.format == "PNG":
             return cairo.ImageSurface.create_from_png(io.BytesIO(image_data))
@@ -103,7 +120,7 @@ class CairoRenderer(Renderer):
 
     def fetch_tile(
         self, download: typing.Callable[[int, int, int], typing.Optional[bytes]], x: int, y: int
-    ) -> typing.Optional[cairo.ImageSurface]:
+    ) -> typing.Optional[cairo_ImageSurface]:
         image_data = download(self._trans.zoom(), x, y)
         if image_data is None:
             return None

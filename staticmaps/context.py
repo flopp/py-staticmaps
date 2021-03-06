@@ -3,15 +3,13 @@
 
 import math
 import os
-import sys
 import typing
 
 import appdirs  # type: ignore
-import cairo  # type: ignore
 import s2sphere  # type: ignore
 import svgwrite  # type: ignore
 
-from .cairo_renderer import CairoRenderer
+from .cairo_renderer import CairoRenderer, cairo_is_supported
 from .color import Color
 from .meta import LIB_NAME
 from .object import Object, PixelBoundsT
@@ -54,8 +52,8 @@ class Context:
     def add_object(self, obj: Object) -> None:
         self._objects.append(obj)
 
-    def render_cairo(self, width: int, height: int) -> cairo.ImageSurface:
-        if "cairo" not in sys.modules:
+    def render_cairo(self, width: int, height: int) -> typing.Any:
+        if not cairo_is_supported():
             raise RuntimeError('You need to install the "cairo" module to enable "render_cairo".')
 
         center, zoom = self.determine_center_zoom(width, height)

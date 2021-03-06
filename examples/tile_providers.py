@@ -20,8 +20,9 @@ for name, provider in staticmaps.default_tile_providers.items():
     context.set_tile_provider(provider)
 
     # render png
-    image = context.render_cairo(800, 500)
-    image.write_to_png(f"provider_{name}.png")
+    if staticmaps.cairo_is_supported():
+        image = context.render_cairo(800, 500)
+        image.write_to_png(f"provider_{name}.png")
 
     # render svg
     svg_image = context.render_svg(800, 500)
