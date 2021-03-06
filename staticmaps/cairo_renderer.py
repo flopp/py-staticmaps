@@ -84,7 +84,7 @@ class CairoRenderer(Renderer):
             return
         width, height = self._trans.image_size()
         self._context.select_font_face("Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
-        font_size = 12.0
+        font_size = 9.0
         while True:
             self._context.set_font_size(font_size)
             _, f_descent, f_height, _, _ = self._context.font_extents()

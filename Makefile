@@ -32,6 +32,7 @@ format:
 
 .PHONY: run-examples
 run-examples:
+	(cd examples && PYTHONPATH=.. ../.env/bin/python custom_objects.py)
 	(cd examples && PYTHONPATH=.. ../.env/bin/python draw_gpx.py running.gpx)
 	(cd examples && PYTHONPATH=.. ../.env/bin/python frankfurt_newyork.py)
 	(cd examples && PYTHONPATH=.. ../.env/bin/python freiburg_area.py)

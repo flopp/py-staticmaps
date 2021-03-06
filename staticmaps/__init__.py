@@ -3,6 +3,7 @@
 
 # flake8: noqa
 from .area import Area
+from .cairo_renderer import CairoRenderer
 from .circle import Circle
 from .color import (
     parse_color,
@@ -26,6 +27,7 @@ from .line import Line
 from .marker import Marker
 from .meta import GITHUB_URL, LIB_NAME, VERSION
 from .object import Object, PixelBoundsT
+from .svg_renderer import SvgRenderer
 from .tile_downloader import TileDownloader
 from .tile_provider import (
     TileProvider,
@@ -33,6 +35,10 @@ from .tile_provider import (
     tile_provider_OSM,
     tile_provider_StamenTerrain,
     tile_provider_StamenToner,
+    tile_provider_StamenTonerLite,
     tile_provider_ArcGISWorldImagery,
+    tile_provider_CartoNoLabels,
+    tile_provider_CartoDarkNoLabels,
+    tile_provider_None,
 )
 from .transformer import Transformer
