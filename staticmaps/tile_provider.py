@@ -73,12 +73,36 @@ tile_provider_StamenToner = TileProvider(
     max_zoom=20,
 )
 
+tile_provider_StamenTonerLite = TileProvider(
+    "stamen-toner-lite",
+    url_pattern="http://$s.tile.stamen.com/toner-lite/$z/$x/$y.png",
+    shards=["a", "b", "c", "d"],
+    attribution="Maps (C) Stamen, Data (C) OpenStreetMap.org contributors",
+    max_zoom=20,
+)
+
 tile_provider_ArcGISWorldImagery = TileProvider(
     "arcgis-worldimagery",
     url_pattern="https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/$z/$y/$x",
     attribution="Source: Esri, Maxar, GeoEye, Earthstar Geographics, "
     "CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community",
     max_zoom=24,
+)
+
+tile_provider_CartoNoLabels = TileProvider(
+    "carto_nolabels",
+    url_pattern="http://$s.basemaps.cartocdn.com/rastertiles/light_nolabels/$z/$x/$y.png",
+    shards=["a", "b", "c", "d"],
+    attribution="Maps (C) CARTO (C) OpenStreetMap.org contributors",
+    max_zoom=20,
+)
+
+tile_provider_CartoDarkNoLabels = TileProvider(
+    "carto_darknolabels",
+    url_pattern="http://$s.basemaps.cartocdn.com/rastertiles/dark_nolabels/$z/$x/$y.png",
+    shards=["a", "b", "c", "d"],
+    attribution="Maps (C) CARTO (C) OpenStreetMap.org contributors",
+    max_zoom=20,
 )
 
 tile_provider_None = TileProvider(
@@ -92,6 +116,9 @@ default_tile_providers = {
     tile_provider_OSM.name(): tile_provider_OSM,
     tile_provider_StamenTerrain.name(): tile_provider_StamenTerrain,
     tile_provider_StamenToner.name(): tile_provider_StamenToner,
+    tile_provider_StamenTonerLite.name(): tile_provider_StamenTonerLite,
     tile_provider_ArcGISWorldImagery.name(): tile_provider_ArcGISWorldImagery,
+    tile_provider_CartoNoLabels.name(): tile_provider_CartoNoLabels,
+    tile_provider_CartoDarkNoLabels.name(): tile_provider_CartoDarkNoLabels,
     tile_provider_None.name(): tile_provider_None,
 }
