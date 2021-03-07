@@ -26,10 +26,14 @@ for p in gpx.walk(only_points=True):
     context.add_object(marker)
     break
 
-# render png
+# render png via pillow
+image = context.render_pillow(800, 500)
+image.save("running.pillow.png")
+
+# render png via cairo
 if staticmaps.cairo_is_supported():
     image = context.render_cairo(800, 500)
-    image.write_to_png("running.png")
+    image.write_to_png("running.cairo.png")
 
 # render svg
 svg_image = context.render_svg(800, 500)

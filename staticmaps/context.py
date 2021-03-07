@@ -8,11 +8,13 @@ import typing
 import appdirs  # type: ignore
 import s2sphere  # type: ignore
 import svgwrite  # type: ignore
+from PIL import Image as PIL_Image  # type: ignore
 
 from .cairo_renderer import CairoRenderer, cairo_is_supported
 from .color import Color
 from .meta import LIB_NAME
 from .object import Object, PixelBoundsT
+from .pillow_renderer import PillowRenderer
 from .svg_renderer import SvgRenderer
 from .tile_downloader import TileDownloader
 from .tile_provider import TileProvider, tile_provider_OSM
@@ -69,6 +71,21 @@ class Context:
         renderer.render_attribution(self._tile_provider.attribution())
 
         return renderer.image_surface()
+
+    def render_pillow(self, width: int, height: int) -> PIL_Image:
+        center, zoom = self.determine_center_zoom(width, height)
+        if center is None or zoom is None:
+            raise RuntimeError("Cannot render map without center/zoom.")
+
+        trans = Transformer(width, height, zoom, center, self._tile_provider.tile_size())
+
+        renderer = PillowRenderer(trans)
+        renderer.render_background(self._background_color)
+        renderer.render_tiles(self._fetch_tile)
+        renderer.render_objects(self._objects)
+        renderer.render_attribution(self._tile_provider.attribution())
+
+        return renderer.image()
 
     def render_svg(self, width: int, height: int) -> svgwrite.Drawing:
         center, zoom = self.determine_center_zoom(width, height)

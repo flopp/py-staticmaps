@@ -11,7 +11,7 @@ try:
 except ImportError:
     pass
 
-from PIL import Image  # type: ignore
+from PIL import Image as PIL_Image  # type: ignore
 
 from .color import Color, BLACK, WHITE
 from .renderer import Renderer
@@ -49,7 +49,7 @@ class CairoRenderer(Renderer):
 
     @staticmethod
     def create_image(image_data: bytes) -> cairo_ImageSurface:
-        image = Image.open(io.BytesIO(image_data))
+        image = PIL_Image.open(io.BytesIO(image_data))
         if image.format == "PNG":
             return cairo.ImageSurface.create_from_png(io.BytesIO(image_data))
         png_bytes = io.BytesIO()

@@ -33,43 +33,27 @@ class TextLabel(staticmaps.Object):
         w = max(self._arrow, tw + 2.0 * self._margin)
         return (int(w / 2.0), int(th + 2.0 * self._margin + self._arrow), int(w / 2), 0)
 
-    def render_svg(self, renderer: staticmaps.SvgRenderer) -> None:
+    def render_pillow(self, renderer: staticmaps.PillowRenderer) -> None:
         x, y = renderer.transformer().ll2pixel(self.latlng())
+        x = x + renderer.offset_x()
 
-        # guess text extents
-        tw = len(self._text) * self._font_size * 0.5
-        th = self._font_size * 1.2
-
+        tw, th = renderer.draw().textsize(self._text)
         w = max(self._arrow, tw + 2 * self._margin)
         h = th + 2 * self._margin
 
-        path = renderer.drawing().path(
-            fill="#ffffff",
-            stroke="#ff0000",
-            stroke_width=1,
-            opacity=1.0,
-        )
-        path.push(f"M {x} {y}")
-        path.push(f" l {self._arrow / 2} {-self._arrow}")
-        path.push(f" l {w / 2 - self._arrow / 2} 0")
-        path.push(f" l 0 {-h}")
-        path.push(f" l {-w} 0")
-        path.push(f" l 0 {h}")
-        path.push(f" l {w / 2 - self._arrow / 2} 0")
-        path.push("Z")
-        renderer.group().add(path)
+        path = [
+            (x, y),
+            (x + self._arrow / 2, y - self._arrow),
+            (x + w / 2, y - self._arrow),
+            (x + w / 2, y - self._arrow - h),
+            (x - w / 2, y - self._arrow - h),
+            (x - w / 2, y - self._arrow),
+            (x - self._arrow / 2, y - self._arrow),
+        ]
 
-        renderer.group().add(
-            renderer.drawing().text(
-                self._text,
-                text_anchor="middle",
-                dominant_baseline="central",
-                insert=(x, y - self._arrow - h / 2),
-                font_family="sans-serif",
-                font_size=f"{self._font_size}px",
-                fill="#000000",
-            )
-        )
+        renderer.draw().polygon(path, fill=(255, 255, 255, 255))
+        renderer.draw().line(path, fill=(255, 0, 0, 255))
+        renderer.draw().text((x - tw / 2, y - self._arrow - h / 2 - th / 2), self._text, fill=(0, 0, 0, 255))
 
     def render_cairo(self, renderer: staticmaps.CairoRenderer) -> None:
         x, y = renderer.transformer().ll2pixel(self.latlng())
@@ -114,6 +98,44 @@ class TextLabel(staticmaps.Object):
         ctx.show_text(self._text)
         ctx.stroke()
 
+    def render_svg(self, renderer: staticmaps.SvgRenderer) -> None:
+        x, y = renderer.transformer().ll2pixel(self.latlng())
+
+        # guess text extents
+        tw = len(self._text) * self._font_size * 0.5
+        th = self._font_size * 1.2
+
+        w = max(self._arrow, tw + 2 * self._margin)
+        h = th + 2 * self._margin
+
+        path = renderer.drawing().path(
+            fill="#ffffff",
+            stroke="#ff0000",
+            stroke_width=1,
+            opacity=1.0,
+        )
+        path.push(f"M {x} {y}")
+        path.push(f" l {self._arrow / 2} {-self._arrow}")
+        path.push(f" l {w / 2 - self._arrow / 2} 0")
+        path.push(f" l 0 {-h}")
+        path.push(f" l {-w} 0")
+        path.push(f" l 0 {h}")
+        path.push(f" l {w / 2 - self._arrow / 2} 0")
+        path.push("Z")
+        renderer.group().add(path)
+
+        renderer.group().add(
+            renderer.drawing().text(
+                self._text,
+                text_anchor="middle",
+                dominant_baseline="central",
+                insert=(x, y - self._arrow - h / 2),
+                font_family="sans-serif",
+                font_size=f"{self._font_size}px",
+                fill="#000000",
+            )
+        )
+
 
 context = staticmaps.Context()
 
@@ -127,10 +149,14 @@ context.add_object(TextLabel(p3, "This is a very long text label"))
 
 context.set_tile_provider(staticmaps.tile_provider_CartoDarkNoLabels)
 
-# render png
+# render png via pillow
+image = context.render_pillow(800, 500)
+image.save("custom_objects.pillow.png")
+
+# render png via cairo
 if staticmaps.cairo_is_supported():
     image = context.render_cairo(800, 500)
-    image.write_to_png("custom_objects.png")
+    image.write_to_png("custom_objects.cairo.png")
 
 # render svg
 svg_image = context.render_svg(800, 500)

@@ -6,8 +6,9 @@ import typing
 
 import s2sphere  # type: ignore
 
-from .svg_renderer import SvgRenderer
 from .cairo_renderer import CairoRenderer
+from .pillow_renderer import PillowRenderer
+from .svg_renderer import SvgRenderer
 from .transformer import Transformer
 
 
@@ -25,6 +26,13 @@ class Object(ABC):
     @abstractmethod
     def bounds(self) -> s2sphere.LatLngRect:
         return s2sphere.LatLngRect()
+
+    def render_pillow(self, renderer: PillowRenderer) -> None:
+        # pylint: disable=unused-argument
+        t = "Pillow"
+        c = type(self).__name__
+        m = "render_pillow"
+        raise RuntimeError(f"Cannot render to {t} since the class '{c}' doesn't implement the '{m}' method.")
 
     def render_svg(self, renderer: SvgRenderer) -> None:
         # pylint: disable=unused-argument

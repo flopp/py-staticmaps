@@ -27,6 +27,7 @@ from .line import Line
 from .marker import Marker
 from .meta import GITHUB_URL, LIB_NAME, VERSION
 from .object import Object, PixelBoundsT
+from .pillow_renderer import PillowRenderer
 from .svg_renderer import SvgRenderer
 from .tile_downloader import TileDownloader
 from .tile_provider import (

@@ -8,6 +8,7 @@ import s2sphere  # type: ignore
 from .color import Color, RED
 from .object import Object, PixelBoundsT
 from .cairo_renderer import CairoRenderer
+from .pillow_renderer import PillowRenderer
 from .svg_renderer import SvgRenderer
 
 
@@ -32,6 +33,28 @@ class Marker(Object):
 
     def extra_pixel_bounds(self) -> PixelBoundsT:
         return self._size, self._size, self._size, 0
+
+    def render_pillow(self, renderer: PillowRenderer) -> None:
+        x, y = renderer.transformer().ll2pixel(self.latlng())
+        x = x + renderer.offset_x()
+
+        r = self.size()
+        dx = math.sin(math.pi / 3.0)
+        dy = math.cos(math.pi / 3.0)
+        cy = y - 2 * r
+
+        renderer.draw().chord([(x - r, cy - r), (x + r, cy + r)], 150, 30, fill=self.color().text_color().int_rgba())
+        renderer.draw().polygon(
+            [(x, y), (x - dx * r, cy + dy * r), (x + dx * r, cy + dy * r)], fill=self.color().text_color().int_rgba()
+        )
+
+        renderer.draw().polygon(
+            [(x, y - 1), (x - dx * (r - 1), cy + dy * (r - 1)), (x + dx * (r - 1), cy + dy * (r - 1))],
+            fill=self.color().int_rgba(),
+        )
+        renderer.draw().chord(
+            [(x - (r - 1), cy - (r - 1)), (x + (r - 1), cy + (r - 1))], 150, 30, fill=self.color().int_rgba()
+        )
 
     def render_svg(self, renderer: SvgRenderer) -> None:
         x, y = renderer.transformer().ll2pixel(self.latlng())

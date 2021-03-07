@@ -11,6 +11,7 @@ from .color import Color, RED
 from .coordinates import create_latlng
 from .object import Object, PixelBoundsT
 from .cairo_renderer import CairoRenderer
+from .pillow_renderer import PillowRenderer
 from .svg_renderer import SvgRenderer
 
 
@@ -77,6 +78,15 @@ class Line(Object):
             self._interpolation_cache.append(current)
             last = current
         return self._interpolation_cache
+
+    def render_pillow(self, renderer: PillowRenderer) -> None:
+        if self.width() == 0:
+            return
+        xys = [
+            (x + renderer.offset_x(), y)
+            for (x, y) in [renderer.transformer().ll2pixel(latlng) for latlng in self.interpolate()]
+        ]
+        renderer.draw().line(xys, self.color().int_rgba(), self.width())
 
     def render_svg(self, renderer: SvgRenderer) -> None:
         if self.width() == 0:

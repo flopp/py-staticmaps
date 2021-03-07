@@ -3,11 +3,14 @@
 
 import typing
 
+from PIL import Image as PIL_Image  # type: ignore
+from PIL import ImageDraw as PIL_ImageDraw  # type: ignore
 import s2sphere  # type: ignore
 
 from .cairo_renderer import CairoRenderer
 from .color import Color, RED, TRANSPARENT
 from .line import Line
+from .pillow_renderer import PillowRenderer
 from .svg_renderer import SvgRenderer
 
 
@@ -23,6 +26,18 @@ class Area(Line):
 
     def fill_color(self) -> Color:
         return self._fill_color
+
+    def render_pillow(self, renderer: PillowRenderer) -> None:
+        xys = [
+            (x + renderer.offset_x(), y)
+            for (x, y) in [renderer.transformer().ll2pixel(latlng) for latlng in self.interpolate()]
+        ]
+        overlay = PIL_Image.new("RGBA", renderer.image().size)
+        draw = PIL_ImageDraw.Draw(overlay)
+        draw.polygon(xys, fill=self.fill_color().int_rgba())
+        renderer.alpha_compose(overlay, (0, 0))
+        if self.width() > 0:
+            renderer.draw().line(xys, fill=self.color().int_rgba(), width=self.width())
 
     def render_svg(self, renderer: SvgRenderer) -> None:
         xys = [renderer.transformer().ll2pixel(latlng) for latlng in self.interpolate()]

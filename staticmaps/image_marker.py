@@ -5,10 +5,11 @@ import io
 import typing
 
 import s2sphere  # type: ignore
-from PIL import Image  # type: ignore
+from PIL import Image as PIL_Image  # type: ignore
 
-from .object import Object, PixelBoundsT
 from .cairo_renderer import CairoRenderer
+from .object import Object, PixelBoundsT
+from .pillow_renderer import PillowRenderer
 from .svg_renderer import SvgRenderer
 
 
@@ -59,6 +60,17 @@ class ImageMarker(Object):
             max(0, self.height() - self._origin_y),
         )
 
+    def render_pillow(self, renderer: PillowRenderer) -> None:
+        x, y = renderer.transformer().ll2pixel(self.latlng())
+        image = renderer.create_image(self.image_data())
+        renderer.alpha_compose(
+            image,
+            (
+                int(x - self.origin_x() + renderer.offset_x()),
+                int(y - self.origin_y()),
+            ),
+        )
+
     def render_svg(self, renderer: SvgRenderer) -> None:
         x, y = renderer.transformer().ll2pixel(self.latlng())
         image = renderer.create_inline_image(self.image_data())
@@ -82,5 +94,5 @@ class ImageMarker(Object):
     def load_image_data(self) -> None:
         with open(self._png_file, "rb") as f:
             self._image_data = f.read()
-        image = Image.open(io.BytesIO(self._image_data))
+        image = PIL_Image.open(io.BytesIO(self._image_data))
         self._width, self._height = image.size

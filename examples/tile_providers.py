@@ -19,10 +19,14 @@ context.add_object(staticmaps.Marker(p3, color=staticmaps.YELLOW))
 for name, provider in staticmaps.default_tile_providers.items():
     context.set_tile_provider(provider)
 
-    # render png
+    # render png via pillow
+    image = context.render_pillow(800, 500)
+    image.save(f"provider_{name}.pillow.png")
+
+    # render png via cairo
     if staticmaps.cairo_is_supported():
         image = context.render_cairo(800, 500)
-        image.write_to_png(f"provider_{name}.png")
+        image.write_to_png(f"provider_{name}.cairo.png")
 
     # render svg
     svg_image = context.render_svg(800, 500)

@@ -438,16 +438,20 @@ freiburg_polygon = [
 context.add_object(
     staticmaps.Area(
         [staticmaps.create_latlng(lat, lng) for lat, lng in freiburg_polygon],
-        fill_color=staticmaps.parse_color("#00FF003F"),
+        fill_color=staticmaps.parse_color("#00FF007F"),
         width=2,
         color=staticmaps.BLUE,
     )
 )
 
-# render png
+# render png via pillow
+image = context.render_pillow(800, 500)
+image.save("freiburg_area.pillow.png")
+
+# render png via cairo
 if staticmaps.cairo_is_supported():
     image = context.render_cairo(800, 500)
-    image.write_to_png("freiburg_area.png")
+    image.write_to_png("freiburg_area.cairo.png")
 
 # render svg
 svg_image = context.render_svg(800, 500)

@@ -28,6 +28,12 @@ class Color:
     def hex_rgb(self) -> str:
         return f"#{self._r:02x}{self._g:02x}{self._b:02x}"
 
+    def int_rgb(self) -> typing.Tuple[int, int, int]:
+        return self._r, self._g, self._b
+
+    def int_rgba(self) -> typing.Tuple[int, int, int, int]:
+        return self._r, self._g, self._b, self._a
+
     def float_rgb(self) -> typing.Tuple[float, float, float]:
         return self._r / 255.0, self._g / 255.0, self._b / 255.0
 

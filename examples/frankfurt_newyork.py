@@ -15,10 +15,14 @@ context.add_object(staticmaps.Line([frankfurt, newyork], color=staticmaps.BLUE, 
 context.add_object(staticmaps.Marker(frankfurt, color=staticmaps.GREEN, size=12))
 context.add_object(staticmaps.Marker(newyork, color=staticmaps.RED, size=12))
 
-# render png
+# render png via pillow
+image = context.render_pillow(800, 500)
+image.save("frankfurt_newyork.pillow.png")
+
+# render png via cairo
 if staticmaps.cairo_is_supported():
     image = context.render_cairo(800, 500)
-    image.write_to_png("frankfurt_newyork.png")
+    image.write_to_png("frankfurt_newyork.cairo.png")
 
 # render svg
 svg_image = context.render_svg(800, 500)

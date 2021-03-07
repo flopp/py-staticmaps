@@ -19,10 +19,14 @@ for _, data in json.loads(response.text).items():
     capital = staticmaps.create_latlng(float(data["lat"]), float(data["long"]))
     context.add_object(staticmaps.Marker(capital, size=5))
 
-# render png
+# render png via pillow
+image = context.render_pillow(800, 500)
+image.save("us_capitals.pillow.png")
+
+# render png via cairo
 if staticmaps.cairo_is_supported():
     image = context.render_cairo(800, 500)
-    image.write_to_png("us_capitals.png")
+    image.write_to_png("us_capitals.cairo.png")
 
 # render svg
 svg_image = context.render_svg(800, 500)
