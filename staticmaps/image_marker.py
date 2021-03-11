@@ -63,13 +63,16 @@ class ImageMarker(Object):
     def render_pillow(self, renderer: PillowRenderer) -> None:
         x, y = renderer.transformer().ll2pixel(self.latlng())
         image = renderer.create_image(self.image_data())
-        renderer.alpha_compose(
+        overlay = PIL_Image.new("RGBA", renderer.image().size, (255, 255, 255, 0))
+        overlay.paste(
             image,
             (
                 int(x - self.origin_x() + renderer.offset_x()),
                 int(y - self.origin_y()),
             ),
+            mask=image
         )
+        renderer.alpha_compose(overlay)
 
     def render_svg(self, renderer: SvgRenderer) -> None:
         x, y = renderer.transformer().ll2pixel(self.latlng())

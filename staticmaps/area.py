@@ -32,10 +32,10 @@ class Area(Line):
             (x + renderer.offset_x(), y)
             for (x, y) in [renderer.transformer().ll2pixel(latlng) for latlng in self.interpolate()]
         ]
-        overlay = PIL_Image.new("RGBA", renderer.image().size)
+        overlay = PIL_Image.new("RGBA", renderer.image().size, (255, 255, 255, 0))
         draw = PIL_ImageDraw.Draw(overlay)
         draw.polygon(xys, fill=self.fill_color().int_rgba())
-        renderer.alpha_compose(overlay, (0, 0))
+        renderer.alpha_compose(overlay)
         if self.width() > 0:
             renderer.draw().line(xys, fill=self.color().int_rgba(), width=self.width())
 

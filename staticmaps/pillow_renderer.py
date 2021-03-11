@@ -33,10 +33,9 @@ class PillowRenderer(Renderer):
     def offset_x(self) -> int:
         return self._offset_x
 
-    def alpha_compose(self, image: PIL_Image.Image, position: typing.Tuple[int, int]) -> None:
-        image2 = PIL_Image.new("RGBA", self._image.size)
-        image2.paste(image, position, mask=image)
-        self._image = PIL_Image.alpha_composite(self._image, image2)
+    def alpha_compose(self, image: PIL_Image.Image) -> None:
+        assert image.size == self._image.size
+        self._image = PIL_Image.alpha_composite(self._image, image)
         self._draw = PIL_ImageDraw.Draw(self._image)
 
     def render_objects(self, objects: typing.List["Object"]) -> None:
@@ -79,10 +78,10 @@ class PillowRenderer(Renderer):
         _, th = self.draw().textsize(attribution)
         w = self._trans.image_width()
         h = self._trans.image_height()
-        overlay = PIL_Image.new("RGBA", (w, h), (255, 255, 255, 0))
+        overlay = PIL_Image.new("RGBA", self._image.size, (255, 255, 255, 0))
         draw = PIL_ImageDraw.Draw(overlay)
-        draw.rectangle([(0, h - th - 2 * margin), (w, h)], fill=(255, 255, 255, 230))
-        self.alpha_compose(overlay, (0, 0))
+        draw.rectangle([(0, h - th - 2 * margin), (w, h)], fill=(255, 255, 255, 204))
+        self.alpha_compose(overlay)
         self.draw().text((margin, h - th - margin), attribution, fill=(0, 0, 0, 255))
 
     def fetch_tile(
