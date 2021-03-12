@@ -70,7 +70,7 @@ class ImageMarker(Object):
                 int(x - self.origin_x() + renderer.offset_x()),
                 int(y - self.origin_y()),
             ),
-            mask=image
+            mask=image,
         )
         renderer.alpha_compose(overlay)
 
