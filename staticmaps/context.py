@@ -26,6 +26,7 @@ class Context:
         self._background_color: typing.Optional[Color] = None
         self._objects: typing.List[Object] = []
         self._center: typing.Optional[s2sphere.LatLng] = None
+        self._bounds: typing.Optional[s2sphere.LatLngRect] = None
         self._zoom: typing.Optional[int] = None
         self._tile_provider = tile_provider_OSM
         self._tile_downloader = TileDownloader()
@@ -38,6 +39,9 @@ class Context:
 
     def set_center(self, latlng: s2sphere.LatLng) -> None:
         self._center = latlng
+
+    def set_bounds(self, latlngrect: s2sphere.LatLngRect) -> None:
+        self._bounds = latlngrect
 
     def set_background_color(self, color: Color) -> None:
         self._background_color = color
@@ -103,12 +107,26 @@ class Context:
         return renderer.drawing()
 
     def object_bounds(self) -> typing.Optional[s2sphere.LatLngRect]:
-        if len(self._objects) == 0:
-            return None
-        bounds = s2sphere.LatLngRect()
-        for obj in self._objects:
-            bounds = bounds.union(obj.bounds())
-        return bounds
+        bounds = None
+        if len(self._objects) != 0:
+            bounds = s2sphere.LatLngRect()
+            for obj in self._objects:
+                bounds = bounds.union(obj.bounds())
+        return self.custom_bounds(bounds)
+
+    def custom_bounds(self, bounds: s2sphere.LatLngRect) -> typing.Optional[s2sphere.LatLngRect]:
+        """check for custom bounds and return the union with object bounds
+
+        :param bounds: boundaries from objects
+        :type bounds: s2sphere.LatLngRect
+        :return: return the union with object bounds
+        :rtype s2sphere.LatLngRect
+        """
+        if not self._bounds:
+            return bounds
+        if not bounds:
+            return self._bounds
+        return bounds.union(self._bounds)
 
     def extra_pixel_bounds(self) -> PixelBoundsT:
         max_l, max_t, max_r, max_b = 0, 0, 0, 0
