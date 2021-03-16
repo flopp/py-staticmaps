@@ -22,6 +22,7 @@ from .transformer import Transformer
 
 
 class Context:
+    # pylint: disable=too-many-instance-attributes
     def __init__(self) -> None:
         self._background_color: typing.Optional[Color] = None
         self._objects: typing.List[Object] = []
