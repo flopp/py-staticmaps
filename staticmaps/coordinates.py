@@ -39,13 +39,14 @@ def parse_latlngs(s: str) -> typing.List[s2sphere.LatLng]:
 def parse_latlngs2rect(s: str) -> s2sphere.LatLngRect:
     """Return a LatLngRect from a given Lat,Lng pair
 
-    :param s: string with given comma separated Lat,Lng pairs
+    :param s: string with given exactly two comma separated Lat,Lng pairs
     :type s: str
     :return: LatLngRect from LatLng pair
-    .:rtype: s2sphere.LatLngRect
+    :rtype: s2sphere.LatLngRect
+    :raises ValueError: exactly two lat/lng pairs must be given as argument
     """
     latlngs = parse_latlngs(s)
-    if not len(latlngs) == 2:
+    if len(latlngs) != 2:
         raise ValueError(f'Cannot parse coordinates string "{s}" (requires exactly two lat/lng pairs)')
 
     return s2sphere.LatLngRect.from_point_pair(latlngs[0], latlngs[1])
