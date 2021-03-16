@@ -122,7 +122,7 @@ def main() -> None:
         for coords in args.marker:
             context.add_object(staticmaps.Marker(staticmaps.parse_latlng(coords)))
     if args.bounds is not None:
-        context.set_bounds(staticmaps.parse_latlngs2rect(args.bounds))
+        context.add_bounds(staticmaps.parse_latlngs2rect(args.bounds))
 
     file_name = args.filename[0]
     if determine_file_format(args.file_format, file_name) == FileFormat.PNG:

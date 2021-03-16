@@ -40,9 +40,6 @@ class Context:
     def set_center(self, latlng: s2sphere.LatLng) -> None:
         self._center = latlng
 
-    def set_bounds(self, latlngrect: s2sphere.LatLngRect) -> None:
-        self._bounds = latlngrect
-
     def set_background_color(self, color: Color) -> None:
         self._background_color = color
 
@@ -57,6 +54,9 @@ class Context:
 
     def add_object(self, obj: Object) -> None:
         self._objects.append(obj)
+
+    def add_bounds(self, latlngrect: s2sphere.LatLngRect) -> None:
+        self._bounds = latlngrect
 
     def render_cairo(self, width: int, height: int) -> typing.Any:
         if not cairo_is_supported():
@@ -112,9 +112,9 @@ class Context:
             bounds = s2sphere.LatLngRect()
             for obj in self._objects:
                 bounds = bounds.union(obj.bounds())
-        return self.custom_bounds(bounds)
+        return self._custom_bounds(bounds)
 
-    def custom_bounds(self, bounds: s2sphere.LatLngRect) -> typing.Optional[s2sphere.LatLngRect]:
+    def _custom_bounds(self, bounds: s2sphere.LatLngRect) -> typing.Optional[s2sphere.LatLngRect]:
         """check for custom bounds and return the union with object bounds
 
         :param bounds: boundaries from objects
