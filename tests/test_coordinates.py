@@ -40,3 +40,15 @@ def test_parse_latlngs() -> None:
     for s in bad:
         with pytest.raises(ValueError):
             staticmaps.parse_latlngs(s)
+
+
+def test_parse_latlngs2rect() -> None:
+    good = ["48,8 47,7", "   48,8    47,7   "]
+    for s in good:
+        r = staticmaps.parse_latlngs2rect(s)
+        assert r.is_valid()
+
+    bad = ["xyz", "48,8 xyz", "48,8 48,181", "48,7", "48,7 48,8 47,7"]
+    for s in bad:
+        with pytest.raises(ValueError):
+            staticmaps.parse_latlngs2rect(s)
