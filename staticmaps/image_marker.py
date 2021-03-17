@@ -25,34 +25,74 @@ class ImageMarker(Object):
         self._image_data: typing.Optional[bytes] = None
 
     def origin_x(self) -> int:
+        """Return x origin of the image marker
+
+        :return: x origin of the image marker
+        :rtype: int
+        """
         return self._origin_x
 
     def origin_y(self) -> int:
+        """Return y origin of the image marker
+
+        :return: y origin of the image marker
+        :rtype: int
+        """
         return self._origin_y
 
     def width(self) -> int:
+        """Return width of the image marker
+
+        :return: width of the image marker
+        :rtype: int
+        """
         if self._image_data is None:
             self.load_image_data()
         return self._width
 
     def height(self) -> int:
+        """Return height of the image marker
+
+        :return: height of the image marker
+        :rtype: int
+        """
         if self._image_data is None:
             self.load_image_data()
         return self._height
 
     def image_data(self) -> bytes:
+        """Return image data of the image marker
+
+        :return: image data of the image marker
+        :rtype: bytes
+        """
         if self._image_data is None:
             self.load_image_data()
         assert self._image_data
         return self._image_data
 
     def latlng(self) -> s2sphere.LatLng:
+        """Return LatLng of the image marker
+
+        :return: LatLng of the image marker
+        :rtype: s2sphere.LatLng
+        """
         return self._latlng
 
     def bounds(self) -> s2sphere.LatLngRect:
+        """Return bounds of the image marker
+
+        :return: bounds of the image marker
+        :rtype: s2sphere.LatLngRect
+        """
         return s2sphere.LatLngRect.from_point(self._latlng)
 
     def extra_pixel_bounds(self) -> PixelBoundsT:
+        """Return extra pixel bounds of the image marker
+
+        :return: extra pixel bounds of the image marker
+        :rtype: PixelBoundsT
+        """
         return (
             max(0, self._origin_x),
             max(0, self._origin_y),
@@ -61,6 +101,11 @@ class ImageMarker(Object):
         )
 
     def render_pillow(self, renderer: PillowRenderer) -> None:
+        """Render marker using PILLOW
+
+        :param renderer: pillow renderer
+        :type renderer: PillowRenderer
+        """
         x, y = renderer.transformer().ll2pixel(self.latlng())
         image = renderer.create_image(self.image_data())
         overlay = PIL_Image.new("RGBA", renderer.image().size, (255, 255, 255, 0))
@@ -75,6 +120,11 @@ class ImageMarker(Object):
         renderer.alpha_compose(overlay)
 
     def render_svg(self, renderer: SvgRenderer) -> None:
+        """Render marker using svgwrite
+
+        :param renderer: svg renderer
+        :type renderer: SvgRenderer
+        """
         x, y = renderer.transformer().ll2pixel(self.latlng())
         image = renderer.create_inline_image(self.image_data())
 
@@ -87,6 +137,11 @@ class ImageMarker(Object):
         )
 
     def render_cairo(self, renderer: CairoRenderer) -> None:
+        """Render marker using cairo
+
+        :param renderer: cairo renderer
+        :type renderer: CairoRenderer
+        """
         x, y = renderer.transformer().ll2pixel(self.latlng())
         image = renderer.create_image(self.image_data())
 
@@ -95,6 +150,7 @@ class ImageMarker(Object):
         renderer.context().paint()
 
     def load_image_data(self) -> None:
+        """Load image data for the image marker"""
         with open(self._png_file, "rb") as f:
             self._image_data = f.read()
         image = PIL_Image.open(io.BytesIO(self._image_data))

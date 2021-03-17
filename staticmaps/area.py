@@ -15,6 +15,11 @@ from .svg_renderer import SvgRenderer
 
 
 class Area(Line):
+    """Render an area using different renderers
+
+    :param master: A line object
+    """
+
     def __init__(
         self, latlngs: typing.List[s2sphere.LatLng], fill_color: Color = RED, color: Color = TRANSPARENT, width: int = 0
     ) -> None:
@@ -25,9 +30,19 @@ class Area(Line):
         self._fill_color = fill_color
 
     def fill_color(self) -> Color:
+        """Return fill color of the area
+
+        :return: color object
+        :rtype: Color
+        """
         return self._fill_color
 
     def render_pillow(self, renderer: PillowRenderer) -> None:
+        """Render area using PILLOW
+
+        :param renderer: pillow renderer
+        :type renderer: PillowRenderer
+        """
         xys = [
             (x + renderer.offset_x(), y)
             for (x, y) in [renderer.transformer().ll2pixel(latlng) for latlng in self.interpolate()]
@@ -40,6 +55,11 @@ class Area(Line):
             renderer.draw().line(xys, fill=self.color().int_rgba(), width=self.width())
 
     def render_svg(self, renderer: SvgRenderer) -> None:
+        """Render area using svgwrite
+
+        :param renderer: svg renderer
+        :type renderer: SvgRenderer
+        """
         xys = [renderer.transformer().ll2pixel(latlng) for latlng in self.interpolate()]
 
         polygon = renderer.drawing().polygon(
@@ -60,6 +80,11 @@ class Area(Line):
             renderer.group().add(polyline)
 
     def render_cairo(self, renderer: CairoRenderer) -> None:
+        """Render area using cairo
+
+        :param renderer: cairo renderer
+        :type renderer: CairoRenderer
+        """
         xys = [renderer.transformer().ll2pixel(latlng) for latlng in self.interpolate()]
 
         renderer.context().set_source_rgba(*self.fill_color().float_rgba())
