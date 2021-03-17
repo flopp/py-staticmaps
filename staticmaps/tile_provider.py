@@ -90,7 +90,7 @@ tile_provider_ArcGISWorldImagery = TileProvider(
 )
 
 tile_provider_CartoNoLabels = TileProvider(
-    "carto_nolabels",
+    "carto-nolabels",
     url_pattern="http://$s.basemaps.cartocdn.com/rastertiles/light_nolabels/$z/$x/$y.png",
     shards=["a", "b", "c", "d"],
     attribution="Maps (C) CARTO (C) OpenStreetMap.org contributors",
@@ -98,7 +98,7 @@ tile_provider_CartoNoLabels = TileProvider(
 )
 
 tile_provider_CartoDarkNoLabels = TileProvider(
-    "carto_darknolabels",
+    "carto-darknolabels",
     url_pattern="http://$s.basemaps.cartocdn.com/rastertiles/dark_nolabels/$z/$x/$y.png",
     shards=["a", "b", "c", "d"],
     attribution="Maps (C) CARTO (C) OpenStreetMap.org contributors",
