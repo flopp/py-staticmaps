@@ -9,6 +9,8 @@ import s2sphere  # type: ignore
 
 # pylint: disable=too-many-instance-attributes
 class Transformer:
+    """Base class for transforming values"""
+
     def __init__(self, width: int, height: int, zoom: int, center: s2sphere.LatLng, tile_size: int) -> None:
         self._zoom = zoom
         self._number_of_tiles = 2 ** zoom
@@ -35,18 +37,45 @@ class Transformer:
         self._tile_offset_y = height / 2 - int((self._tile_center_y - self._first_tile_y) * tile_size)
 
     def world_width(self) -> int:
+        """Return the width of the world in pixels depending on tiles provider
+
+        :return: width of the world in pixels
+        :rtype: int
+        """
         return self._number_of_tiles * self._tile_size
 
     def image_width(self) -> int:
+        """Return the width of the image in pixels
+
+        :return: width of the image in pixels
+        :rtype: int
+        """
         return self._width
 
     def image_height(self) -> int:
+        """Return the height of the image in pixels
+
+        :return: height of the image in pixels
+        :rtype: int
+        """
         return self._height
 
     def zoom(self) -> int:
+        """Return the zoom of the static map
+
+        :return: zoom of the static map
+        :rtype: int
+        """
+
         return self._zoom
 
     def image_size(self) -> typing.Tuple[int, int]:
+        """Return the size of the image as tuple of width and height
+
+        :return: width and height of the image in pixels
+        :rtype: tuple
+        """
+
         return self._width, self._height
 
     def number_of_tiles(self) -> int:

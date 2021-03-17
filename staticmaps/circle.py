@@ -12,6 +12,11 @@ from .coordinates import create_latlng
 
 
 class Circle(Area):
+    """Render a circle using different renderers
+
+    :param master: an area object
+    """
+
     def __init__(
         self,
         center: s2sphere.LatLng,
@@ -24,6 +29,16 @@ class Circle(Area):
 
     @staticmethod
     def compute_circle(center: s2sphere.LatLng, radius_km: float) -> typing.Iterator[s2sphere.LatLng]:
+        """Compute a circle with given center and radius
+
+        :param center: Center of the circle
+        :param radius_km: Radius of the circle
+        :type center: s2sphere.LatLng
+        :type radius_km: float
+
+        :return: circle
+        :rtype: typing.Iterator[s2sphere.LatLng]
+        """
         first = None
         delta_angle = 0.1
         angle = 0.0

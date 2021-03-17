@@ -29,21 +29,46 @@ class Line(Object):
         self._interpolation_cache: typing.Optional[typing.List[s2sphere.LatLng]] = None
 
     def color(self) -> Color:
+        """Return color of the line
+
+        :return: color object
+        :rtype: Color
+        """
         return self._color
 
     def width(self) -> int:
+        """Return width of line
+
+        :return: width
+        :rtype: int
+        """
         return self._width
 
     def bounds(self) -> s2sphere.LatLngRect:
+        """Return bounds of line
+
+        :return: bounds of line
+        :rtype: s2sphere.LatLngRect
+        """
         b = s2sphere.LatLngRect()
         for latlng in self.interpolate():
             b = b.union(s2sphere.LatLngRect.from_point(latlng.normalized()))
         return b
 
     def extra_pixel_bounds(self) -> PixelBoundsT:
+        """Return extra pixel bounds from line
+
+        :return: extra pixel bounds
+        :rtype: PixelBoundsT
+        """
         return self._width, self._width, self._width, self._width
 
     def interpolate(self) -> typing.List[s2sphere.LatLng]:
+        """Interpolate bounds
+
+        :return: list of LatLng
+        :rtype: typing.List[s2sphere.LatLng]
+        """
         if self._interpolation_cache is not None:
             return self._interpolation_cache
         assert len(self._latlngs) >= 2
@@ -80,6 +105,11 @@ class Line(Object):
         return self._interpolation_cache
 
     def render_pillow(self, renderer: PillowRenderer) -> None:
+        """Render line using PILLOW
+
+        :param renderer: pillow renderer
+        :type renderer: PillowRenderer
+        """
         if self.width() == 0:
             return
         xys = [
@@ -89,6 +119,11 @@ class Line(Object):
         renderer.draw().line(xys, self.color().int_rgba(), self.width())
 
     def render_svg(self, renderer: SvgRenderer) -> None:
+        """Render line using svgwrite
+
+        :param renderer: svg renderer
+        :type renderer: SvgRenderer
+        """
         if self.width() == 0:
             return
         xys = [renderer.transformer().ll2pixel(latlng) for latlng in self.interpolate()]
@@ -102,6 +137,11 @@ class Line(Object):
         renderer.group().add(polyline)
 
     def render_cairo(self, renderer: CairoRenderer) -> None:
+        """Render line using cairo
+
+        :param renderer: cairo renderer
+        :type renderer: CairoRenderer
+        """
         if self.width() == 0:
             return
         xys = [renderer.transformer().ll2pixel(latlng) for latlng in self.interpolate()]

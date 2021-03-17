@@ -20,21 +20,51 @@ class Marker(Object):
         self._size = size
 
     def latlng(self) -> s2sphere.LatLng:
+        """Return LatLng of the marker
+
+        :return: LatLng of the marker
+        :rtype: s2sphere.LatLng
+        """
         return self._latlng
 
     def color(self) -> Color:
+        """Return color of the marker
+
+        :return: color object
+        :rtype: Color
+        """
         return self._color
 
     def size(self) -> int:
+        """Return size of the marker
+
+        :return: size of the marker
+        :rtype: int
+        """
         return self._size
 
     def bounds(self) -> s2sphere.LatLngRect:
+        """Return bounds of the marker
+
+        :return: bounds of the marker
+        :rtype: s2sphere.LatLngRect
+        """
         return s2sphere.LatLngRect.from_point(self._latlng)
 
     def extra_pixel_bounds(self) -> PixelBoundsT:
+        """Return extra pixel bounds of the marker
+
+        :return: extra pixel bounds of the marker
+        :rtype: PixelBoundsT
+        """
         return self._size, self._size, self._size, 0
 
     def render_pillow(self, renderer: PillowRenderer) -> None:
+        """Render marker using PILLOW
+
+        :param renderer: pillow renderer
+        :type renderer: PillowRenderer
+        """
         x, y = renderer.transformer().ll2pixel(self.latlng())
         x = x + renderer.offset_x()
 
@@ -57,6 +87,11 @@ class Marker(Object):
         )
 
     def render_svg(self, renderer: SvgRenderer) -> None:
+        """Render marker using svgwrite
+
+        :param renderer: svg renderer
+        :type renderer: SvgRenderer
+        """
         x, y = renderer.transformer().ll2pixel(self.latlng())
         r = self.size()
         dx = math.sin(math.pi / 3.0)
@@ -74,6 +109,11 @@ class Marker(Object):
         renderer.group().add(path)
 
     def render_cairo(self, renderer: CairoRenderer) -> None:
+        """Render marker using cairo
+
+        :param renderer: cairo renderer
+        :type renderer: CairoRenderer
+        """
         x, y = renderer.transformer().ll2pixel(self.latlng())
         r = self.size()
         dx = math.sin(math.pi / 3.0)
