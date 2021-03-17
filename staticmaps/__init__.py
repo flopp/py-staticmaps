@@ -21,7 +21,7 @@ from .color import (
     TRANSPARENT,
 )
 from .context import Context
-from .coordinates import create_latlng, parse_latlng, parse_latlngs
+from .coordinates import create_latlng, parse_latlng, parse_latlngs, parse_latlngs2rect
 from .image_marker import ImageMarker
 from .line import Line
 from .marker import Marker
