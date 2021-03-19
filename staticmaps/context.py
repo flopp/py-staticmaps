@@ -34,32 +34,84 @@ class Context:
         self._cache_dir = os.path.join(appdirs.user_cache_dir(LIB_NAME), "tiles")
 
     def set_zoom(self, zoom: int) -> None:
+        """Set zoom for static map
+
+        :param zoom:  zoom for static map
+        :type zoom: int
+        :raises ValueError: raises value error for invalid zoom factors
+        """
         if zoom < 0 or zoom > 30:
             raise ValueError("Bad zoom value: {}".format(zoom))
         self._zoom = zoom
 
     def set_center(self, latlng: s2sphere.LatLng) -> None:
+        """Set center for static map
+
+        :param latlng: zoom for static map
+        :type latlng: s2sphere.LatLng
+        """
         self._center = latlng
 
     def set_background_color(self, color: Color) -> None:
+        """Set background color for static map
+
+        :param color: background color for static map
+        :type color: s2sphere.LatLng
+        """
         self._background_color = color
 
     def set_cache_dir(self, directory: str) -> None:
+        """Set cache dir
+
+        :param directory: cache directory
+        :type directory: str
+        """
         self._cache_dir = directory
 
     def set_tile_downloader(self, downloader: TileDownloader) -> None:
+        """Set tile downloader
+
+        :param downloader: tile downloader
+        :type downloader: TileDownloader
+        """
         self._tile_downloader = downloader
 
     def set_tile_provider(self, provider: TileProvider) -> None:
+        """Set tile provider
+
+        :param provider: tile provider
+        :type provider: TileProvider
+        """
         self._tile_provider = provider
 
     def add_object(self, obj: Object) -> None:
+        """Add object for the static map (e.g. line, area, marker)
+
+        :param obj: map object
+        :type obj: Object
+        """
         self._objects.append(obj)
 
     def add_bounds(self, latlngrect: s2sphere.LatLngRect) -> None:
+        """Add boundaries that shall be respected by the static map
+
+        :param latlngrect: boundaries to be respected
+        :type latlngrect: s2sphere.LatLngRect
+        """
         self._bounds = latlngrect
 
     def render_cairo(self, width: int, height: int) -> typing.Any:
+        """Render area using cairo
+
+        :param width: width of static map
+        :type width: int
+        :param height: height of static map
+        :type height: int
+        :return: cairo image
+        :rtype: cairo.ImageSurface
+        :raises RuntimeError: raises runtime error if cairo is not available
+        :raises RuntimeError: raises runtime error if map has no center and zoom
+        """
         if not cairo_is_supported():
             raise RuntimeError('You need to install the "cairo" module to enable "render_cairo".')
 
@@ -78,6 +130,16 @@ class Context:
         return renderer.image_surface()
 
     def render_pillow(self, width: int, height: int) -> PIL_Image:
+        """Render context using PILLOW
+
+        :param width: width of static map
+        :type width: int
+        :param height: height of static map
+        :type height: int
+        :return: pillow image
+        :rtype: PIL_Image
+        :raises RuntimeError: raises runtime error if map has no center and zoom
+        """
         center, zoom = self.determine_center_zoom(width, height)
         if center is None or zoom is None:
             raise RuntimeError("Cannot render map without center/zoom.")
@@ -93,6 +155,16 @@ class Context:
         return renderer.image()
 
     def render_svg(self, width: int, height: int) -> svgwrite.Drawing:
+        """Render context using svgwrite
+
+        :param width: width of static map
+        :type width: int
+        :param height: height of static map
+        :type height: int
+        :return: svg drawing
+        :rtype: svgwrite.Drawing
+        :raises RuntimeError: raises runtime error if map has no center and zoom
+        """
         center, zoom = self.determine_center_zoom(width, height)
         if center is None or zoom is None:
             raise RuntimeError("Cannot render map without center/zoom.")
@@ -108,6 +180,11 @@ class Context:
         return renderer.drawing()
 
     def object_bounds(self) -> typing.Optional[s2sphere.LatLngRect]:
+        """return maximum bounds of all objects
+
+        :return: maximum of all object bounds
+        :rtype: s2sphere.LatLngRect
+        """
         bounds = None
         if len(self._objects) != 0:
             bounds = s2sphere.LatLngRect()
@@ -116,12 +193,12 @@ class Context:
         return self._custom_bounds(bounds)
 
     def _custom_bounds(self, bounds: s2sphere.LatLngRect) -> typing.Optional[s2sphere.LatLngRect]:
-        """check for custom bounds and return the union with object bounds
+        """check for additional bounds and return the union with object bounds
 
         :param bounds: boundaries from objects
         :type bounds: s2sphere.LatLngRect
-        :return: return the union with object bounds
-        :rtype s2sphere.LatLngRect
+        :return: maximum of additional and object bounds
+        :rtype: s2sphere.LatLngRect
         """
         if not self._bounds:
             return bounds
@@ -130,6 +207,11 @@ class Context:
         return bounds.union(self._bounds)
 
     def extra_pixel_bounds(self) -> PixelBoundsT:
+        """return extra pixel bounds from all objects
+
+        :return: extra pixel object bounds
+        :rtype: PixelBoundsT
+        """
         max_l, max_t, max_r, max_b = 0, 0, 0, 0
         attribution = self._tile_provider.attribution()
         if (attribution is None) or (attribution == ""):
@@ -143,6 +225,15 @@ class Context:
         return (max_l, max_t, max_r, max_b)
 
     def determine_center_zoom(self, width: int, height: int) -> typing.Tuple[s2sphere.LatLng, typing.Optional[int]]:
+        """return center and zoom of static map
+
+        :param width: width of static map
+        :param height: height of static map
+        :type width: int
+        :type height: int
+        :return: center, zoom
+        :rtype: tuple
+        """
         if self._center is not None:
             if self._zoom is not None:
                 return self._center, self._clamp_zoom(self._zoom)

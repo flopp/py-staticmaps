@@ -7,6 +7,8 @@ import typing
 
 
 class Color:
+    """A generic color class"""
+
     def __init__(self, r: int, g: int, b: int, a: int = 255):
         if not 0x00 <= r <= 0xFF:
             raise ValueError(f"'r' component out of range (must be 0-255): {r}")
@@ -22,16 +24,36 @@ class Color:
         self._a = a
 
     def text_color(self) -> "Color":
+        """Return text color depending on luminance
+
+        :return: a color depending on luminance
+        :rtype: Color
+        """
         luminance = 0.299 * self._r + 0.587 * self._g + 0.114 * self._b
         return BLACK if luminance >= 0x7F else WHITE
 
     def hex_rgb(self) -> str:
+        """Return color in rgb hex values
+
+        :return: color in rgb hex values
+        :rtype:str
+        """
         return f"#{self._r:02x}{self._g:02x}{self._b:02x}"
 
     def int_rgb(self) -> typing.Tuple[int, int, int]:
+        """Return color in int values
+
+        :return: color in int values
+        :rtype:tuple
+        """
         return self._r, self._g, self._b
 
     def int_rgba(self) -> typing.Tuple[int, int, int, int]:
+        """Return color in rgba int values with transparency
+
+        :return: color in rgba int values
+        :rtype:tuple
+        """
         return self._r, self._g, self._b, self._a
 
     def float_rgb(self) -> typing.Tuple[float, float, float]:

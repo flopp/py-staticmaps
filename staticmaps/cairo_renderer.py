@@ -23,6 +23,11 @@ if typing.TYPE_CHECKING:
 
 
 def cairo_is_supported() -> bool:
+    """Check whether cairo is supported
+
+    :return: Is cairo supported
+    :rtype: bool
+    """
     return "cairo" in sys.modules
 
 
@@ -32,6 +37,8 @@ cairo_ImageSurface = typing.Any
 
 
 class CairoRenderer(Renderer):
+    """An image renderer using cairo that extends a generic renderer class"""
+
     def __init__(self, transformer: Transformer) -> None:
         Renderer.__init__(self, transformer)
 
@@ -42,13 +49,31 @@ class CairoRenderer(Renderer):
         self._context = cairo.Context(self._surface)
 
     def image_surface(self) -> cairo_ImageSurface:
+        """
+
+        :return: cairo image surface
+        :rtype: cairo.ImageSurface
+        """
         return self._surface
 
     def context(self) -> cairo_Context:
+        """
+
+        :return: cairo context
+        :rtype: cairo.Context
+        """
         return self._context
 
     @staticmethod
     def create_image(image_data: bytes) -> cairo_ImageSurface:
+        """Create a cairo image
+
+        :param image_data: Image data
+        :type image_data: bytes
+
+        :return: cairo image surface
+        :rtype: cairo.ImageSurface
+        """
         image = PIL_Image.open(io.BytesIO(image_data))
         if image.format == "PNG":
             return cairo.ImageSurface.create_from_png(io.BytesIO(image_data))
@@ -59,6 +84,11 @@ class CairoRenderer(Renderer):
         return cairo.ImageSurface.create_from_png(png_bytes)
 
     def render_objects(self, objects: typing.List["Object"]) -> None:
+        """Render all objects of static map
+
+        :param objects: objects of static map
+        :type objects: typing.List["Object"]
+        """
         x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
         for obj in objects:
             for p in range(-x_count, x_count + 1):
@@ -68,6 +98,11 @@ class CairoRenderer(Renderer):
                 self._context.restore()
 
     def render_background(self, color: typing.Optional[Color]) -> None:
+        """Render background of static map
+
+        :param color: background color
+        :type color: typing.Optional[Color]
+        """
         if color is None:
             return
         self._context.set_source_rgb(*color.float_rgb())
@@ -75,6 +110,11 @@ class CairoRenderer(Renderer):
         self._context.fill()
 
     def render_tiles(self, download: typing.Callable[[int, int, int], typing.Optional[bytes]]) -> None:
+        """Render background of static map
+
+        :param download: url of tiles provider
+        :type download: typing.Callable[[int, int, int], typing.Optional[bytes]]
+        """
         for yy in range(0, self._trans.tiles_y()):
             y = self._trans.first_tile_y() + yy
             if y < 0 or y >= self._trans.number_of_tiles():
@@ -97,6 +137,11 @@ class CairoRenderer(Renderer):
                     pass
 
     def render_attribution(self, attribution: typing.Optional[str]) -> None:
+        """Render attribution from given tiles provider
+
+        :param attribution: Attribution for the given tiles provider
+        :type attribution: typing.Optional[str]:
+        """
         if (attribution is None) or (attribution == ""):
             return
         width, height = self._trans.image_size()
@@ -121,6 +166,18 @@ class CairoRenderer(Renderer):
     def fetch_tile(
         self, download: typing.Callable[[int, int, int], typing.Optional[bytes]], x: int, y: int
     ) -> typing.Optional[cairo_ImageSurface]:
+        """Fetch tiles from given tiles provider
+
+        :param download: callable
+        :param x: width
+        :param y: height
+        :type download: typing.Callable[[int, int, int], typing.Optional[bytes]]
+        :type x: int
+        :type y: int
+
+        :return: cairo image surface
+        :rtype: typing.Optional[cairo_ImageSurface]
+        """
         image_data = download(self._trans.zoom(), x, y)
         if image_data is None:
             return None

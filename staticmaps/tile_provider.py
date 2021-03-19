@@ -6,6 +6,8 @@ import typing
 
 
 class TileProvider:
+    """A tile provider class with several pre-defined tile providers"""
+
     def __init__(
         self,
         name: str,
@@ -23,22 +25,58 @@ class TileProvider:
         self._max_zoom = max_zoom if ((max_zoom is not None) and (max_zoom <= 20)) else 20
 
     def set_api_key(self, key: str) -> None:
+        """Set an api key
+
+        :param key: api key
+        :type key: str
+        """
         self._api_key = key
 
     def name(self) -> str:
+        """Return the name of the tile provider
+
+        :return: name of tile provider
+        :rtype: str
+        """
         return self._name
 
     def attribution(self) -> typing.Optional[str]:
+        """Return the attribution of the tile provider
+
+        :return: attribution of tile provider if available
+        :rtype: typing.Optional[str]
+        """
         return self._attribution
 
     @staticmethod
     def tile_size() -> int:
+        """Return the tile size
+
+        :return: tile size
+        :rtype: int
+        """
         return 256
 
     def max_zoom(self) -> int:
+        """Return the maximum zoom of the tile provider
+
+        :return: maximum zoom
+        :rtype: int
+        """
         return self._max_zoom
 
     def url(self, zoom: int, x: int, y: int) -> typing.Optional[str]:
+        """Return the url of the tile provider
+
+        :param zoom: zoom for static map
+        :type zoom: int
+        :param x: x value of center for the static map
+        :type x: int
+        :param y: y value of center for the static map
+        :type y: int
+        :return: url with zoom, x and y values
+        :rtype: typing.Optional[str]
+        """
         if len(self._url_pattern.template) == 0:
             return None
         if (zoom < 0) or (zoom > self._max_zoom):
@@ -90,7 +128,7 @@ tile_provider_ArcGISWorldImagery = TileProvider(
 )
 
 tile_provider_CartoNoLabels = TileProvider(
-    "carto_nolabels",
+    "carto-nolabels",
     url_pattern="http://$s.basemaps.cartocdn.com/rastertiles/light_nolabels/$z/$x/$y.png",
     shards=["a", "b", "c", "d"],
     attribution="Maps (C) CARTO (C) OpenStreetMap.org contributors",
@@ -98,7 +136,7 @@ tile_provider_CartoNoLabels = TileProvider(
 )
 
 tile_provider_CartoDarkNoLabels = TileProvider(
-    "carto_darknolabels",
+    "carto-darknolabels",
     url_pattern="http://$s.basemaps.cartocdn.com/rastertiles/dark_nolabels/$z/$x/$y.png",
     shards=["a", "b", "c", "d"],
     attribution="Maps (C) CARTO (C) OpenStreetMap.org contributors",
