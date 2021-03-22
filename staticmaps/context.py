@@ -255,7 +255,7 @@ class Context:
         return self._adjust_center(width, height, c, z), z
 
     def _determine_zoom(
-        self, width: int, height: int, b: typing.Optional[s2sphere.LatLngRect], c: s2sphere.LatLngRect
+        self, width: int, height: int, b: typing.Optional[s2sphere.LatLngRect], c: s2sphere.LatLng
     ) -> typing.Optional[int]:
         if b is None:
             b = s2sphere.LatLngRect(c, c)
