@@ -224,7 +224,9 @@ class Context:
             max_b = max(max_b, b)
         return (max_l, max_t, max_r, max_b)
 
-    def determine_center_zoom(self, width: int, height: int) -> typing.Tuple[s2sphere.LatLng, typing.Optional[int]]:
+    def determine_center_zoom(
+        self, width: int, height: int
+    ) -> typing.Tuple[typing.Optional[s2sphere.LatLng], typing.Optional[int]]:
         """return center and zoom of static map
 
         :param width: width of static map
