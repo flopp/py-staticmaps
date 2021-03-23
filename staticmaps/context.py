@@ -189,10 +189,11 @@ class Context:
         if len(self._objects) != 0:
             bounds = s2sphere.LatLngRect()
             for obj in self._objects:
+                assert bounds
                 bounds = bounds.union(obj.bounds())
         return self._custom_bounds(bounds)
 
-    def _custom_bounds(self, bounds: s2sphere.LatLngRect) -> typing.Optional[s2sphere.LatLngRect]:
+    def _custom_bounds(self, bounds: typing.Optional[s2sphere.LatLngRect]) -> typing.Optional[s2sphere.LatLngRect]:
         """check for additional bounds and return the union with object bounds
 
         :param bounds: boundaries from objects
@@ -261,6 +262,7 @@ class Context:
             b = s2sphere.LatLngRect(c, c)
         else:
             b = b.union(s2sphere.LatLngRect(c, c))
+        assert b
         if b.is_point():
             return self._clamp_zoom(15)
 

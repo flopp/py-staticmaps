@@ -56,4 +56,5 @@ class Circle(Area):
                 first = latlng
             yield latlng
             angle = angle + delta_angle
-        yield first
+        if first:
+            yield first
