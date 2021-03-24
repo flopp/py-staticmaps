@@ -204,4 +204,4 @@ Please take a look at the command line program which uses the `staticmaps` packa
 
 ## License
 
-[MIT](LICENSE) &copy; 2020-2012 Florian Pigorsch
+[MIT](LICENSE) &copy; 2020-2021 Florian Pigorsch
