@@ -14,25 +14,26 @@ A python module to create static map images (PNG, SVG) with markers, geodesic li
 - Several pre-configured map tile providers
 - Proper tile provider attributions display
 - On-disc caching of map tile images for faster drawing and reduced load on the tile servers
-- Anti-aliased drawing via `pycairo`
+- Non-anti-aliased drawing via `PILLOW`
+- Anti-aliased drawing via `pycairo` (optional; only if `pycairo` is installed properly)
 - SVG creation via `svgwrite`
 
 
 ## Installation
 
-### SVG only version
+### SVG + non-anti-aliased PNG version
 
 ```shell
 pip install py-staticmaps
 ```
 
-### SVG + PNG version (via Cairo)
+### SVG + anti-aliased PNG version (via Cairo)
 
 ```shell
 pip install py-staticmaps[cairo]
 ```
 
-`py-staticmaps` uses `pycairo` for creating antialiased raster-graphics, so make sure `libcairo2` is installed on your system (on Ubuntu just install the `libcairo2-dev` package, i.e. `sudo apt install libcairo2-dev`).
+`py-staticmaps` uses `pycairo` for creating anti-aliased raster-graphics, so make sure `libcairo2` is installed on your system (on Ubuntu just install the `libcairo2-dev` package, i.e. `sudo apt install libcairo2-dev`).
 
 
 ## Examples
@@ -54,9 +55,13 @@ context.add_object(staticmaps.Line([frankfurt, newyork], color=staticmaps.BLUE, 
 context.add_object(staticmaps.Marker(frankfurt, color=staticmaps.GREEN, size=12))
 context.add_object(staticmaps.Marker(newyork, color=staticmaps.RED, size=12))
 
-# render png
+# render non-anti-aliased png
+image = context.render_pillow(800, 500)
+image.save("frankfurt_newyork.pillow.png")
+
+# render anti-aliased png (this only works if pycairo is installed)
 image = context.render_cairo(800, 500)
-image.write_to_png("frankfurt_newyork.png")
+image.write_to_png("frankfurt_newyork.cairo.png")
 
 # render svg
 svg_image = context.render_svg(800, 500)
@@ -91,9 +96,13 @@ context.add_object(
     )
 )
 
-# render png
+# render non-anti-aliased png
+image = context.render_pillow(800, 500)
+image.save("freiburg_area.pillow.png")
+
+# render anti-aliased png (this only works if pycairo is installed)
 image = context.render_cairo(800, 500)
-image.write_to_png("freiburg_area.png")
+image.write_to_png("freiburg_area.cairo.png")
 
 # render svg
 svg_image = context.render_svg(800, 500)
@@ -129,8 +138,13 @@ for p in gpx.walk(only_points=True):
     context.add_object(marker)
     break
 
+# render non-anti-aliased png
+image = context.render_pillow(800, 500)
+image.save("draw_gpx.pillow.png")
+
+# render anti-aliased png (this only works if pycairo is installed)
 image = context.render_cairo(800, 500)
-image.write_to_png("draw_gpx.png")
+image.write_to_png("draw_gpx.cairo.png")
 ```
 
 ![draw_gpx](../assets/draw_gpx.png?raw=true)
@@ -155,8 +169,13 @@ for _, data in json.loads(response.text).items():
     capital = staticmaps.create_latlng(float(data["lat"]), float(data["long"]))
     context.add_object(staticmaps.Marker(capital, size=5))
 
+# render non-anti-aliased png
+image = context.render_pillow(800, 500)
+image.save("us_capitals.pillow.png")
+
+# render anti-aliased png (this only works if pycairo is installed)
 image = context.render_cairo(800, 500)
-image.write_to_png("us_capitals.png")
+image.write_to_png("us_capitals.cairo.png")
 ```
 
 ![us_capitals](../assets/us_capitals.png?raw=true)
@@ -178,8 +197,13 @@ context.add_object(staticmaps.Circle(center2, 2000, fill_color=staticmaps.TRANSP
 context.add_object(staticmaps.Marker(center1, color=staticmaps.RED))
 context.add_object(staticmaps.Marker(center2, color=staticmaps.GREEN))
 
+# render non-anti-aliased png
+image = context.render_pillow(800, 500)
+image.save("geodesic_circles.pillow.png")
+
+# render anti-aliased png (this only works if pycairo is installed)
 image = context.render_cairo(800, 600)
-image.write_to_png("geodesic_circles.png")
+image.write_to_png("geodesic_circles.cairo.png")
 ```
 
 ![geodesic_circles](../assets/geodesic_circles.png?raw=true)
@@ -194,7 +218,8 @@ Please take a look at the command line program which uses the `staticmaps` packa
 
 `py-staticmaps` uses
 
-- `pycairo` for rendering antialiased raster-graphics
+- `PILLOW` for rendering raster-graphics
+- `pycairo` for rendering antialiased raster-graphics (optional!)
 - `svgwrite` for writing SVG files
 - `s2sphere` for geo coordinates handling
 - `geographiclib` for geodesic computations
