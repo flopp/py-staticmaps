@@ -106,8 +106,6 @@ class Context:
         :type extra_pixel_bounds: int, tuple
         """
         self._bounds = latlngrect
-        print(self._extra_pixel_bounds)
-        print(extra_pixel_bounds)
         if extra_pixel_bounds:
             if isinstance(extra_pixel_bounds, tuple):
                 self._extra_pixel_bounds = extra_pixel_bounds
@@ -118,7 +116,6 @@ class Context:
                     extra_pixel_bounds,
                     extra_pixel_bounds,
                 )
-        print(self._extra_pixel_bounds)
 
     def render_cairo(self, width: int, height: int) -> typing.Any:
         """Render area using cairo
