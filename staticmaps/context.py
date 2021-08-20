@@ -129,13 +129,15 @@ class Context:
 
         return renderer.image_surface()
 
-    def render_pillow(self, width: int, height: int) -> PIL_Image:
+    def render_pillow(self, width: int, height: int, render_tight_on_objects: bool = False) -> PIL_Image:
         """Render context using PILLOW
 
         :param width: width of static map
         :type width: int
         :param height: height of static map
         :type height: int
+        :param render_tight_on_objects: bool: option to render tight on objects, i.e no buffer between objects
+        and image edge
         :return: pillow image
         :rtype: PIL_Image
         :raises RuntimeError: raises runtime error if map has no center and zoom
@@ -149,8 +151,11 @@ class Context:
         renderer = PillowRenderer(trans)
         renderer.render_background(self._background_color)
         renderer.render_tiles(self._fetch_tile)
-        renderer.render_objects(self._objects)
+        renderer.render_objects(self._objects, render_tight_on_objects=render_tight_on_objects)
         renderer.render_attribution(self._tile_provider.attribution())
+
+        if render_tight_on_objects:
+            return renderer.image_tight_on_objects()
 
         return renderer.image()
 
@@ -342,3 +347,19 @@ class Context:
         if zoom > self._tile_provider.max_zoom():
             return self._tile_provider.max_zoom()
         return zoom
+
+    def make_clean_map_from_bounding_box(
+        self, bottom_left: s2sphere.LatLng, top_right: s2sphere.LatLng, width: int, height: int
+    ) -> PIL_Image:
+        """
+        bottom_left: cooredinate for bottom left of image
+        top_right: coordinates for top right of image
+        width: wdith of static map [pixels]
+        height: height of static map [pixels]
+        """
+
+        see_through = staticmaps.Color(255, 255, 255, 255)
+        self.add_object(staticmaps.Marker(bottom_left, color=see_through, size=0))
+        self.add_object(staticmaps.Marker(top_right, color=see_through, size=0))
+
+        return self.render_pillow(width=width, height=height, render_tight_on_objects=True)

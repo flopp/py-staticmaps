@@ -55,3 +55,14 @@ def test_render_center_zoom() -> None:
     context.set_center(staticmaps.create_latlng(48, 8))
     context.set_zoom(15)
     context.render_svg(200, 100)
+
+
+def test_render_tight_on_markers():
+    context = staticmaps.Context()
+
+    # make bottom left and top right bounding box for map, happens to be Oxford and Norwich
+    bottom_left = staticmaps.create_latlng(51.75, -1.25)
+    top_right = staticmaps.create_latlng(52.63, 1.29)
+
+    # make clean map
+    _ = context.make_clean_map_from_bounding_box(bottom_left=bottom_left, top_right=top_right, width=1000, height=1000)

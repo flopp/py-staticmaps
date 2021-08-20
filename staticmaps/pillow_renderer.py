@@ -26,11 +26,23 @@ class PillowRenderer(Renderer):
         self._draw = PIL_ImageDraw.Draw(self._image)
         self._offset_x = 0
 
+        # save the maximum and minimum x and y coordinates of the rendered objects
+        self._obj_x_min = None
+        self._obj_x_max = None
+        self._obj_y_min = None
+        self._obj_y_max = None
+
     def draw(self) -> PIL_ImageDraw.Draw:
         return self._draw
 
     def image(self) -> PIL_Image.Image:
         return self._image
+
+    def image_tight_on_objects(self) -> PIL_Image.Image:
+        """
+        Make PIL image which is tight on the objects i.e not boundary between objects and edge of image.
+        """
+        return self._image.crop((self._obj_x_min, self._obj_y_min, self._obj_x_max, self._obj_y_max))
 
     def offset_x(self) -> int:
         return self._offset_x
@@ -40,7 +52,7 @@ class PillowRenderer(Renderer):
         self._image = PIL_Image.alpha_composite(self._image, image)
         self._draw = PIL_ImageDraw.Draw(self._image)
 
-    def render_objects(self, objects: typing.List["Object"]) -> None:
+    def render_objects(self, objects: typing.List["Object"], render_tight_on_objects:bool = False) -> None:
         """Render all objects of static map
 
         :param objects: objects of static map
@@ -51,6 +63,9 @@ class PillowRenderer(Renderer):
             for p in range(-x_count, x_count + 1):
                 self._offset_x = p * self._trans.world_width()
                 obj.render_pillow(self)
+
+        if render_tight_on_objects:
+            self.update_obj_x_y_min_max(objects)
 
     def render_background(self, color: typing.Optional[Color]) -> None:
         """Render background of static map
@@ -137,3 +152,18 @@ class PillowRenderer(Renderer):
         :rtype: PIL.Image
         """
         return PIL_Image.open(io.BytesIO(image_data)).convert("RGBA")
+
+    def update_obj_x_y_min_max(self, objects: typing.List["Object"]):
+        """
+        Update x and y, min and max coorindates from all objects.
+        """
+
+        for obj in objects:
+
+            # this probably only works for class Marker
+            x, y = self.transformer().ll2pixel(obj.latlng())
+
+            self._obj_x_min = x if self._obj_x_min is None else min(x,self._obj_x_min)
+            self._obj_x_max = x if self._obj_x_max is None else max(x, self._obj_x_max)
+            self._obj_y_min = y if self._obj_y_min is None else min(y, self._obj_y_min)
+            self._obj_y_max = y if self._obj_y_max is None else max(y, self._obj_y_max)
