@@ -19,6 +19,7 @@ from .svg_renderer import SvgRenderer
 from .tile_downloader import TileDownloader
 from .tile_provider import TileProvider, tile_provider_OSM
 from .transformer import Transformer
+from .marker import Marker
 
 
 class Context:
@@ -358,8 +359,7 @@ class Context:
         height: height of static map [pixels]
         """
 
-        see_through = staticmaps.Color(255, 255, 255, 255)
-        self.add_object(staticmaps.Marker(bottom_left, color=see_through, size=0))
-        self.add_object(staticmaps.Marker(top_right, color=see_through, size=0))
+        self.add_object(Marker(bottom_left, size=0))
+        self.add_object(Marker(top_right, size=0))
 
         return self.render_pillow(width=width, height=height, render_tight_on_objects=True)
