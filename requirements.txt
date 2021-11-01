@@ -4,5 +4,6 @@ PILLOW
 python-slugify
 requests
 s2sphere
+slugify
 svgwrite
 types-requests
