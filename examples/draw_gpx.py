@@ -11,7 +11,7 @@ import staticmaps
 context = staticmaps.Context()
 context.set_tile_provider(staticmaps.tile_provider_ArcGISWorldImagery)
 
-with open(sys.argv[1], "r") as file:
+with open(sys.argv[1], "r", encoding="utf-8") as file:
     gpx = gpxpy.parse(file)
 
 for track in gpx.tracks:

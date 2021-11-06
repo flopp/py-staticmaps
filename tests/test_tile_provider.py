@@ -11,7 +11,7 @@ def test_sharding() -> None:
         for y in range(0, 100):
             u = t.url(0, x, y)
             for s in [0, 1, 2]:
-                if u == "{}/0/{}/{}".format(s, x, y):
+                if u == f"{s}/0/{x}/{y}":
                     shard_counts[s] += 1
     assert shard_counts[0] + shard_counts[1] + shard_counts[2] == 100 * 100
     third = (100 * 100) // 3

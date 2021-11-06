@@ -41,7 +41,7 @@ class Context:
         :raises ValueError: raises value error for invalid zoom factors
         """
         if zoom < 0 or zoom > 30:
-            raise ValueError("Bad zoom value: {}".format(zoom))
+            raise ValueError(f"Bad zoom value: {zoom}")
         self._zoom = zoom
 
     def set_center(self, latlng: s2sphere.LatLng) -> None:

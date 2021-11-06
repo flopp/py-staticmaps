@@ -10,7 +10,7 @@ import setuptools  # type: ignore
 
 def _read_meta(rel_path: str, identifier: str) -> str:
     abs_path = os.path.join(os.path.dirname(__file__), rel_path)
-    with open(abs_path) as f:
+    with open(abs_path, encoding="utf-8") as f:
         content = f.read()
     r = r"^" + identifier + r"\s*=\s*['\"]([^'\"]*)['\"]$"
     m = re.search(r, content, re.M)
@@ -23,7 +23,7 @@ def _read_descr(rel_path: str) -> str:
     abs_path = os.path.join(os.path.dirname(__file__), rel_path)
     re_image = re.compile(r"^.*!\[.*\]\(.*\).*$")
     lines: typing.List[str] = []
-    with open(abs_path) as f:
+    with open(abs_path, encoding="utf-8") as f:
         for line in f:
             if re_image.match(line):
                 continue
@@ -34,7 +34,7 @@ def _read_descr(rel_path: str) -> str:
 
 def _read_reqs(rel_path: str) -> typing.List[str]:
     abs_path = os.path.join(os.path.dirname(__file__), rel_path)
-    with open(abs_path) as f:
+    with open(abs_path, encoding="utf-8") as f:
         return [s.strip() for s in f.readlines() if s.strip() and not s.strip().startswith("#")]
 
 

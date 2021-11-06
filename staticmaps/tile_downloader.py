@@ -58,7 +58,7 @@ class TileDownloader:
         if res.status_code == 200:
             data = res.content
         else:
-            raise RuntimeError("fetch {} yields {}".format(url, res.status_code))
+            raise RuntimeError(f"fetch {url} yields {res.status_code}")
 
         if file_name is not None:
             pathlib.Path(os.path.dirname(file_name)).mkdir(parents=True, exist_ok=True)
@@ -98,4 +98,4 @@ class TileDownloader:
         :return: cache file name
         :rtype: str
         """
-        return os.path.join(cache_dir, self.sanitized_name(provider.name()), str(zoom), str(x), "{}.png".format(y))
+        return os.path.join(cache_dir, self.sanitized_name(provider.name()), str(zoom), str(x), f"{y}.png")
