@@ -28,6 +28,7 @@ class Context:
         self._objects: typing.List[Object] = []
         self._center: typing.Optional[s2sphere.LatLng] = None
         self._bounds: typing.Optional[s2sphere.LatLngRect] = None
+        self._extra_pixel_bounds: typing.Tuple[int, int, int, int] = (0, 0, 0, 0)
         self._zoom: typing.Optional[int] = None
         self._tile_provider = tile_provider_OSM
         self._tile_downloader = TileDownloader()
@@ -92,13 +93,29 @@ class Context:
         """
         self._objects.append(obj)
 
-    def add_bounds(self, latlngrect: s2sphere.LatLngRect) -> None:
+    def add_bounds(
+        self,
+        latlngrect: s2sphere.LatLngRect,
+        extra_pixel_bounds: typing.Optional[typing.Union[int, typing.Tuple[int, int, int, int]]] = None,
+    ) -> None:
         """Add boundaries that shall be respected by the static map
 
         :param latlngrect: boundaries to be respected
         :type latlngrect: s2sphere.LatLngRect
+        :param extra_pixel_bounds: extra pixel bounds to be respected
+        :type extra_pixel_bounds: int, tuple
         """
         self._bounds = latlngrect
+        if extra_pixel_bounds:
+            if isinstance(extra_pixel_bounds, tuple):
+                self._extra_pixel_bounds = extra_pixel_bounds
+            else:
+                self._extra_pixel_bounds = (
+                    extra_pixel_bounds,
+                    extra_pixel_bounds,
+                    extra_pixel_bounds,
+                    extra_pixel_bounds,
+                )
 
     def render_cairo(self, width: int, height: int) -> typing.Any:
         """Render area using cairo
@@ -213,7 +230,7 @@ class Context:
         :return: extra pixel object bounds
         :rtype: PixelBoundsT
         """
-        max_l, max_t, max_r, max_b = 0, 0, 0, 0
+        max_l, max_t, max_r, max_b = self._extra_pixel_bounds
         attribution = self._tile_provider.attribution()
         if (attribution is None) or (attribution == ""):
             max_b = 12
@@ -223,7 +240,7 @@ class Context:
             max_t = max(max_t, t)
             max_r = max(max_r, r)
             max_b = max(max_b, b)
-        return (max_l, max_t, max_r, max_b)
+        return max_l, max_t, max_r, max_b
 
     def determine_center_zoom(
         self, width: int, height: int
