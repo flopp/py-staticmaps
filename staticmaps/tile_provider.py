@@ -174,7 +174,22 @@ tile_provider_StadiaAlidadeSmoothDark = TileProvider(
     shards=["a", "b", "c", "d"],
     attribution="Maps (C) Stadia Maps (C) OpenMapTiles (C) OpenStreetMap.org contributors",
     max_zoom=20,
-    api_key="",
+)
+
+tile_provider_JawgLight = TileProvider(
+    "jawg-light",
+    url_pattern="https://$s.tile.jawg.io/jawg-light/$z/$x/$y.png?access-token=$k",
+    shards=["a", "b", "c", "d"],
+    attribution="Maps (C) Jawg Maps (C) OpenStreetMap.org contributors",
+    max_zoom=22,
+)
+
+tile_provider_JawgDark = TileProvider(
+    "jawg-dark",
+    url_pattern="https://$s.tile.jawg.io/jawg-dark/$z/$x/$y.png?access-token=$k",
+    shards=["a", "b", "c", "d"],
+    attribution="Maps (C) Jawg Maps (C) OpenStreetMap.org contributors",
+    max_zoom=22,
 )
 
 tile_provider_None = TileProvider(
@@ -196,5 +211,7 @@ default_tile_providers = {
     tile_provider_CartoDarkNoLabels.name(): tile_provider_CartoDarkNoLabels,
     tile_provider_StadiaAlidadeSmooth.name(): tile_provider_StadiaAlidadeSmooth,
     tile_provider_StadiaAlidadeSmoothDark.name(): tile_provider_StadiaAlidadeSmoothDark,
+    tile_provider_JawgLight.name(): tile_provider_JawgLight,
+    tile_provider_JawgDark.name(): tile_provider_JawgDark,
     tile_provider_None.name(): tile_provider_None,
 }
