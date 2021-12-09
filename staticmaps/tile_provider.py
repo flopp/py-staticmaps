@@ -127,9 +127,25 @@ tile_provider_ArcGISWorldImagery = TileProvider(
     max_zoom=24,
 )
 
+tile_provider_Carto = TileProvider(
+    "carto",
+    url_pattern="http://$s.basemaps.cartocdn.com/rastertiles/light_all/$z/$x/$y.png",
+    shards=["a", "b", "c", "d"],
+    attribution="Maps (C) CARTO (C) OpenStreetMap.org contributors",
+    max_zoom=20,
+)
+
 tile_provider_CartoNoLabels = TileProvider(
     "carto-nolabels",
     url_pattern="http://$s.basemaps.cartocdn.com/rastertiles/light_nolabels/$z/$x/$y.png",
+    shards=["a", "b", "c", "d"],
+    attribution="Maps (C) CARTO (C) OpenStreetMap.org contributors",
+    max_zoom=20,
+)
+
+tile_provider_CartoDark = TileProvider(
+    "carto-dark",
+    url_pattern="http://$s.basemaps.cartocdn.com/rastertiles/dark_all/$z/$x/$y.png",
     shards=["a", "b", "c", "d"],
     attribution="Maps (C) CARTO (C) OpenStreetMap.org contributors",
     max_zoom=20,
@@ -156,7 +172,9 @@ default_tile_providers = {
     tile_provider_StamenToner.name(): tile_provider_StamenToner,
     tile_provider_StamenTonerLite.name(): tile_provider_StamenTonerLite,
     tile_provider_ArcGISWorldImagery.name(): tile_provider_ArcGISWorldImagery,
+    tile_provider_Carto.name(): tile_provider_Carto,
     tile_provider_CartoNoLabels.name(): tile_provider_CartoNoLabels,
+    tile_provider_CartoDark.name(): tile_provider_CartoDark,
     tile_provider_CartoDarkNoLabels.name(): tile_provider_CartoDarkNoLabels,
     tile_provider_None.name(): tile_provider_None,
 }
