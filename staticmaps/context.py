@@ -77,13 +77,17 @@ class Context:
         """
         self._tile_downloader = downloader
 
-    def set_tile_provider(self, provider: TileProvider) -> None:
+    def set_tile_provider(self, provider: TileProvider, api_key: typing.Optional[str] = None) -> None:
         """Set tile provider
 
         :param provider: tile provider
         :type provider: TileProvider
+        :param api_key: api key (if needed)
+        :type api_key: str
         """
         self._tile_provider = provider
+        if api_key:
+            self._tile_provider.set_api_key(api_key)
 
     def add_object(self, obj: Object) -> None:
         """Add object for the static map (e.g. line, area, marker)

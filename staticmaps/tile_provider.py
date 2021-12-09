@@ -159,6 +159,24 @@ tile_provider_CartoDarkNoLabels = TileProvider(
     max_zoom=20,
 )
 
+tile_provider_StadiaAlidadeSmooth = TileProvider(
+    "stadia-alidade-smooth",
+    url_pattern="https://tiles.stadiamaps.com/tiles/alidade_smooth/$z/$x/$y.png?api_key=$k",
+    shards=["a", "b", "c", "d"],
+    attribution="Maps (C) Stadia Maps (C) OpenMapTiles (C) OpenStreetMap.org contributors",
+    max_zoom=20,
+    api_key="",
+)
+
+tile_provider_StadiaAlidadeSmoothDark = TileProvider(
+    "stadia-alidade-smooth",
+    url_pattern="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/$z/$x/$y.png?api_key=$k",
+    shards=["a", "b", "c", "d"],
+    attribution="Maps (C) Stadia Maps (C) OpenMapTiles (C) OpenStreetMap.org contributors",
+    max_zoom=20,
+    api_key="",
+)
+
 tile_provider_None = TileProvider(
     "none",
     url_pattern="",
@@ -176,5 +194,7 @@ default_tile_providers = {
     tile_provider_CartoNoLabels.name(): tile_provider_CartoNoLabels,
     tile_provider_CartoDark.name(): tile_provider_CartoDark,
     tile_provider_CartoDarkNoLabels.name(): tile_provider_CartoDarkNoLabels,
+    tile_provider_StadiaAlidadeSmooth.name(): tile_provider_StadiaAlidadeSmooth,
+    tile_provider_StadiaAlidadeSmoothDark.name(): tile_provider_StadiaAlidadeSmoothDark,
     tile_provider_None.name(): tile_provider_None,
 }
