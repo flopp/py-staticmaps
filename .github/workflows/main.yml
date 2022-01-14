@@ -12,10 +12,6 @@ jobs:
         python-version: [3.6, 3.7, 3.8, 3.9]
     steps:
     - uses: actions/checkout@v2
-    - name: Install system dependencies - ${{runner.os}}
-      if: runner.os == 'Windows'
-      run: |
-        sed -i '/disable=/a \    no-member,' .pylintrc
     - name: Set up Python v${{matrix.python-version}} - ${{runner.os}}
       uses: actions/setup-python@v2
       with:
