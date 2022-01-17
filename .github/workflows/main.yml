@@ -69,9 +69,9 @@ jobs:
         PYTHONPATH=.. python geodesic_circles.py
         PYTHONPATH=.. python tile_providers.py
         PYTHONPATH=.. python us_capitals.py
-        mv        *.svg build/.
-        mv *pillow*.png build/.
-        mv  *cairo*.png build/.
+        (ls *cairo*.png && mv        *.svg build/.) || echo "no svg files found!"
+        (ls *cairo*.png && mv *pillow*.png build/.) || echo "no pllow png files found!"
+        (ls *cairo*.png && mv  *cairo*.png build/.) || echo "no cairo png files found!"
         cd -
     - name: Archive examples
       uses: actions/upload-artifact@v2
