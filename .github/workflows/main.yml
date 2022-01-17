@@ -61,6 +61,7 @@ jobs:
     - name: Build examples
       run: |
         cd examples
+        mkdir build
         PYTHONPATH=.. python custom_objects.py
         PYTHONPATH=.. python draw_gpx.py running.gpx
         PYTHONPATH=.. python frankfurt_newyork.py
