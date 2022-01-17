@@ -55,6 +55,7 @@ jobs:
         cache: pip
     - name: Install Python dependencies
       run: |
+    	python -m venv .env
         python -m pip install --upgrade pip setuptools wheel
         pip install -r requirements.txt
         pip install -r requirements-examples.txt
