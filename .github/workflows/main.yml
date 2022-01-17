@@ -55,20 +55,19 @@ jobs:
         cache: pip
     - name: Install Python dependencies
       run: |
-        python -m venv .env
         python -m pip install --upgrade pip setuptools wheel
         pip install -r requirements.txt
         pip install -r requirements-examples.txt
     - name: Build examples
       run: |
         cd examples
-        PYTHONPATH=.. ../.env/bin/python custom_objects.py
-        PYTHONPATH=.. ../.env/bin/python draw_gpx.py running.gpx
-        PYTHONPATH=.. ../.env/bin/python frankfurt_newyork.py
-        PYTHONPATH=.. ../.env/bin/python freiburg_area.py
-        PYTHONPATH=.. ../.env/bin/python geodesic_circles.py
-        PYTHONPATH=.. ../.env/bin/python tile_providers.py
-        PYTHONPATH=.. ../.env/bin/python us_capitals.py
+        PYTHONPATH=.. python custom_objects.py
+        PYTHONPATH=.. python draw_gpx.py running.gpx
+        PYTHONPATH=.. python frankfurt_newyork.py
+        PYTHONPATH=.. python freiburg_area.py
+        PYTHONPATH=.. python geodesic_circles.py
+        PYTHONPATH=.. python tile_providers.py
+        PYTHONPATH=.. python us_capitals.py
         mv        *.svg build/.
         mv *pillow*.png build/.
         mv  *cairo*.png build/.
