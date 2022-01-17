@@ -26,7 +26,6 @@ jobs:
         python -m pip install --upgrade pip setuptools wheel
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
-        pip install -r requirements-examples.txt
     - name: Check formatting (black)
       run: black --line-length 120 --check --diff staticmaps examples tests
     - name: Lint (pylint)
@@ -37,3 +36,36 @@ jobs:
       run: mypy staticmaps examples tests
     - name: Run tests (pytest)
       run: python -m pytest tests
+  build:
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.7]
+    steps:
+    - name: Git config
+      run: git config --global core.autocrlf input
+    - uses: actions/checkout@v2
+    - name: Set up Python v${{matrix.python-version}} - ${{runner.os}}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{matrix.python-version}}
+        cache: pip
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
+        pip install -r requirements.txt
+        pip install -r requirements-examples.txt
+    - name: Build examples
+      uses: actions/upload-artifact@v2
+      run:
+        (cd examples && PYTHONPATH=.. ../.env/bin/python custom_objects.py && custom_objects*png build/.)
+        (cd examples && PYTHONPATH=.. ../.env/bin/python draw_gpx.py running.gpx && draw_gpx*png build/.)
+        (cd examples && PYTHONPATH=.. ../.env/bin/python frankfurt_newyork.py && frankfurt_newyork*png build/.)
+        (cd examples && PYTHONPATH=.. ../.env/bin/python freiburg_area.py && freiburg_area*png build/.)
+        (cd examples && PYTHONPATH=.. ../.env/bin/python geodesic_circles.py && geodesic_circles*png build/.)
+        (cd examples && PYTHONPATH=.. ../.env/bin/python tile_providers.py && tile_providers*png build/.)
+        (cd examples && PYTHONPATH=.. ../.env/bin/python us_capitals.py && us_capitals*png build/.)
+      with:
+        name: build_examples
+        path: examples/build
