@@ -37,3 +37,44 @@ jobs:
       run: mypy staticmaps examples tests
     - name: Run tests (pytest)
       run: python -m pytest tests
+  build:
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.7]
+    needs: "lint_and_test"
+    steps:
+    - name: Git config
+      run: git config --global core.autocrlf input
+    - uses: actions/checkout@v2
+    - name: Set up Python v${{matrix.python-version}} - ${{runner.os}}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{matrix.python-version}}
+        cache: pip
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
+        pip install -r requirements.txt
+        pip install -r requirements-examples.txt
+    - name: Build examples
+      run: |
+        cd examples
+        mkdir build
+        PYTHONPATH=.. python custom_objects.py
+        PYTHONPATH=.. python draw_gpx.py running.gpx
+        PYTHONPATH=.. python frankfurt_newyork.py
+        PYTHONPATH=.. python freiburg_area.py
+        PYTHONPATH=.. python geodesic_circles.py
+        PYTHONPATH=.. python tile_providers.py
+        PYTHONPATH=.. python us_capitals.py
+        (ls        *.svg && mv        *.svg build/.) || echo "no svg files found!"
+        (ls *pillow*.png && mv *pillow*.png build/.) || echo "no pillow png files found!"
+        (ls  *cairo*.png && mv  *cairo*.png build/.) || echo "no cairo png files found!"
+        cd -
+    - name: Archive examples
+      uses: actions/upload-artifact@v2
+      with:
+        name: build_examples
+        path: examples/build
