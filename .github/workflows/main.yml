@@ -42,6 +42,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python-version: [3.7]
+    needs: "lint_and_test"
     steps:
     - name: Git config
       run: git config --global core.autocrlf input
@@ -58,18 +59,18 @@ jobs:
         pip install -r requirements-examples.txt
     - name: Build examples
       run:
-        cd examples
-        PYTHONPATH=.. ../.env/bin/python custom_objects.py
-        PYTHONPATH=.. ../.env/bin/python draw_gpx.py running.gpx
-        PYTHONPATH=.. ../.env/bin/python frankfurt_newyork.py
-        PYTHONPATH=.. ../.env/bin/python freiburg_area.py
-        PYTHONPATH=.. ../.env/bin/python geodesic_circles.py
-        PYTHONPATH=.. ../.env/bin/python tile_providers.py
-        PYTHONPATH=.. ../.env/bin/python us_capitals.py
-        mv        *.svg build/.
-        mv *pillow*.png build/.
-        mv  *cairo*.png build/.
-        cd -
+        cd examples ;
+        PYTHONPATH=.. ../.env/bin/python custom_objects.py ;
+        PYTHONPATH=.. ../.env/bin/python draw_gpx.py running.gpx ;
+        PYTHONPATH=.. ../.env/bin/python frankfurt_newyork.py ;
+        PYTHONPATH=.. ../.env/bin/python freiburg_area.py ;
+        PYTHONPATH=.. ../.env/bin/python geodesic_circles.py ;
+        PYTHONPATH=.. ../.env/bin/python tile_providers.py ;
+        PYTHONPATH=.. ../.env/bin/python us_capitals.py ;
+        mv        *.svg build/. ;
+        mv *pillow*.png build/. ;
+        mv  *cairo*.png build/. ;
+        cd - ;
     - name: Archive examples
       uses: actions/upload-artifact@v2
       with:
