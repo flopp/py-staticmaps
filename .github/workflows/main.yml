@@ -59,13 +59,17 @@ jobs:
     - name: Build examples
       uses: actions/upload-artifact@v2
       run:
-        (cd examples && PYTHONPATH=.. ../.env/bin/python custom_objects.py && custom_objects*png build/.)
-        (cd examples && PYTHONPATH=.. ../.env/bin/python draw_gpx.py running.gpx && draw_gpx*png build/.)
-        (cd examples && PYTHONPATH=.. ../.env/bin/python frankfurt_newyork.py && frankfurt_newyork*png build/.)
-        (cd examples && PYTHONPATH=.. ../.env/bin/python freiburg_area.py && freiburg_area*png build/.)
-        (cd examples && PYTHONPATH=.. ../.env/bin/python geodesic_circles.py && geodesic_circles*png build/.)
-        (cd examples && PYTHONPATH=.. ../.env/bin/python tile_providers.py && tile_providers*png build/.)
-        (cd examples && PYTHONPATH=.. ../.env/bin/python us_capitals.py && us_capitals*png build/.)
+        (cd examples && PYTHONPATH=.. ../.env/bin/python custom_objects.py)
+        (cd examples && PYTHONPATH=.. ../.env/bin/python draw_gpx.py running.gpx)
+        (cd examples && PYTHONPATH=.. ../.env/bin/python frankfurt_newyork.py)
+        (cd examples && PYTHONPATH=.. ../.env/bin/python freiburg_area.py)
+        (cd examples && PYTHONPATH=.. ../.env/bin/python geodesic_circles.py)
+        (cd examples && PYTHONPATH=.. ../.env/bin/python tile_providers.py)
+        (cd examples && PYTHONPATH=.. ../.env/bin/python us_capitals.py)
+        (cd examples && mv        *.svg build/.)
+        (cd examples && mv *pillow*.png build/.)
+        (cd examples && mv  *cairo*.png build/.)
+        (cd -)
       with:
         name: build_examples
         path: examples/build
