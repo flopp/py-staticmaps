@@ -1,12 +1,13 @@
 # py-staticmaps
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
-from abc import ABC, abstractmethod
 import typing
+from abc import ABC, abstractmethod
+
+import s2sphere  # type: ignore
 
 from .color import Color
 from .transformer import Transformer
-
 
 if typing.TYPE_CHECKING:
     # avoid circlic import
@@ -32,11 +33,13 @@ class Renderer(ABC):
         return self._trans
 
     @abstractmethod
-    def render_objects(self, objects: typing.List["Object"]) -> None:
+    def render_objects(self, objects: typing.List["Object"], bbox: s2sphere.LatLngRect) -> None:
         """Render all objects of static map
 
         :param objects: objects of static map
         :type objects: typing.List["Object"]
+        :param bbox: boundary box of all objects
+        :type bbox: s2sphere.LatLngRect
         """
 
     @abstractmethod
@@ -48,11 +51,15 @@ class Renderer(ABC):
         """
 
     @abstractmethod
-    def render_tiles(self, download: typing.Callable[[int, int, int], typing.Optional[bytes]]) -> None:
+    def render_tiles(
+        self, download: typing.Callable[[int, int, int], typing.Optional[bytes]], bbox: s2sphere.LatLngRect
+    ) -> None:
         """Render background of static map
 
         :param download: url of tiles provider
         :type download: typing.Callable[[int, int, int], typing.Optional[bytes]]
+        :param bbox: boundary box of all objects
+        :type bbox: s2sphere.LatLngRect
         """
 
     def render_marker_object(self, marker: "Marker") -> None:

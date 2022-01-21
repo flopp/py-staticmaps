@@ -191,11 +191,12 @@ class Context:
             raise RuntimeError("Cannot render map without center/zoom.")
 
         trans = Transformer(width, height, zoom, center, self._tile_provider.tile_size())
+        bbox = self.object_bounds()
 
         renderer = SvgRenderer(trans)
         renderer.render_background(self._background_color)
-        renderer.render_tiles(self._fetch_tile)
-        renderer.render_objects(self._objects)
+        renderer.render_tiles(self._fetch_tile, bbox)
+        renderer.render_objects(self._objects, bbox)
         renderer.render_attribution(self._tile_provider.attribution())
 
         return renderer.drawing()

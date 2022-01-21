@@ -6,6 +6,8 @@ import math
 import sys
 import typing
 
+import s2sphere  # type: ignore
+
 try:
     import cairo  # type: ignore
 except ImportError:
@@ -83,11 +85,13 @@ class CairoRenderer(Renderer):
         png_bytes.seek(0)
         return cairo.ImageSurface.create_from_png(png_bytes)
 
-    def render_objects(self, objects: typing.List["Object"]) -> None:
+    def render_objects(self, objects: typing.List["Object"], bbox: s2sphere.LatLngRect = None) -> None:
         """Render all objects of static map
 
         :param objects: objects of static map
         :type objects: typing.List["Object"]
+        :param bbox: boundary box of all objects
+        :type bbox: s2sphere.LatLngRect
         """
         x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
         for obj in objects:
@@ -109,11 +113,15 @@ class CairoRenderer(Renderer):
         self._context.rectangle(0, 0, *self._trans.image_size())
         self._context.fill()
 
-    def render_tiles(self, download: typing.Callable[[int, int, int], typing.Optional[bytes]]) -> None:
+    def render_tiles(
+        self, download: typing.Callable[[int, int, int], typing.Optional[bytes]], bbox: s2sphere.LatLngRect = None
+    ) -> None:
         """Render background of static map
 
         :param download: url of tiles provider
         :type download: typing.Callable[[int, int, int], typing.Optional[bytes]]
+        :param bbox: boundary box of all objects
+        :type bbox: s2sphere.LatLngRect
         """
         for yy in range(0, self._trans.tiles_y()):
             y = self._trans.first_tile_y() + yy
