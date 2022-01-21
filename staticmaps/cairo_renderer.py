@@ -85,13 +85,20 @@ class CairoRenderer(Renderer):
         png_bytes.seek(0)
         return cairo.ImageSurface.create_from_png(png_bytes)
 
-    def render_objects(self, objects: typing.List["Object"], bbox: s2sphere.LatLngRect = None) -> None:
+    def render_objects(
+        self,
+        objects: typing.List["Object"],
+        bbox: s2sphere.LatLngRect = None,
+        epb: typing.Tuple[int, int, int, int] = None,
+    ) -> None:
         """Render all objects of static map
 
         :param objects: objects of static map
         :type objects: typing.List["Object"]
         :param bbox: boundary box of all objects
         :type bbox: s2sphere.LatLngRect
+        :param epb: extra pixel bounds
+        :type epb: typing.Tuple[int, int, int, int]
         """
         x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
         for obj in objects:
@@ -114,7 +121,10 @@ class CairoRenderer(Renderer):
         self._context.fill()
 
     def render_tiles(
-        self, download: typing.Callable[[int, int, int], typing.Optional[bytes]], bbox: s2sphere.LatLngRect = None
+        self,
+        download: typing.Callable[[int, int, int], typing.Optional[bytes]],
+        bbox: s2sphere.LatLngRect = None,
+        epb: typing.Tuple[int, int, int, int] = None,
     ) -> None:
         """Render background of static map
 
@@ -122,6 +132,8 @@ class CairoRenderer(Renderer):
         :type download: typing.Callable[[int, int, int], typing.Optional[bytes]]
         :param bbox: boundary box of all objects
         :type bbox: s2sphere.LatLngRect
+        :param epb: extra pixel bounds
+        :type epb: typing.Tuple[int, int, int, int]
         """
         for yy in range(0, self._trans.tiles_y()):
             y = self._trans.first_tile_y() + yy
