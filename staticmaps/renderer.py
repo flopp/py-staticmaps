@@ -33,13 +33,17 @@ class Renderer(ABC):
         return self._trans
 
     @abstractmethod
-    def render_objects(self, objects: typing.List["Object"], bbox: s2sphere.LatLngRect) -> None:
+    def render_objects(
+        self, objects: typing.List["Object"], bbox: s2sphere.LatLngRect, epb: typing.Tuple[int, int, int, int] = None
+    ) -> None:
         """Render all objects of static map
 
         :param objects: objects of static map
         :type objects: typing.List["Object"]
         :param bbox: boundary box of all objects
         :type bbox: s2sphere.LatLngRect
+        :param epb: extra pixel bounds
+        :type epb: typing.Tuple[int, int, int, int]
         """
 
     @abstractmethod
@@ -52,14 +56,19 @@ class Renderer(ABC):
 
     @abstractmethod
     def render_tiles(
-        self, download: typing.Callable[[int, int, int], typing.Optional[bytes]], bbox: s2sphere.LatLngRect
+        self,
+        download: typing.Callable[[int, int, int], typing.Optional[bytes]],
+        bbox: s2sphere.LatLngRect,
+        epb: typing.Tuple[int, int, int, int] = None,
     ) -> None:
-        """Render background of static map
+        """Render tiles of static map
 
         :param download: url of tiles provider
         :type download: typing.Callable[[int, int, int], typing.Optional[bytes]]
         :param bbox: boundary box of all objects
         :type bbox: s2sphere.LatLngRect
+        :param epb: extra pixel bounds
+        :type epb: typing.Tuple[int, int, int, int]
         """
 
     def render_marker_object(self, marker: "Marker") -> None:
