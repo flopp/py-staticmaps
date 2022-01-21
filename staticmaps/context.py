@@ -105,7 +105,10 @@ class Context:
         :param extra_pixel_bounds: extra pixel bounds to be respected
         :type extra_pixel_bounds: int, tuple
         """
-        self._bounds = latlngrect
+        if self._bounds:
+            self._bounds = self._bounds.union(latlngrect)
+        else:
+            self._bounds = latlngrect
         if extra_pixel_bounds:
             if isinstance(extra_pixel_bounds, tuple):
                 self._extra_pixel_bounds = extra_pixel_bounds
