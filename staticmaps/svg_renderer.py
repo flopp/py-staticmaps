@@ -5,6 +5,7 @@ import base64
 import math
 import typing
 
+import s2sphere  # type: ignore
 import svgwrite  # type: ignore
 
 from .color import Color, BLACK, WHITE
@@ -46,11 +47,13 @@ class SvgRenderer(Renderer):
         assert self._group is not None
         return self._group
 
-    def render_objects(self, objects: typing.List["Object"]) -> None:
+    def render_objects(self, objects: typing.List["Object"], bbox: s2sphere.LatLngRect = None) -> None:
         """Render all objects of static map
 
         :param objects: objects of static map
         :type objects: typing.List["Object"]
+        :param bbox: boundary box of all objects
+        :type bbox: s2sphere.LatLngRect
         """
         x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
         for obj in objects:
@@ -59,6 +62,8 @@ class SvgRenderer(Renderer):
                     clip_path="url(#page)", transform=f"translate({p * self._trans.world_width()}, 0)"
                 )
                 obj.render_svg(self)
+                if bbox:
+                    self._tighten_to_boundary(bbox)
                 self._draw.add(self._group)
                 self._group = None
 
@@ -74,11 +79,15 @@ class SvgRenderer(Renderer):
         group.add(self._draw.rect(insert=(0, 0), size=self._trans.image_size(), rx=None, ry=None, fill=color.hex_rgb()))
         self._draw.add(group)
 
-    def render_tiles(self, download: typing.Callable[[int, int, int], typing.Optional[bytes]]) -> None:
-        """Render background of static map
+    def render_tiles(
+        self, download: typing.Callable[[int, int, int], typing.Optional[bytes]], bbox: s2sphere.LatLngRect = None
+    ) -> None:
+        """Render tiles of static map
 
         :param download: url of tiles provider
         :type download: typing.Callable[[int, int, int], typing.Optional[bytes]]
+        :param bbox: boundary box of all objects
+        :type bbox: s2sphere.LatLngRect
         """
         group = self._draw.g(clip_path="url(#page)")
         for yy in range(0, self._trans.tiles_y()):
@@ -103,7 +112,31 @@ class SvgRenderer(Renderer):
                     )
                 except RuntimeError:
                     pass
+        if bbox:
+            self._tighten_to_boundary(bbox)
         self._draw.add(group)
+
+    def _tighten_to_boundary(self, bbox: s2sphere.LatLngRect) -> None:
+        """Calculate scale and offset for tight rendering on the boundary"""
+        # boundary points
+        lo_le_x, lo_le_y = self._trans.ll2pixel(s2sphere.LatLng.from_angles(bbox.lat_lo(), bbox.lng_lo()))
+        up_ri_x, up_ri_y = self._trans.ll2pixel(s2sphere.LatLng.from_angles(bbox.lat_hi(), bbox.lng_hi()))
+        # boundary size
+        size_x = up_ri_x - lo_le_x
+        size_y = lo_le_y - up_ri_y
+        # scale to boundaries
+        width = self._trans.image_width()
+        height = self._trans.image_height()
+        scale_x = size_x / width
+        scale_y = size_y / height
+        scale = 1 / max(scale_x, scale_y)
+        # translate new center to old center
+        off_x = -0.5 * width * (scale - 1)
+        off_y = -0.5 * height * (scale - 1)
+        # finally, translate and scale
+        if isinstance(self._group, svgwrite.container.Group):
+            self._group.translate(off_x, off_y)
+            self._group.scale(scale)
 
     def render_attribution(self, attribution: typing.Optional[str]) -> None:
         """Render attribution from given tiles provider
