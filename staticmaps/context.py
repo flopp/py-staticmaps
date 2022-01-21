@@ -238,7 +238,7 @@ class Context:
         max_l, max_t, max_r, max_b = self._extra_pixel_bounds
         attribution = self._tile_provider.attribution()
         if (attribution is None) or (attribution == ""):
-            max_b = 12
+            max_b = max(max_b, 12)
         for obj in self._objects:
             (l, t, r, b) = obj.extra_pixel_bounds()
             max_l = max(max_l, l)
