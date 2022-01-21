@@ -128,19 +128,20 @@ class SvgRenderer(Renderer):
             self._tighten_to_boundary(bbox, epb)
         self._draw.add(group)
 
-    def _tighten_to_boundary(self, bbox: s2sphere.LatLngRect, epb: tuple) -> None:
+    def _tighten_to_boundary(
+        self, bbox: s2sphere.LatLngRect, epb: typing.Optional[typing.Tuple[int, int, int, int]] = None
+    ) -> None:
         """Calculate scale and offset for tight rendering on the boundary"""
+        # pylint: disable=too-many-locals
         # boundary points
         nw_x, nw_y = self._trans.ll2pixel(s2sphere.LatLng.from_angles(bbox.lat_lo(), bbox.lng_lo()))
         se_x, se_y = self._trans.ll2pixel(s2sphere.LatLng.from_angles(bbox.lat_hi(), bbox.lng_hi()))
-        epb_l, epb_t, epb_r, epb_b = epb
+        epb_l, epb_t, epb_r, epb_b = 0, 0, 0, 0
+        if epb:
+            epb_l, epb_t, epb_r, epb_b = epb
         # boundary size
-        size_x = se_x - nw_x
-        size_y = nw_y - se_y
-        print(size_x, size_y)
         size_x = se_x - nw_x + epb_r + epb_l
         size_y = nw_y - se_y + epb_t + epb_b
-        print(size_x, size_y)
         # scale to boundaries
         width = self._trans.image_width()
         height = self._trans.image_height()
