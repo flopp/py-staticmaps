@@ -109,7 +109,10 @@ class Context:
         :param extra_pixel_bounds: extra pixel bounds to be respected
         :type extra_pixel_bounds: int, tuple
         """
-        self._bounds = latlngrect
+        if self._bounds:
+            self._bounds = self._bounds.union(latlngrect)
+        else:
+            self._bounds = latlngrect
         if extra_pixel_bounds:
             if isinstance(extra_pixel_bounds, tuple):
                 self._extra_pixel_bounds = extra_pixel_bounds
@@ -192,11 +195,12 @@ class Context:
 
         trans = Transformer(width, height, zoom, center, self._tile_provider.tile_size())
         bbox = self.object_bounds()
+        epb = self.extra_pixel_bounds()
 
         renderer = SvgRenderer(trans)
         renderer.render_background(self._background_color)
-        renderer.render_tiles(self._fetch_tile, bbox)
-        renderer.render_objects(self._objects, bbox)
+        renderer.render_tiles(self._fetch_tile, bbox, epb)
+        renderer.render_objects(self._objects, bbox, epb)
         renderer.render_attribution(self._tile_provider.attribution())
 
         return renderer.drawing()
@@ -238,7 +242,7 @@ class Context:
         max_l, max_t, max_r, max_b = self._extra_pixel_bounds
         attribution = self._tile_provider.attribution()
         if (attribution is None) or (attribution == ""):
-            max_b = 12
+            max_b = max(max_b, 12)
         for obj in self._objects:
             (l, t, r, b) = obj.extra_pixel_bounds()
             max_l = max(max_l, l)
