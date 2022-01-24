@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """py-staticmaps - Context"""
 
 # py-staticmaps

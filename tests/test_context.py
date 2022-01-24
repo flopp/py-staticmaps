@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """py-staticmaps - Test Context"""
 
 # py-staticmaps
