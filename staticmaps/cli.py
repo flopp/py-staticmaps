@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""py-staticmaps - cli.py - entry point"""
 
 # py-staticmaps
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
@@ -80,6 +81,12 @@ def main() -> None:
         type=str,
     )
     args_parser.add_argument(
+        "--tight-to-bounds",
+        action="store_true",
+        default=False,
+        help="Tighten static map to minimum boundaries of objects, custom boundaries, ...(default: False)",
+    )
+    args_parser.add_argument(
         "--tiles",
         metavar="TILEPROVIDER",
         type=str,
@@ -123,6 +130,7 @@ def main() -> None:
             context.add_object(staticmaps.Marker(staticmaps.parse_latlng(coords)))
     if args.bounds is not None:
         context.add_bounds(staticmaps.parse_latlngs2rect(args.bounds))
+    context.set_tighten_to_bounds(args.tighten_to_bounds)
 
     file_name = args.filename[0]
     if determine_file_format(args.file_format, file_name) == FileFormat.PNG:

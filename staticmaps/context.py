@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+"""py-staticmaps - Context"""
+
 # py-staticmaps
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
@@ -33,6 +36,7 @@ class Context:
         self._tile_provider = tile_provider_OSM
         self._tile_downloader = TileDownloader()
         self._cache_dir = os.path.join(appdirs.user_cache_dir(LIB_NAME), "tiles")
+        self._tighten_to_bounds: bool = False
 
     def set_zoom(self, zoom: int) -> None:
         """Set zoom for static map
@@ -84,6 +88,14 @@ class Context:
         :type provider: TileProvider
         """
         self._tile_provider = provider
+
+    def set_tighten_to_bounds(self, tighten: bool = False) -> None:
+        """Set tighten to bounds
+
+        :param tighten: tighten or not
+        :type tighten: bool
+        """
+        self._tighten_to_bounds = tighten
 
     def add_object(self, obj: Object) -> None:
         """Add object for the static map (e.g. line, area, marker)
@@ -190,8 +202,11 @@ class Context:
             raise RuntimeError("Cannot render map without center/zoom.")
 
         trans = Transformer(width, height, zoom, center, self._tile_provider.tile_size())
-        bbox = self.object_bounds()
-        epb = self.extra_pixel_bounds()
+        bbox = None
+        epb = None
+        if self._tighten_to_bounds:
+            bbox = self.object_bounds()
+            epb = self.extra_pixel_bounds()
 
         renderer = SvgRenderer(trans)
         renderer.render_background(self._background_color)
