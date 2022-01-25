@@ -30,15 +30,35 @@ class PillowRenderer(Renderer):
         self._offset_x = 0
 
     def draw(self) -> PIL_ImageDraw.Draw:
+        """Return pillow image draw
+
+        :return: pillow image draw
+        :rtype: PIL_ImageDraw.Draw
+        """
         return self._draw
 
     def image(self) -> PIL_Image.Image:
+        """Return pillow image
+
+        :return: pillow image
+        :rtype: PIL_Image.Image
+        """
         return self._image
 
     def offset_x(self) -> int:
+        """Return x offset
+
+        :return: x offset
+        :rtype: int
+        """
         return self._offset_x
 
     def alpha_compose(self, image: PIL_Image.Image) -> None:
+        """Generate Pillow alpha composition
+
+        :param image: pillow image
+        :type image: PIL_Image.Image
+        """
         assert image.size == self._image.size
         self._image = PIL_Image.alpha_composite(self._image, image)
         self._draw = PIL_ImageDraw.Draw(self._image)
@@ -72,7 +92,7 @@ class PillowRenderer(Renderer):
         """
         if color is None:
             return
-        self.draw().rectangle([(0, 0), self.image().size], fill=color.int_rgba())
+        self.draw().rectangle(((0, 0), self.image().size), fill=color.int_rgba())
 
     def render_tiles(
         self,
@@ -123,7 +143,7 @@ class PillowRenderer(Renderer):
         h = self._trans.image_height()
         overlay = PIL_Image.new("RGBA", self._image.size, (255, 255, 255, 0))
         draw = PIL_ImageDraw.Draw(overlay)
-        draw.rectangle([(0, h - th - 2 * margin), (w, h)], fill=(255, 255, 255, 204))
+        draw.rectangle(((0, h - th - 2 * margin), (w, h)), fill=(255, 255, 255, 204))
         self.alpha_compose(overlay)
         self.draw().text((margin, h - th - margin), attribution, fill=(0, 0, 0, 255))
 
