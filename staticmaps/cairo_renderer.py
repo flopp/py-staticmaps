@@ -1,5 +1,7 @@
+"""py-staticmaps - CaroRenderer"""
+
 # py-staticmaps
-# Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
+# Copyright (c) 2022 Florian Pigorsch; see /LICENSE for licensing information
 
 import io
 import math
