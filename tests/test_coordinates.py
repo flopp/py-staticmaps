@@ -1,4 +1,4 @@
-# py-staticmaps
+"""py-staticmaps - Test Coordinates"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import pytest  # type: ignore
@@ -7,6 +7,13 @@ import staticmaps
 
 
 def test_parse_latlng() -> None:
+    good = ["48,8", " 48 , 8 ", "-48,8", "+48,8", "48,-8", "48,+8", "48.123,8.456"]
+    for s in good:
+        c = staticmaps.parse_latlng(s)
+        assert c.is_valid()
+
+
+def test_parse_latlng_raises_value_error() -> None:
     bad = [
         "",
         "aaa",
@@ -24,11 +31,6 @@ def test_parse_latlng() -> None:
         with pytest.raises(ValueError):
             staticmaps.parse_latlng(s)
 
-    good = ["48,8", " 48 , 8 ", "-48,8", "+48,8", "48,-8", "48,+8", "48.123,8.456"]
-    for s in good:
-        c = staticmaps.parse_latlng(s)
-        assert c.is_valid()
-
 
 def test_parse_latlngs() -> None:
     good = [("", 0), ("48,8", 1), ("48,8 47,7", 2), ("   48,8    47,7   ", 2), ("48,7 48,8 47,7", 3)]
@@ -36,6 +38,8 @@ def test_parse_latlngs() -> None:
         a = staticmaps.parse_latlngs(s)
         assert len(a) == expected_len
 
+
+def test_parse_latlngs_raises_value_error() -> None:
     bad = ["xyz", "48,8 xyz", "48,8 48,181"]
     for s in bad:
         with pytest.raises(ValueError):
@@ -48,6 +52,8 @@ def test_parse_latlngs2rect() -> None:
         r = staticmaps.parse_latlngs2rect(s)
         assert r.is_valid()
 
+
+def test_parse_latlngs2rect_raises_value_error() -> None:
     bad = ["xyz", "48,8 xyz", "48,8 48,181", "48,7", "48,7 48,8 47,7"]
     for s in bad:
         with pytest.raises(ValueError):
