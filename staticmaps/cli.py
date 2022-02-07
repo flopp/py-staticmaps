@@ -94,6 +94,13 @@ def main() -> None:
         default=staticmaps.tile_provider_OSM.name(),
     )
     args_parser.add_argument(
+        "--tiles-api-key",
+        dest="tiles_api_key",
+        metavar="API_KEY",
+        type=str,
+        default=None,
+    )
+    args_parser.add_argument(
         "--file-format",
         metavar="FORMAT",
         type=FileFormat,
@@ -111,7 +118,7 @@ def main() -> None:
 
     context = staticmaps.Context()
 
-    context.set_tile_provider(staticmaps.default_tile_providers[args.tiles])
+    context.set_tile_provider(staticmaps.default_tile_providers[args.tiles], args.tiles_api_key)
 
     if args.center is not None:
         context.set_center(staticmaps.parse_latlng(args.center))

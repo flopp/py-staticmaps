@@ -127,9 +127,25 @@ tile_provider_ArcGISWorldImagery = TileProvider(
     max_zoom=24,
 )
 
+tile_provider_Carto = TileProvider(
+    "carto",
+    url_pattern="http://$s.basemaps.cartocdn.com/rastertiles/light_all/$z/$x/$y.png",
+    shards=["a", "b", "c", "d"],
+    attribution="Maps (C) CARTO (C) OpenStreetMap.org contributors",
+    max_zoom=20,
+)
+
 tile_provider_CartoNoLabels = TileProvider(
     "carto-nolabels",
     url_pattern="http://$s.basemaps.cartocdn.com/rastertiles/light_nolabels/$z/$x/$y.png",
+    shards=["a", "b", "c", "d"],
+    attribution="Maps (C) CARTO (C) OpenStreetMap.org contributors",
+    max_zoom=20,
+)
+
+tile_provider_CartoDark = TileProvider(
+    "carto-dark",
+    url_pattern="http://$s.basemaps.cartocdn.com/rastertiles/dark_all/$z/$x/$y.png",
     shards=["a", "b", "c", "d"],
     attribution="Maps (C) CARTO (C) OpenStreetMap.org contributors",
     max_zoom=20,
@@ -141,6 +157,39 @@ tile_provider_CartoDarkNoLabels = TileProvider(
     shards=["a", "b", "c", "d"],
     attribution="Maps (C) CARTO (C) OpenStreetMap.org contributors",
     max_zoom=20,
+)
+
+tile_provider_StadiaAlidadeSmooth = TileProvider(
+    "stadia-alidade-smooth",
+    url_pattern="https://tiles.stadiamaps.com/tiles/alidade_smooth/$z/$x/$y.png?api_key=$k",
+    shards=["a", "b", "c", "d"],
+    attribution="Maps (C) Stadia Maps (C) OpenMapTiles (C) OpenStreetMap.org contributors",
+    max_zoom=20,
+    api_key="",
+)
+
+tile_provider_StadiaAlidadeSmoothDark = TileProvider(
+    "stadia-alidade-smooth",
+    url_pattern="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/$z/$x/$y.png?api_key=$k",
+    shards=["a", "b", "c", "d"],
+    attribution="Maps (C) Stadia Maps (C) OpenMapTiles (C) OpenStreetMap.org contributors",
+    max_zoom=20,
+)
+
+tile_provider_JawgLight = TileProvider(
+    "jawg-light",
+    url_pattern="https://$s.tile.jawg.io/jawg-light/$z/$x/$y.png?access-token=$k",
+    shards=["a", "b", "c", "d"],
+    attribution="Maps (C) Jawg Maps (C) OpenStreetMap.org contributors",
+    max_zoom=22,
+)
+
+tile_provider_JawgDark = TileProvider(
+    "jawg-dark",
+    url_pattern="https://$s.tile.jawg.io/jawg-dark/$z/$x/$y.png?access-token=$k",
+    shards=["a", "b", "c", "d"],
+    attribution="Maps (C) Jawg Maps (C) OpenStreetMap.org contributors",
+    max_zoom=22,
 )
 
 tile_provider_None = TileProvider(
@@ -156,7 +205,13 @@ default_tile_providers = {
     tile_provider_StamenToner.name(): tile_provider_StamenToner,
     tile_provider_StamenTonerLite.name(): tile_provider_StamenTonerLite,
     tile_provider_ArcGISWorldImagery.name(): tile_provider_ArcGISWorldImagery,
+    tile_provider_Carto.name(): tile_provider_Carto,
     tile_provider_CartoNoLabels.name(): tile_provider_CartoNoLabels,
+    tile_provider_CartoDark.name(): tile_provider_CartoDark,
     tile_provider_CartoDarkNoLabels.name(): tile_provider_CartoDarkNoLabels,
+    tile_provider_StadiaAlidadeSmooth.name(): tile_provider_StadiaAlidadeSmooth,
+    tile_provider_StadiaAlidadeSmoothDark.name(): tile_provider_StadiaAlidadeSmoothDark,
+    tile_provider_JawgLight.name(): tile_provider_JawgLight,
+    tile_provider_JawgDark.name(): tile_provider_JawgDark,
     tile_provider_None.name(): tile_provider_None,
 }
