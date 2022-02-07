@@ -39,7 +39,10 @@ run-examples:
 	(cd examples && PYTHONPATH=.. ../.env/bin/python geodesic_circles.py)
 	(cd examples && PYTHONPATH=.. ../.env/bin/python tile_providers.py)
 	(cd examples && PYTHONPATH=.. ../.env/bin/python us_capitals.py)
-
+	(cd examples && mv *.svg build/.)
+	(cd examples && mv *pillow*png build/.)
+	(cd examples && mv *cairo*png build/.)
+	(cd -)
 .PHONY: test
 test:
 	PYTHONPATH=. .env/bin/python -m pytest tests

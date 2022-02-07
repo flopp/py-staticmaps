@@ -1,12 +1,62 @@
-.cache
-.env
-.mypy_cache
-.pytest_cache
-.vscode
-*.egg-info
-*.pyc
-*.png
-*.svg
+# Python
 __pycache__
-build
+*.pyc
+# sqlite
+*.sql
+*.sqlite3
+*.sqlite
+# Sphinx documentation build
+_build/
+# Testing
+.cache/
+.eggs/
+junit*.xml
+# virtualenv
+.env*/
+env*/
+.venv*/
+venv*/
+# setuptools
+*.egg-info
+dist/
+# coverage.py
+.coverage
+htmlcov/
+coverage*.xml
+# Temporary data directory
+tmp/*
+.pytest_cache/*
+# OSX
+.DS_Store
+# PyCharm
+.idea
+# VS Code
+.vscode
+pylint_usage_code.txt
+pylint_usage_tests.txt
+rackguru-api.iml
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+# Static files
+#
+# Build
 dist
+sdist
+.tox
+# mypy
+.mypy_cache
+
+# Project specific
+gpx_dir/*
+output/*
+data
+*.svg
+*.gif
+*.mov
+*.avi
+*.mpg
+*.mpeg
+*.mp4
+*.mkv
+*.wmv'
