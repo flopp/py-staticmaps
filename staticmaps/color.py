@@ -1,4 +1,4 @@
-# py-staticmaps
+"""py-staticmaps - Color"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import random
@@ -57,12 +57,27 @@ class Color:
         return self._r, self._g, self._b, self._a
 
     def float_rgb(self) -> typing.Tuple[float, float, float]:
+        """Return color in rgb float values
+
+        :return: color in rgb float values
+        :rtype:tuple
+        """
         return self._r / 255.0, self._g / 255.0, self._b / 255.0
 
     def float_rgba(self) -> typing.Tuple[float, float, float, float]:
+        """Return color in rgba float values with transparency
+
+        :return: color in rgba float values
+        :rtype:tuple
+        """
         return self._r / 255.0, self._g / 255.0, self._b / 255.0, self._a / 255.0
 
     def float_a(self) -> float:
+        """Return transparency as float value
+
+        :return: transparency as float value
+        :rtype:tuple
+        """
         return self._a / 255.0
 
 
@@ -79,6 +94,14 @@ YELLOW = Color(0xFF, 0xFF, 0x00)
 
 
 def parse_color(s: str) -> Color:
+    """Parses a given string and return a color
+
+    :param s: string defining a color
+    :type s: str
+    :return: a color depending on given string
+    :rtype: Color
+    :raises ValueError: raises a value error if string cannot be parsed to a color
+    """
     re_rgb = re.compile(r"^(0x|#)([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$")
     re_rgba = re.compile(r"^(0x|#)([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$")
 
@@ -120,6 +143,11 @@ def parse_color(s: str) -> Color:
 
 
 def random_color() -> Color:
+    """Return a random color
+
+    :return: a random color from a list of colors
+    :rtype: Color
+    """
     return random.choice(
         [
             BLACK,
