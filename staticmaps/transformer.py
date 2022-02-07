@@ -13,7 +13,7 @@ class Transformer:
 
     def __init__(self, width: int, height: int, zoom: int, center: s2sphere.LatLng, tile_size: int) -> None:
         self._zoom = zoom
-        self._number_of_tiles = 2 ** zoom
+        self._number_of_tiles = 2**zoom
         self._tile_size = tile_size
         self._width = width
         self._height = height
