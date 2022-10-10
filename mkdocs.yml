@@ -1,0 +1,52 @@
+site_name: py-staticmaps
+site_description: "A python module to create static map images (PNG, SVG) with markers, geodesic lines, etc."
+
+repo_url: https://github.com/flopp/py-staticmaps
+repo_name: py-staticmaps
+
+use_directory_urls: false
+
+theme:
+  icon:
+    repo: fontawesome/brands/github
+  name: "material"
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      primary: "blue"
+      accent: "grey"
+      scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      primary: "blue"
+      accent: "white"
+      scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+
+plugins:
+  - search
+  - autorefs
+  - section-index
+  - gen-files:
+      scripts:
+      - docs/gen_ref_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [staticmaps]
+          options:
+            show_root_heading: true
+            show_source: true
+      watch:
+        - src/sta_run_all_loadcases
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.magiclink
+  - pymdownx.superfences

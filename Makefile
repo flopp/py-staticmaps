@@ -1,6 +1,8 @@
+PYTHON=python3
+
 .PHONY: setup
 setup:
-	python3 -m venv .env
+	$(PYTHON) -m venv .env
 	.env/bin/pip install --upgrade pip
 	.env/bin/pip install --upgrade --requirement requirements.txt
 	.env/bin/pip install --upgrade --requirement requirements-dev.txt
@@ -60,3 +62,9 @@ upload-package-test:
 .PHONY: upload-package
 upload-package:
 	PYTHONPATH=. .env/bin/twine upload --repository py-staticmaps dist/*
+
+.PHONY: documentation
+documentation:
+	@if type mkdocs >/dev/null 2>&1 ; then .env/bin/python -m mkdocs build --clean --verbose ; \
+	 else echo "SKIPPED. Run '$(PIP) install mkdocs' first." >&2 ; fi 
+
