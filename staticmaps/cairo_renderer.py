@@ -1,4 +1,4 @@
-# py-staticmaps
+"""py-staticmaps cairo_renderer"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import io
@@ -169,7 +169,7 @@ class CairoRenderer(Renderer):
             t_width = self._context.text_extents(attribution)[3]
             if t_width < width - 4:
                 break
-            font_size = font_size - 0.25
+            font_size -= 0.25
         self._context.set_source_rgba(*WHITE.float_rgb(), 0.8)
         self._context.rectangle(0, height - f_height - f_descent - 2, width, height)
         self._context.fill()
