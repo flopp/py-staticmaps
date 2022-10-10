@@ -29,7 +29,7 @@ def main() -> None:
         if not parts:
             continue
 
-        nav[parts] = doc_path.as_posix()
+        nav[tuple(parts)] = doc_path.as_posix()
 
         with mkdocs_gen_files.open(full_doc_path, "w") as file_handle:
             ident = ".".join(parts)

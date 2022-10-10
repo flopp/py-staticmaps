@@ -9,7 +9,7 @@
 
 # Add files or directories to the blacklist. They should be base names, not
 # paths.
-ignore=.tox,.env,.venv,.eggs,build,migrations,south_migrations
+ignore=.tox,.env,.venv,.eggs,build,migrations,south_migrations,examples,tests
 
 # Pickle collected data for later comparisons.
 persistent=yes
@@ -53,7 +53,7 @@ confidence=
 # --disable=W"
 disable=
     duplicate-code,
-    missing-docstring,
+#    missing-docstring,
     no-member,
     no-value-for-parameter,
     too-few-public-methods,

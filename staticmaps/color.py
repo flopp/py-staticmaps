@@ -1,4 +1,4 @@
-# py-staticmaps
+"""py-staticmaps - color"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import random
@@ -26,8 +26,8 @@ class Color:
     def text_color(self) -> "Color":
         """Return text color depending on luminance
 
-        :return: a color depending on luminance
-        :rtype: Color
+        Returns:
+            Color: a color depending on luminance
         """
         luminance = 0.299 * self._r + 0.587 * self._g + 0.114 * self._b
         return BLACK if luminance >= 0x7F else WHITE
@@ -35,34 +35,49 @@ class Color:
     def hex_rgb(self) -> str:
         """Return color in rgb hex values
 
-        :return: color in rgb hex values
-        :rtype:str
+        Returns:
+            str: color in rgb hex values
         """
         return f"#{self._r:02x}{self._g:02x}{self._b:02x}"
 
     def int_rgb(self) -> typing.Tuple[int, int, int]:
         """Return color in int values
 
-        :return: color in int values
-        :rtype:tuple
+        Returns:
+            tuple: color in int values
         """
         return self._r, self._g, self._b
 
     def int_rgba(self) -> typing.Tuple[int, int, int, int]:
         """Return color in rgba int values with transparency
 
-        :return: color in rgba int values
-        :rtype:tuple
+        Returns:
+            tuple: color in rgba int values
         """
         return self._r, self._g, self._b, self._a
 
     def float_rgb(self) -> typing.Tuple[float, float, float]:
+        """Return color in rgb float values
+
+        Returns:
+            tuple: color in rgb float values
+        """
         return self._r / 255.0, self._g / 255.0, self._b / 255.0
 
     def float_rgba(self) -> typing.Tuple[float, float, float, float]:
+        """Return color in rgba float values with transparency
+
+        Returns:
+            tuple: color in rgba float values
+        """
         return self._r / 255.0, self._g / 255.0, self._b / 255.0, self._a / 255.0
 
     def float_a(self) -> float:
+        """Return alpha channel as float value
+
+        Returns:
+            float: alpha channel as float value
+        """
         return self._a / 255.0
 
 
@@ -79,6 +94,18 @@ YELLOW = Color(0xFF, 0xFF, 0x00)
 
 
 def parse_color(s: str) -> Color:
+    """
+    parse_color Parse a string to a color object
+
+    Parameters:
+        s (str): A string representing a color
+
+    Raises:
+        ValueError: If string is not recognised as a color representation
+
+    Returns:
+        Color: A Color object
+    """
     re_rgb = re.compile(r"^(0x|#)([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$")
     re_rgba = re.compile(r"^(0x|#)([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$")
 
@@ -120,6 +147,12 @@ def parse_color(s: str) -> Color:
 
 
 def random_color() -> Color:
+    """
+    random_color Return a color object of a random color
+
+    Returns:
+        Color: A Color object
+    """
     return random.choice(
         [
             BLACK,

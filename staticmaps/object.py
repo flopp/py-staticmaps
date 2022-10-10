@@ -1,4 +1,4 @@
-# py-staticmaps
+"""py-staticmaps - object"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 from abc import ABC, abstractmethod
@@ -16,6 +16,10 @@ PixelBoundsT = typing.Tuple[int, int, int, int]
 
 
 class Object(ABC):
+    """
+    Object A base class for objects
+    """
+
     def __init__(self) -> None:
         pass
 
