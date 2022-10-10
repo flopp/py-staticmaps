@@ -35,16 +35,16 @@ class SvgRenderer(Renderer):
     def drawing(self) -> svgwrite.Drawing:
         """Return the svg drawing for the image
 
-        :return: svg drawing
-        :rtype: svgwrite.Drawing
+        Returns:
+            svgwrite.Drawing: svg drawing
         """
         return self._draw
 
     def group(self) -> svgwrite.container.Group:
         """Return the svg group for the image
 
-        :return: svg group
-        :rtype: svgwrite.container.Group
+        Returns:
+            svgwrite.container.Group: svg group
         """
         assert self._group is not None
         return self._group
@@ -57,12 +57,10 @@ class SvgRenderer(Renderer):
     ) -> None:
         """Render all objects of static map
 
-        :param objects: objects of static map
-        :type objects: typing.List["Object"]
-        :param bbox: boundary box of all objects
-        :type bbox: s2sphere.LatLngRect
-        :param epb: extra pixel bounds
-        :type epb: typing.Tuple[int, int, int, int]
+        Parameters:
+            objects (typing.List["Object"]): objects of static map
+            bbox (s2sphere.LatLngRect): boundary box of all objects
+            epb (typing.Tuple[int, int, int, int]): extra pixel bounds
         """
         self._group = self._draw.g(clip_path="url(#page)")
         x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
@@ -78,8 +76,8 @@ class SvgRenderer(Renderer):
     def render_background(self, color: typing.Optional[Color]) -> None:
         """Render background of static map
 
-        :param color: background color
-        :type color: typing.Optional[Color]
+        Parameters:
+            color (typing.Optional[Color]): background color
         """
         if color is None:
             return
@@ -95,12 +93,10 @@ class SvgRenderer(Renderer):
     ) -> None:
         """Render tiles of static map
 
-        :param download: url of tiles provider
-        :type download: typing.Callable[[int, int, int], typing.Optional[bytes]]
-        :param bbox: boundary box of all objects
-        :type bbox: s2sphere.LatLngRect
-        :param epb: extra pixel bounds
-        :type epb: typing.Tuple[int, int, int, int]
+        Parameters:
+            download (typing.Callable[[int, int, int], typing.Optional[bytes]]): url of tiles provider
+            bbox (s2sphere.LatLngRect): boundary box of all objects
+            epb (typing.Tuple[int, int, int, int]): extra pixel bounds
         """
         self._group = self._draw.g(clip_path="url(#page)")
         for yy in range(0, self._trans.tiles_y()):
@@ -165,8 +161,9 @@ class SvgRenderer(Renderer):
     def render_attribution(self, attribution: typing.Optional[str]) -> None:
         """Render attribution from given tiles provider
 
-        :param attribution: Attribution for the given tiles provider
-        :type attribution: typing.Optional[str]:
+        Parameters:
+            attribution (typing.Optional[str]:): Attribution for the
+                given tiles provider
         """
         if (attribution is None) or (attribution == ""):
             return
@@ -197,15 +194,14 @@ class SvgRenderer(Renderer):
     ) -> typing.Optional[str]:
         """Fetch tiles from given tiles provider
 
-        :param download: callable
-        :param x: width
-        :param y: height
-        :type download: typing.Callable[[int, int, int], typing.Optional[bytes]]
-        :type x: int
-        :type y: int
+        Parameters:
+            download (typing.Callable[[int, int, int], typing.Optional[bytes]]):
+                callable
+            x (int): width
+            y (int): height
 
-        :return: svg drawing
-        :rtype: typing.Optional[str]
+        Returns:
+            typing.Optional[str]: svg drawing
         """
         image_data = download(self._trans.zoom(), x, y)
         if image_data is None:
@@ -216,10 +212,11 @@ class SvgRenderer(Renderer):
     def guess_image_mime_type(data: bytes) -> str:
         """Guess mime type from image data
 
-        :param data: image data
-        :type data: bytes
-        :return: mime type
-        :rtype: str
+        Parameters:
+            data (bytes): image data
+
+        Returns:
+            str: mime type
         """
         if data[:4] == b"\xff\xd8\xff\xe0" and data[6:11] == b"JFIF\0":
             return "image/jpeg"
@@ -231,11 +228,11 @@ class SvgRenderer(Renderer):
     def create_inline_image(image_data: bytes) -> str:
         """Create an svg inline image
 
-        :param image_data: Image data
-        :type image_data: bytes
+        Parameters:
+            image_data (bytes): Image data
 
-        :return: svg inline image
-        :rtype: str
+        Returns:
+            str: svg inline image
         """
         image_type = SvgRenderer.guess_image_mime_type(image_data)
         return f"data:{image_type};base64,{base64.b64encode(image_data).decode('utf-8')}"

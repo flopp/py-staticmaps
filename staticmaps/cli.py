@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """py-staticmaps - cli.py - entry point"""
 
-# py-staticmaps
+"""py-staticmaps cli"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import argparse
@@ -12,12 +12,27 @@ import staticmaps
 
 
 class FileFormat(enum.Enum):
+    """FileFormat"""
+
     GUESS = "guess"
     PNG = "png"
     SVG = "svg"
 
 
 def determine_file_format(file_format: FileFormat, file_name: str) -> FileFormat:
+    """
+    determine_file_format Try to determine the file format
+
+    Parameters:
+        file_format (FileFormat): The File Format
+        file_name (str): The file name
+
+    Raises:
+        RuntimeError: If the file format cannot be determined
+
+    Returns:
+        FileFormat: A FileFormat object
+    """
     if file_format != FileFormat.GUESS:
         return file_format
     extension = os.path.splitext(file_name)[1]
@@ -29,6 +44,7 @@ def determine_file_format(file_format: FileFormat, file_name: str) -> FileFormat
 
 
 def main() -> None:
+    """main Entry point"""
     args_parser = argparse.ArgumentParser(prog="createstaticmap")
     args_parser.add_argument(
         "--center",

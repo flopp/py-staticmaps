@@ -1,6 +1,24 @@
+# Runtime requirements
+--requirement requirements.txt
+
+# Linting/Tooling
 black
 flake8
 mypy
 pylint
+
+# Testing
 pytest
+
+# Building
 twine
+
+# Documentation
+mkdocs
+mkdocstrings
+mkdocstrings-python
+mkdocs-gen-files
+mkdocs-literate-nav
+mkdocs-material
+mkdocs-section-index
+Pygments

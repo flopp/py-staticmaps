@@ -1,4 +1,4 @@
-# py-staticmaps
+"""py-staticmaps - image_marker"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import io
@@ -14,6 +14,10 @@ from .svg_renderer import SvgRenderer
 
 
 class ImageMarker(Object):
+    """
+    ImageMarker A marker for an image object
+    """
+
     def __init__(self, latlng: s2sphere.LatLng, png_file: str, origin_x: int, origin_y: int) -> None:
         Object.__init__(self)
         self._latlng = latlng
@@ -27,24 +31,24 @@ class ImageMarker(Object):
     def origin_x(self) -> int:
         """Return x origin of the image marker
 
-        :return: x origin of the image marker
-        :rtype: int
+        Returns:
+            int: x origin of the image marker
         """
         return self._origin_x
 
     def origin_y(self) -> int:
         """Return y origin of the image marker
 
-        :return: y origin of the image marker
-        :rtype: int
+        Returns:
+            int: y origin of the image marker
         """
         return self._origin_y
 
     def width(self) -> int:
         """Return width of the image marker
 
-        :return: width of the image marker
-        :rtype: int
+        Returns:
+            int: width of the image marker
         """
         if self._image_data is None:
             self.load_image_data()
@@ -53,8 +57,8 @@ class ImageMarker(Object):
     def height(self) -> int:
         """Return height of the image marker
 
-        :return: height of the image marker
-        :rtype: int
+        Returns:
+            int: height of the image marker
         """
         if self._image_data is None:
             self.load_image_data()
@@ -63,8 +67,8 @@ class ImageMarker(Object):
     def image_data(self) -> bytes:
         """Return image data of the image marker
 
-        :return: image data of the image marker
-        :rtype: bytes
+        Returns:
+            bytes: image data of the image marker
         """
         if self._image_data is None:
             self.load_image_data()
@@ -74,24 +78,24 @@ class ImageMarker(Object):
     def latlng(self) -> s2sphere.LatLng:
         """Return LatLng of the image marker
 
-        :return: LatLng of the image marker
-        :rtype: s2sphere.LatLng
+        Returns:
+            s2sphere.LatLng: LatLng of the image marker
         """
         return self._latlng
 
     def bounds(self) -> s2sphere.LatLngRect:
         """Return bounds of the image marker
 
-        :return: bounds of the image marker
-        :rtype: s2sphere.LatLngRect
+        Returns:
+            s2sphere.LatLngRect: bounds of the image marker
         """
         return s2sphere.LatLngRect.from_point(self._latlng)
 
     def extra_pixel_bounds(self) -> PixelBoundsT:
         """Return extra pixel bounds of the image marker
 
-        :return: extra pixel bounds of the image marker
-        :rtype: PixelBoundsT
+        Returns:
+            PixelBoundsT: extra pixel bounds of the image marker
         """
         return (
             max(0, self._origin_x),
@@ -103,8 +107,8 @@ class ImageMarker(Object):
     def render_pillow(self, renderer: PillowRenderer) -> None:
         """Render marker using PILLOW
 
-        :param renderer: pillow renderer
-        :type renderer: PillowRenderer
+        Parameters:
+            renderer (PillowRenderer): pillow renderer
         """
         x, y = renderer.transformer().ll2pixel(self.latlng())
         image = renderer.create_image(self.image_data())
@@ -122,8 +126,8 @@ class ImageMarker(Object):
     def render_svg(self, renderer: SvgRenderer) -> None:
         """Render marker using svgwrite
 
-        :param renderer: svg renderer
-        :type renderer: SvgRenderer
+        Parameters:
+            renderer (SvgRenderer): svg renderer
         """
         x, y = renderer.transformer().ll2pixel(self.latlng())
         image = renderer.create_inline_image(self.image_data())
@@ -139,8 +143,8 @@ class ImageMarker(Object):
     def render_cairo(self, renderer: CairoRenderer) -> None:
         """Render marker using cairo
 
-        :param renderer: cairo renderer
-        :type renderer: CairoRenderer
+        Parameters:
+            renderer (CairoRenderer): cairo renderer
         """
         x, y = renderer.transformer().ll2pixel(self.latlng())
         image = renderer.create_image(self.image_data())

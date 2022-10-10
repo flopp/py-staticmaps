@@ -1,4 +1,4 @@
-# py-staticmaps
+"""py-staticmaps - pillow_renderer"""
 # Copyright (c) 2021 Florian Pigorsch; see /LICENSE for licensing information
 
 import io
@@ -28,15 +28,39 @@ class PillowRenderer(Renderer):
         self._offset_x = 0
 
     def draw(self) -> PIL_ImageDraw.Draw:
+        """
+        draw Call PIL_ImageDraw.Draw()
+
+        Returns:
+            PIL_ImageDraw.Draw: An PIL_Image draw object
+        """
         return self._draw
 
     def image(self) -> PIL_Image.Image:
+        """
+        image Call PIL_Image.new()
+
+        Returns:
+            PIL_Image.Image: A PIL_Image image object
+        """
         return self._image
 
     def offset_x(self) -> int:
+        """
+        offset_x Return the offset in x direction
+
+        Returns:
+            int: Offset in x direction
+        """
         return self._offset_x
 
     def alpha_compose(self, image: PIL_Image.Image) -> None:
+        """
+        alpha_compose Call PIL_Image.alpha_composite()
+
+        Parameters:
+            image (PIL_Image.Image): A PIL_Image image object
+        """
         assert image.size == self._image.size
         self._image = PIL_Image.alpha_composite(self._image, image)
         self._draw = PIL_ImageDraw.Draw(self._image)
@@ -49,12 +73,10 @@ class PillowRenderer(Renderer):
     ) -> None:
         """Render all objects of static map
 
-        :param objects: objects of static map
-        :type objects: typing.List["Object"]
-        :param bbox: boundary box of all objects
-        :type bbox: s2sphere.LatLngRect
-        :param epb: extra pixel bounds
-        :type epb: typing.Tuple[int, int, int, int]
+        Parameters:
+            objects (typing.List["Object"]): objects of static map
+            bbox (s2sphere.LatLngRect): boundary box of all objects
+            epb (typing.Tuple[int, int, int, int]): extra pixel bounds
         """
         x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
         for obj in objects:
@@ -65,8 +87,8 @@ class PillowRenderer(Renderer):
     def render_background(self, color: typing.Optional[Color]) -> None:
         """Render background of static map
 
-        :param color: background color
-        :type color: typing.Optional[Color]
+        Parameters:
+            color (typing.Optional[Color]): background color
         """
         if color is None:
             return
@@ -80,12 +102,10 @@ class PillowRenderer(Renderer):
     ) -> None:
         """Render background of static map
 
-        :param download: url of tiles provider
-        :type download: typing.Callable[[int, int, int], typing.Optional[bytes]]
-        :param bbox: boundary box of all objects
-        :type bbox: s2sphere.LatLngRect
-        :param epb: extra pixel bounds
-        :type epb: typing.Tuple[int, int, int, int]
+        Parameters:
+            download (typing.Callable[[int, int, int], typing.Optional[bytes]]): url of tiles provider
+            bbox (s2sphere.LatLngRect): boundary box of all objects
+            epb (typing.Tuple[int, int, int, int]): extra pixel bounds
         """
         for yy in range(0, self._trans.tiles_y()):
             y = self._trans.first_tile_y() + yy
@@ -110,8 +130,8 @@ class PillowRenderer(Renderer):
     def render_attribution(self, attribution: typing.Optional[str]) -> None:
         """Render attribution from given tiles provider
 
-        :param attribution: Attribution for the given tiles provider
-        :type attribution: typing.Optional[str]:
+        Parameters:
+            attribution (typing.Optional[str]:): Attribution for the given tiles provider
         """
         if (attribution is None) or (attribution == ""):
             return
@@ -130,15 +150,13 @@ class PillowRenderer(Renderer):
     ) -> typing.Optional[PIL_Image.Image]:
         """Fetch tiles from given tiles provider
 
-        :param download: callable
-        :param x: width
-        :param y: height
-        :type download: typing.Callable[[int, int, int], typing.Optional[bytes]]
-        :type x: int
-        :type y: int
+        Parameters:
+            download (typing.Callable[[int, int, int], typing.Optional[bytes]]): callable
+            x (int): width
+            y (int): height
 
-        :return: pillow image
-        :rtype: typing.Optional[PIL_Image.Image]
+        Returns:
+            typing.Optional[PIL_Image.Image]: pillow image
         """
         image_data = download(self._trans.zoom(), x, y)
         if image_data is None:
@@ -149,10 +167,10 @@ class PillowRenderer(Renderer):
     def create_image(image_data: bytes) -> PIL_Image:
         """Create a pillow image
 
-        :param image_data: Image data
-        :type image_data: bytes
+        Parameters:
+            image_data (bytes): Image data
 
-        :return: pillow image
-        :rtype: PIL.Image
+        Returns:
+            PIL.Image: pillow image
         """
         return PIL_Image.open(io.BytesIO(image_data)).convert("RGBA")

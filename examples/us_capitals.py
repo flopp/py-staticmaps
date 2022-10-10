@@ -15,7 +15,7 @@ URL = (
     "https://gist.githubusercontent.com/jpriebe/d62a45e29f24e843c974/"
     "raw/b1d3066d245e742018bce56e41788ac7afa60e29/us_state_capitals.json"
 )
-response = requests.get(URL)
+response = requests.get(URL, timeout=3600)
 for _, data in json.loads(response.text).items():
     capital = staticmaps.create_latlng(float(data["lat"]), float(data["long"]))
     context.add_object(staticmaps.Marker(capital, size=5))

@@ -1,4 +1,4 @@
-# py-staticmaps
+"""py-staticmaps - transformer"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import math
@@ -39,32 +39,32 @@ class Transformer:
     def world_width(self) -> int:
         """Return the width of the world in pixels depending on tiles provider
 
-        :return: width of the world in pixels
-        :rtype: int
+        Returns:
+            int: width of the world in pixels
         """
         return self._number_of_tiles * self._tile_size
 
     def image_width(self) -> int:
         """Return the width of the image in pixels
 
-        :return: width of the image in pixels
-        :rtype: int
+        Returns:
+            int: width of the image in pixels
         """
         return self._width
 
     def image_height(self) -> int:
         """Return the height of the image in pixels
 
-        :return: height of the image in pixels
-        :rtype: int
+        Returns:
+            int: height of the image in pixels
         """
         return self._height
 
     def zoom(self) -> int:
         """Return the zoom of the static map
 
-        :return: zoom of the static map
-        :rtype: int
+        Returns:
+            int: zoom of the static map
         """
 
         return self._zoom
@@ -72,8 +72,8 @@ class Transformer:
     def image_size(self) -> typing.Tuple[int, int]:
         """Return the size of the image as tuple of width and height
 
-        :return: width and height of the image in pixels
-        :rtype: tuple
+        Returns:
+            tuple: width and height of the image in pixels
         """
 
         return self._width, self._height
@@ -81,64 +81,64 @@ class Transformer:
     def number_of_tiles(self) -> int:
         """Return number of tiles of static map
 
-        :return: number of tiles
-        :rtype: int
+        Returns:
+            int: number of tiles
         """
         return self._number_of_tiles
 
     def first_tile_x(self) -> int:
         """Return number of first tile in x
 
-        :return: number of first tile
-        :rtype: int
+        Returns:
+            int: number of first tile
         """
         return self._first_tile_x
 
     def first_tile_y(self) -> int:
         """Return number of first tile in y
 
-        :return: number of first tile
-        :rtype: int
+        Returns:
+            int: number of first tile
         """
         return self._first_tile_y
 
     def tiles_x(self) -> int:
         """Return number of tiles in x
 
-        :return: number of tiles
-        :rtype: int
+        Returns:
+            int: number of tiles
         """
         return self._tiles_x
 
     def tiles_y(self) -> int:
         """Return number of tiles in y
 
-        :return: number of tiles
-        :rtype: int
+        Returns:
+            int: number of tiles
         """
         return self._tiles_y
 
     def tile_offset_x(self) -> float:
         """Return tile offset in x
 
-        :return: tile offset
-        :rtype: int
+        Returns:
+            int: tile offset
         """
         return self._tile_offset_x
 
     def tile_offset_y(self) -> float:
         """Return tile offset in y
 
-        :return: tile offset
-        :rtype: int
+        Returns:
+            int: tile offset
         """
         return self._tile_offset_y
 
     def tile_size(self) -> int:
         """Return tile size
 
-        :return: tile size
-        :rtype: int
+        Returns:
+            int: tile size
         """
         return self._tile_size
 
@@ -146,10 +146,11 @@ class Transformer:
     def mercator(latlng: s2sphere.LatLng) -> typing.Tuple[float, float]:
         """Mercator projection
 
-        :param latlng: LatLng object
-        :type latlng: s2sphere.LatLng
-        :return: tile values of given LatLng
-        :rtype: tuple
+        Parameters:
+            latlng (s2sphere.LatLng): LatLng object
+
+        Returns:
+            tuple: tile values of given LatLng
         """
         lat = latlng.lat().radians
         lng = latlng.lng().radians
@@ -159,12 +160,12 @@ class Transformer:
     def mercator_inv(x: float, y: float) -> s2sphere.LatLng:
         """Inverse Mercator projection
 
-        :param x: x value
-        :type x: float
-        :param y: x value
-        :type y: float
-        :return: LatLng values of given values
-        :rtype: s2sphere.LatLng
+        Parameters:
+            x (float): x value
+            y (float): x value
+
+        Returns:
+            s2sphere.LatLng: LatLng values of given values
         """
         x = 2 * math.pi * (x - 0.5)
         k = math.exp(4 * math.pi * (0.5 - y))
@@ -174,10 +175,11 @@ class Transformer:
     def ll2t(self, latlng: s2sphere.LatLng) -> typing.Tuple[float, float]:
         """Transform LatLng values into tiles
 
-        :param latlng: LatLng object
-        :type latlng: s2sphere.LatLng
-        :return: tile values of given LatLng
-        :rtype: tuple
+        Parameters:
+            latlng (s2sphere.LatLng): LatLng object
+
+        Returns:
+            tuple: tile values of given LatLng
         """
         x, y = self.mercator(latlng)
         return self._number_of_tiles * x, self._number_of_tiles * y
@@ -185,22 +187,23 @@ class Transformer:
     def t2ll(self, x: float, y: float) -> s2sphere.LatLng:
         """Transform tile values into LatLng values
 
-        :param x: x tile
-        :type x: float
-        :param y: x tile
-        :type y: float
-        :return: LatLng values of given tile values
-        :rtype: s2sphere.LatLng
+        Parameters:
+            x (float): x tile
+            y (float): x tile
+
+        Returns:
+            s2sphere.LatLng: LatLng values of given tile values
         """
         return self.mercator_inv(x / self._number_of_tiles, y / self._number_of_tiles)
 
     def ll2pixel(self, latlng: s2sphere.LatLng) -> typing.Tuple[float, float]:
         """Transform LatLng values into pixel values
 
-        :param latlng: LatLng object
-        :type latlng: s2sphere.LatLng
-        :return: pixel values of given LatLng
-        :rtype: tuple
+        Parameters:
+            latlng (s2sphere.LatLng): LatLng object
+
+        Returns:
+            tuple: pixel values of given LatLng
         """
         x, y = self.ll2t(latlng)
         s = self._tile_size
@@ -211,12 +214,12 @@ class Transformer:
     def pixel2ll(self, x: float, y: float) -> s2sphere.LatLng:
         """Transform pixel values into LatLng values
 
-        :param x: x pixel
-        :type x: float
-        :param y: x pixel
-        :type y: float
-        :return: LatLng values of given pixel values
-        :rtype: s2sphere.LatLng
+        Parameters:
+            x (float): x pixel
+            y (float): x pixel
+
+        Returns:
+            s2sphere.LatLng: LatLng values of given pixel values
         """
         s = self._tile_size
         x = (x - self._width / 2) / s + self._tile_center_x

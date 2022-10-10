@@ -1,4 +1,4 @@
-# py-staticmaps
+"""py-staticmaps - marker"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import math
@@ -13,6 +13,10 @@ from .svg_renderer import SvgRenderer
 
 
 class Marker(Object):
+    """
+    Marker A marker object
+    """
+
     def __init__(self, latlng: s2sphere.LatLng, color: Color = RED, size: int = 10) -> None:
         Object.__init__(self)
         self._latlng = latlng
@@ -22,51 +26,51 @@ class Marker(Object):
     def latlng(self) -> s2sphere.LatLng:
         """Return LatLng of the marker
 
-        :return: LatLng of the marker
-        :rtype: s2sphere.LatLng
+        Returns:
+            s2sphere.LatLng: LatLng of the marker
         """
         return self._latlng
 
     def color(self) -> Color:
         """Return color of the marker
 
-        :return: color object
-        :rtype: Color
+        Returns:
+            Color: color object
         """
         return self._color
 
     def size(self) -> int:
         """Return size of the marker
 
-        :return: size of the marker
-        :rtype: int
+        Returns:
+            int: size of the marker
         """
         return self._size
 
     def bounds(self) -> s2sphere.LatLngRect:
         """Return bounds of the marker
 
-        :return: bounds of the marker
-        :rtype: s2sphere.LatLngRect
+        Returns:
+            s2sphere.LatLngRect: bounds of the marker
         """
         return s2sphere.LatLngRect.from_point(self._latlng)
 
     def extra_pixel_bounds(self) -> PixelBoundsT:
         """Return extra pixel bounds of the marker
 
-        :return: extra pixel bounds of the marker
-        :rtype: PixelBoundsT
+        Returns:
+            PixelBoundsT: extra pixel bounds of the marker
         """
         return self._size, self._size, self._size, 0
 
     def render_pillow(self, renderer: PillowRenderer) -> None:
         """Render marker using PILLOW
 
-        :param renderer: pillow renderer
-        :type renderer: PillowRenderer
+        Parameters:
+            renderer (PillowRenderer): pillow renderer
         """
         x, y = renderer.transformer().ll2pixel(self.latlng())
-        x = x + renderer.offset_x()
+        x += renderer.offset_x()
 
         r = self.size()
         dx = math.sin(math.pi / 3.0)
@@ -89,8 +93,8 @@ class Marker(Object):
     def render_svg(self, renderer: SvgRenderer) -> None:
         """Render marker using svgwrite
 
-        :param renderer: svg renderer
-        :type renderer: SvgRenderer
+        Parameters:
+            renderer (SvgRenderer): svg renderer
         """
         x, y = renderer.transformer().ll2pixel(self.latlng())
         r = self.size()
@@ -111,8 +115,8 @@ class Marker(Object):
     def render_cairo(self, renderer: CairoRenderer) -> None:
         """Render marker using cairo
 
-        :param renderer: cairo renderer
-        :type renderer: CairoRenderer
+        Parameters:
+            renderer (CairoRenderer): cairo renderer
         """
         x, y = renderer.transformer().ll2pixel(self.latlng())
         r = self.size()

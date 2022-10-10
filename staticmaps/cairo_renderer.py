@@ -27,8 +27,8 @@ if typing.TYPE_CHECKING:
 def cairo_is_supported() -> bool:
     """Check whether cairo is supported
 
-    :return: Is cairo supported
-    :rtype: bool
+    Returns:
+        bool: Is cairo supported
     """
     return "cairo" in sys.modules
 
@@ -52,17 +52,15 @@ class CairoRenderer(Renderer):
 
     def image_surface(self) -> cairo_ImageSurface:
         """
-
-        :return: cairo image surface
-        :rtype: cairo.ImageSurface
+        Returns:
+            cairo.ImageSurface: cairo image surface
         """
         return self._surface
 
     def context(self) -> cairo_Context:
         """
-
-        :return: cairo context
-        :rtype: cairo.Context
+        Returns:
+            cairo.Context: cairo context
         """
         return self._context
 
@@ -70,11 +68,11 @@ class CairoRenderer(Renderer):
     def create_image(image_data: bytes) -> cairo_ImageSurface:
         """Create a cairo image
 
-        :param image_data: Image data
-        :type image_data: bytes
+        Parameters:
+            image_data (bytes): Image data
 
-        :return: cairo image surface
-        :rtype: cairo.ImageSurface
+        Returns:
+            cairo.ImageSurface: cairo image surface
         """
         image = PIL_Image.open(io.BytesIO(image_data))
         if image.format == "PNG":
@@ -93,12 +91,10 @@ class CairoRenderer(Renderer):
     ) -> None:
         """Render all objects of static map
 
-        :param objects: objects of static map
-        :type objects: typing.List["Object"]
-        :param bbox: boundary box of all objects
-        :type bbox: s2sphere.LatLngRect
-        :param epb: extra pixel bounds
-        :type epb: typing.Tuple[int, int, int, int]
+        Parameters:
+            objects (typing.List["Object"]): objects of static map
+            bbox (s2sphere.LatLngRect): boundary box of all objects
+            epb (typing.Tuple[int, int, int, int]): extra pixel bounds
         """
         x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
         for obj in objects:
@@ -111,8 +107,8 @@ class CairoRenderer(Renderer):
     def render_background(self, color: typing.Optional[Color]) -> None:
         """Render background of static map
 
-        :param color: background color
-        :type color: typing.Optional[Color]
+        Parameters:
+            color (typing.Optional[Color]): background color
         """
         if color is None:
             return
@@ -128,12 +124,11 @@ class CairoRenderer(Renderer):
     ) -> None:
         """Render background of static map
 
-        :param download: url of tiles provider
-        :type download: typing.Callable[[int, int, int], typing.Optional[bytes]]
-        :param bbox: boundary box of all objects
-        :type bbox: s2sphere.LatLngRect
-        :param epb: extra pixel bounds
-        :type epb: typing.Tuple[int, int, int, int]
+        Parameters:
+            download (typing.Callable[[int, int, int], typing.Optional[bytes]]):
+                url of tiles provider
+            bbox (s2sphere.LatLngRect): boundary box of all objects
+            epb (typing.Tuple[int, int, int, int]): extra pixel bounds
         """
         for yy in range(0, self._trans.tiles_y()):
             y = self._trans.first_tile_y() + yy
@@ -159,8 +154,9 @@ class CairoRenderer(Renderer):
     def render_attribution(self, attribution: typing.Optional[str]) -> None:
         """Render attribution from given tiles provider
 
-        :param attribution: Attribution for the given tiles provider
-        :type attribution: typing.Optional[str]:
+        Parameters:
+            attribution (typing.Optional[str]:): Attribution for the
+                given tiles provider
         """
         if (attribution is None) or (attribution == ""):
             return
@@ -188,15 +184,14 @@ class CairoRenderer(Renderer):
     ) -> typing.Optional[cairo_ImageSurface]:
         """Fetch tiles from given tiles provider
 
-        :param download: callable
-        :param x: width
-        :param y: height
-        :type download: typing.Callable[[int, int, int], typing.Optional[bytes]]
-        :type x: int
-        :type y: int
+        Parameters:
+            download (typing.Callable[[int, int, int], typing.Optional[bytes]]):
+                callable
+            x (int): width
+            y (int): height
 
-        :return: cairo image surface
-        :rtype: typing.Optional[cairo_ImageSurface]
+        Returns:
+            typing.Optional[cairo_ImageSurface]: cairo image surface
         """
         image_data = download(self._trans.zoom(), x, y)
         if image_data is None:
