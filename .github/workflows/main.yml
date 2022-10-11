@@ -14,9 +14,9 @@ jobs:
     steps:
     - name: Git config
       run: git config --global core.autocrlf input
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python v${{matrix.python-version}} - ${{runner.os}}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: ${{matrix.python-version}}
         cache: pip
@@ -48,9 +48,9 @@ jobs:
     steps:
     - name: Git config
       run: git config --global core.autocrlf input
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python v${{matrix.python-version}} - ${{runner.os}}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: ${{matrix.python-version}}
         cache: pip
@@ -75,7 +75,7 @@ jobs:
         (ls  *cairo*.png && mv  *cairo*.png build/.) || echo "no cairo png files found!"
         cd -
     - name: Archive examples
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: build_examples
         path: examples/build
