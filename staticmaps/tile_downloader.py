@@ -41,8 +41,7 @@ class TileDownloader:
             typing.Optional[bytes]: tiles
 
         Raises:
-            RuntimeError: raises a runtime error if the the server
-                response status is not 200
+            RuntimeError: raises a runtime error if the server response status is not 200
         """
         file_name = None
         if cache_dir is not None:
