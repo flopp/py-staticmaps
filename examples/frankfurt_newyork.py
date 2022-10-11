@@ -1,7 +1,6 @@
 #!/usr/bin/env python
-"""py-staticmaps - Example Frankfurt-New York"""
 
-# py-staticmaps
+"""py-staticmaps - Example Frankfurt-New York"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import staticmaps

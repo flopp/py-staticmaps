@@ -1,7 +1,6 @@
 #!/usr/bin/env python
-"""py-staticmaps - Example Freiburg Area"""
 
-# py-staticmaps
+"""py-staticmaps - Example Freiburg Area"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import staticmaps
