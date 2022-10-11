@@ -1,5 +1,4 @@
-#PYTHON=python3
-PYTHON=/applbin/python_vw
+PYTHON=python3
 
 .PHONY: setup
 setup:
