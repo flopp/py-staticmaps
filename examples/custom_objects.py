@@ -37,7 +37,7 @@ class TextLabel(staticmaps.Object):
         x, y = renderer.transformer().ll2pixel(self.latlng())
         x = x + renderer.offset_x()
 
-        tw, th = renderer.draw().textsize(self._text)
+        tw, th = renderer.draw().textlength(self._text)
         w = max(self._arrow, tw + 2 * self._margin)
         h = th + 2 * self._margin
 
