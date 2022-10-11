@@ -92,7 +92,7 @@ class PillowRenderer(Renderer):
         """
         if color is None:
             return
-        self.draw().rectangle([(0, 0), self.image().size], fill=color.int_rgba())
+        self.draw().rectangle(((0, 0), self.image().size), fill=color.int_rgba())
 
     def render_tiles(
         self,
@@ -141,7 +141,7 @@ class PillowRenderer(Renderer):
         h = self._trans.image_height()
         overlay = PIL_Image.new("RGBA", self._image.size, (255, 255, 255, 0))
         draw = PIL_ImageDraw.Draw(overlay)
-        draw.rectangle([(0, h - th - 2 * margin), (w, h)], fill=(255, 255, 255, 204))
+        draw.rectangle(((0, h - th - 2 * margin), (w, h)), fill=(255, 255, 255, 204))
         self.alpha_compose(overlay)
         self.draw().text((margin, h - th - margin), attribution, fill=(0, 0, 0, 255))
 

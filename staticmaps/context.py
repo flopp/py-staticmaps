@@ -1,7 +1,7 @@
 """py-staticmaps - Context"""
 
 # py-staticmaps
-# Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
+# Copyright (c) 2022 Florian Pigorsch; see /LICENSE for licensing information
 
 import math
 import os
