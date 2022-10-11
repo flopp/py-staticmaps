@@ -3,12 +3,15 @@
 
 # Linting/Tooling
 black
+codespell
 flake8
 mypy
 pylint
 
 # Testing
+coverage
 pytest
+pytest-cov
 
 # Building
 twine

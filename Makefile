@@ -1,9 +1,10 @@
-PYTHON=python3
+#PYTHON=python3
+PYTHON=/applbin/python_vw
 
 .PHONY: setup
 setup:
 	$(PYTHON) -m venv .env
-	.env/bin/pip install --upgrade pip
+	.env/bin/pip install --upgrade pip wheel
 	.env/bin/pip install --upgrade --requirement requirements.txt
 	.env/bin/pip install --upgrade --requirement requirements-dev.txt
 	.env/bin/pip install --upgrade --requirement requirements-examples.txt
@@ -14,17 +15,19 @@ install: setup
 
 .PHONY: lint
 lint:
-	.env/bin/pylint \
-	    setup.py staticmaps examples tests
-	.env/bin/flake8 \
-	    setup.py staticmaps examples tests
-	.env/bin/mypy \
-	    setup.py staticmaps examples tests
 	.env/bin/black \
 	    --line-length 120 \
 	    --check \
 	    --diff \
 	    setup.py staticmaps examples tests
+	.env/bin/flake8 \
+	    setup.py staticmaps examples tests
+	.env/bin/pylint \
+	    setup.py staticmaps examples tests
+	.env/bin/mypy \
+	    setup.py staticmaps examples tests
+	.env/bin/codespell  \
+	    README.md staticmaps/*.py tests/*.py examples/*.py
 
 .PHONY: format
 format:
@@ -48,6 +51,10 @@ run-examples:
 .PHONY: test
 test:
 	PYTHONPATH=. .env/bin/python -m pytest tests
+
+.PHONY: coverage
+coverage:
+	PYTHONPATH=. .env/bin/python -m pytest --cov=staticmaps --cov-branch --cov-report=term --cov-report=html tests
 
 .PHONY: build-package
 build-package:
