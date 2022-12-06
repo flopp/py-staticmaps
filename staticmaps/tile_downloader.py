@@ -11,6 +11,8 @@ import slugify  # type: ignore
 from .meta import GITHUB_URL, LIB_NAME, VERSION
 from .tile_provider import TileProvider
 
+REQUEST_TIMEOUT = 10
+
 
 class TileDownloader:
     """A tile downloader class"""
@@ -54,7 +56,7 @@ class TileDownloader:
         url = provider.url(zoom, x, y)
         if url is None:
             return None
-        res = requests.get(url, headers={"user-agent": self._user_agent})
+        res = requests.get(url, headers={"user-agent": self._user_agent}, timeout=REQUEST_TIMEOUT)
         if res.status_code == 200:
             data = res.content
         else:
