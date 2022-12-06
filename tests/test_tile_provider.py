@@ -1,4 +1,4 @@
-# py-staticmaps
+"""py-staticmaps - Test TileProvider"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import staticmaps
@@ -18,3 +18,21 @@ def test_sharding() -> None:
     for s in shard_counts:
         assert (third * 0.9) < s
         assert s < (third * 1.1)
+
+
+def test_tile_provider_init() -> None:
+    t1 = staticmaps.tile_provider.tile_provider_JawgLight
+    t1.set_api_key("0123456789876543210")
+
+    t2 = staticmaps.TileProvider(
+        "jawg-light",
+        url_pattern="https://$s.tile.jawg.io/jawg-light/$z/$x/$y.png?access-token=$k",
+        shards=["a", "b", "c", "d"],
+        attribution="Maps (C) Jawg Maps (C) OpenStreetMap.org contributors",
+        max_zoom=20,
+        api_key="0123456789876543210",
+    )
+    assert t1.name() == t2.name() == "jawg-light"
+    assert t1.attribution() == t2.attribution() == "Maps (C) Jawg Maps (C) OpenStreetMap.org contributors"
+    assert t1.tile_size() == t2.tile_size() == 256
+    assert t1.max_zoom() == t2.max_zoom() == 20

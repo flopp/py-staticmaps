@@ -1,6 +1,6 @@
 #!/usr/bin/env python
+"""py-staticmaps - cli.py - entry point"""
 
-# py-staticmaps
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import argparse
@@ -11,12 +11,27 @@ import staticmaps
 
 
 class FileFormat(enum.Enum):
+    """FileFormat"""
+
     GUESS = "guess"
     PNG = "png"
     SVG = "svg"
 
 
 def determine_file_format(file_format: FileFormat, file_name: str) -> FileFormat:
+    """
+    determine_file_format Try to determine the file format
+
+    Parameters:
+        file_format (FileFormat): The File Format
+        file_name (str): The file name
+
+    Raises:
+        RuntimeError: If the file format cannot be determined
+
+    Returns:
+        FileFormat: A FileFormat object
+    """
     if file_format != FileFormat.GUESS:
         return file_format
     extension = os.path.splitext(file_name)[1]
@@ -28,6 +43,7 @@ def determine_file_format(file_format: FileFormat, file_name: str) -> FileFormat
 
 
 def main() -> None:
+    """main Entry point"""
     args_parser = argparse.ArgumentParser(prog="createstaticmap")
     args_parser.add_argument(
         "--center",
@@ -80,6 +96,12 @@ def main() -> None:
         type=str,
     )
     args_parser.add_argument(
+        "--tight-to-bounds",
+        action="store_true",
+        default=False,
+        help="Tighten static map to minimum boundaries of objects, custom boundaries, ...(default: False)",
+    )
+    args_parser.add_argument(
         "--tiles",
         metavar="TILEPROVIDER",
         type=str,
@@ -130,6 +152,7 @@ def main() -> None:
             context.add_object(staticmaps.Marker(staticmaps.parse_latlng(coords)))
     if args.bounds is not None:
         context.add_bounds(staticmaps.parse_latlngs2rect(args.bounds))
+    context.set_tighten_to_bounds(args.tighten_to_bounds)
 
     file_name = args.filename[0]
     if determine_file_format(args.file_format, file_name) == FileFormat.PNG:

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# py-staticmaps
+"""py-staticmaps - Example Geodesic Circles"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import staticmaps
@@ -13,7 +13,7 @@ center2 = staticmaps.create_latlng(0, 0)
 
 context.add_object(staticmaps.Circle(center1, 2000, fill_color=staticmaps.TRANSPARENT, color=staticmaps.RED, width=2))
 context.add_object(staticmaps.Circle(center2, 2000, fill_color=staticmaps.TRANSPARENT, color=staticmaps.GREEN, width=2))
-context.add_object(staticmaps.Marker(center1, color=staticmaps.RED))
+context.add_object(staticmaps.Marker(center1))
 context.add_object(staticmaps.Marker(center2, color=staticmaps.GREEN))
 
 # render png via pillow

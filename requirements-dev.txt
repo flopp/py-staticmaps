@@ -1,9 +1,28 @@
+# Runtime requirements
+--requirement requirements.txt
+
+# Linting/Tooling
 black
 codespell
 coverage
 flake8
 mypy
 pylint
+
+# Testing
+coverage
 pytest
 pytest-cov
+
+# Building
 twine
+
+# Documentation
+mkdocs
+mkdocstrings
+mkdocstrings-python
+mkdocs-gen-files
+mkdocs-literate-nav
+mkdocs-material
+mkdocs-section-index
+Pygments

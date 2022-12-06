@@ -1,4 +1,4 @@
-# py-staticmaps
+"""py-staticmaps - line"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import math
@@ -16,6 +16,10 @@ from .svg_renderer import SvgRenderer
 
 
 class Line(Object):
+    """
+    Line A line object
+    """
+
     def __init__(self, latlngs: typing.List[s2sphere.LatLng], color: Color = RED, width: int = 2) -> None:
         Object.__init__(self)
         if latlngs is None or len(latlngs) < 2:
@@ -31,24 +35,24 @@ class Line(Object):
     def color(self) -> Color:
         """Return color of the line
 
-        :return: color object
-        :rtype: Color
+        Returns:
+            Color: color object
         """
         return self._color
 
     def width(self) -> int:
         """Return width of line
 
-        :return: width
-        :rtype: int
+        Returns:
+            int: width
         """
         return self._width
 
     def bounds(self) -> s2sphere.LatLngRect:
         """Return bounds of line
 
-        :return: bounds of line
-        :rtype: s2sphere.LatLngRect
+        Returns:
+            s2sphere.LatLngRect: bounds of line
         """
         b = s2sphere.LatLngRect()
         for latlng in self.interpolate():
@@ -58,16 +62,16 @@ class Line(Object):
     def extra_pixel_bounds(self) -> PixelBoundsT:
         """Return extra pixel bounds from line
 
-        :return: extra pixel bounds
-        :rtype: PixelBoundsT
+        Returns:
+            PixelBoundsT: extra pixel bounds
         """
         return self._width, self._width, self._width, self._width
 
     def interpolate(self) -> typing.List[s2sphere.LatLng]:
         """Interpolate bounds
 
-        :return: list of LatLng
-        :rtype: typing.List[s2sphere.LatLng]
+        Returns:
+            typing.List[s2sphere.LatLng]: list of LatLng
         """
         if self._interpolation_cache is not None:
             return self._interpolation_cache
@@ -107,8 +111,8 @@ class Line(Object):
     def render_pillow(self, renderer: PillowRenderer) -> None:
         """Render line using PILLOW
 
-        :param renderer: pillow renderer
-        :type renderer: PillowRenderer
+        Parameters:
+            renderer (PillowRenderer): pillow renderer
         """
         if self.width() == 0:
             return
@@ -121,8 +125,8 @@ class Line(Object):
     def render_svg(self, renderer: SvgRenderer) -> None:
         """Render line using svgwrite
 
-        :param renderer: svg renderer
-        :type renderer: SvgRenderer
+        Parameters:
+            renderer (SvgRenderer): svg renderer
         """
         if self.width() == 0:
             return
@@ -139,8 +143,8 @@ class Line(Object):
     def render_cairo(self, renderer: CairoRenderer) -> None:
         """Render line using cairo
 
-        :param renderer: cairo renderer
-        :type renderer: CairoRenderer
+        Parameters:
+            renderer (CairoRenderer): cairo renderer
         """
         if self.width() == 0:
             return
