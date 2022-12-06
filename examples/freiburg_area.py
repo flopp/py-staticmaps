@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# py-staticmaps
+"""py-staticmaps - Example Freiburg Area"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import staticmaps
@@ -456,4 +456,10 @@ if staticmaps.cairo_is_supported():
 # render svg
 svg_image = context.render_svg(800, 500)
 with open("freiburg_area.svg", "w", encoding="utf-8") as f:
+    svg_image.write(f, pretty=True)
+
+# render svg - tight boundaries
+context.set_tighten_to_bounds(True)
+svg_image = context.render_svg(800, 500)
+with open("freiburg_area.tight.svg", "w", encoding="utf-8") as f:
     svg_image.write(f, pretty=True)

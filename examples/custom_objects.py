@@ -1,17 +1,23 @@
 #!/usr/bin/env python
 
-# py-staticmaps
+"""py-staticmaps - Example Custom Objects"""
 # Copyright (c) 2021 Florian Pigorsch; see /LICENSE for licensing information
 
 try:
     import cairo  # type: ignore
 except ImportError:
     pass
+
 import s2sphere  # type: ignore
+
 import staticmaps
 
 
 class TextLabel(staticmaps.Object):
+    """
+    TextLabel Custom object, inherits from staticmaps.Object
+    """
+
     def __init__(self, latlng: s2sphere.LatLng, text: str) -> None:
         staticmaps.Object.__init__(self)
         self._latlng = latlng
@@ -21,23 +27,44 @@ class TextLabel(staticmaps.Object):
         self._font_size = 12
 
     def latlng(self) -> s2sphere.LatLng:
+        """Return latlng of object
+
+        Returns:
+            s2sphere.LatLng: latlng of object
+        """
         return self._latlng
 
     def bounds(self) -> s2sphere.LatLngRect:
+        """Return bounds of object
+
+        Returns:
+            s2sphere.LatLngRect: bounds of object
+        """
         return s2sphere.LatLngRect.from_point(self._latlng)
 
     def extra_pixel_bounds(self) -> staticmaps.PixelBoundsT:
+        """Return extra pixel bounds from object
+
+        Returns:
+            PixelBoundsT: extra pixel bounds
+        """
         # Guess text extents.
         tw = len(self._text) * self._font_size * 0.5
         th = self._font_size * 1.2
-        w = max(self._arrow, tw + 2.0 * self._margin)
-        return (int(w / 2.0), int(th + 2.0 * self._margin + self._arrow), int(w / 2), 0)
+        w = max(self._arrow, int(tw + 2.0 * self._margin))
+        return int(w / 2.0), int(th + 2.0 * self._margin + self._arrow), int(w / 2), 0
 
     def render_pillow(self, renderer: staticmaps.PillowRenderer) -> None:
-        x, y = renderer.transformer().ll2pixel(self.latlng())
-        x = x + renderer.offset_x()
+        """Render object using PILLOW
 
-        tw, th = renderer.draw().textsize(self._text)
+        Parameters:
+            renderer (PillowRenderer): pillow renderer
+        """
+        x, y = renderer.transformer().ll2pixel(self.latlng())
+        x += renderer.offset_x()
+
+        textbox = renderer.draw().textbbox((0, 0, 0, 0), self._text)
+        tw, th = (textbox[2] - textbox[0], textbox[3] - textbox[1])
         w = max(self._arrow, tw + 2 * self._margin)
         h = th + 2 * self._margin
 
@@ -56,6 +83,11 @@ class TextLabel(staticmaps.Object):
         renderer.draw().text((x - tw / 2, y - self._arrow - h / 2 - th / 2), self._text, fill=(0, 0, 0, 255))
 
     def render_cairo(self, renderer: staticmaps.CairoRenderer) -> None:
+        """Render object using cairo
+
+        Parameters:
+            renderer (CairoRenderer): cairo renderer
+        """
         x, y = renderer.transformer().ll2pixel(self.latlng())
 
         ctx = renderer.context()
@@ -99,13 +131,18 @@ class TextLabel(staticmaps.Object):
         ctx.stroke()
 
     def render_svg(self, renderer: staticmaps.SvgRenderer) -> None:
+        """Render object using svgwrite
+
+        Parameters:
+            renderer (SvgRenderer): svg renderer
+        """
         x, y = renderer.transformer().ll2pixel(self.latlng())
 
         # guess text extents
         tw = len(self._text) * self._font_size * 0.5
         th = self._font_size * 1.2
 
-        w = max(self._arrow, tw + 2 * self._margin)
+        w = max(self._arrow, int(tw + 2 * self._margin))
         h = th + 2 * self._margin
 
         path = renderer.drawing().path(

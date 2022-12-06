@@ -1,4 +1,4 @@
-# py-staticmaps
+"""py-staticmaps setup"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import os
@@ -55,7 +55,7 @@ setuptools.setup(
         "Topic :: Scientific/Engineering :: GIS",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
+        # "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",

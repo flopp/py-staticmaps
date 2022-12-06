@@ -1,4 +1,4 @@
-# py-staticmaps
+"""py-staticmaps - object"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 from abc import ABC, abstractmethod
@@ -16,6 +16,10 @@ PixelBoundsT = typing.Tuple[int, int, int, int]
 
 
 class Object(ABC):
+    """
+    Object A base class for objects
+    """
+
     def __init__(self) -> None:
         pass
 
@@ -23,8 +27,8 @@ class Object(ABC):
     def extra_pixel_bounds(self) -> PixelBoundsT:
         """Return extra pixel bounds from object
 
-        :return: extra pixel bounds
-        :rtype: PixelBoundsT
+        Returns:
+            PixelBoundsT: extra pixel bounds
         """
         return 0, 0, 0, 0
 
@@ -32,17 +36,19 @@ class Object(ABC):
     def bounds(self) -> s2sphere.LatLngRect:
         """Return bounds of object
 
-        :return: bounds of object
-        :rtype: s2sphere.LatLngRect
+        Returns:
+            s2sphere.LatLngRect: bounds of object
         """
         return s2sphere.LatLngRect()
 
     def render_pillow(self, renderer: PillowRenderer) -> None:
         """Render object using PILLOW
 
-        :param renderer: pillow renderer
-        :type renderer: PillowRenderer
-        :raises RuntimeError: raises runtime error if a not implemented method is called
+        Parameters:
+            renderer (PillowRenderer): pillow renderer
+
+        Raises:
+            RuntimeError: raises runtime error if a not implemented method is called
         """
         # pylint: disable=unused-argument
         t = "Pillow"
@@ -53,9 +59,11 @@ class Object(ABC):
     def render_svg(self, renderer: SvgRenderer) -> None:
         """Render object using svgwrite
 
-        :param renderer: svg renderer
-        :type renderer: SvgRenderer
-        :raises RuntimeError: raises runtime error if a not implemented method is called
+        Parameters:
+            renderer (SvgRenderer): svg renderer
+
+        Raises:
+            RuntimeError: raises runtime error if a not implemented method is called
         """
         # pylint: disable=unused-argument
         t = "SVG"
@@ -66,9 +74,11 @@ class Object(ABC):
     def render_cairo(self, renderer: CairoRenderer) -> None:
         """Render object using cairo
 
-        :param renderer: cairo renderer
-        :type renderer: CairoRenderer
-        :raises RuntimeError: raises runtime error if a not implemented method is called
+        Parameters:
+            renderer (CairoRenderer): cairo renderer
+
+        Raises:
+            RuntimeError: raises runtime error if a not implemented method is called
         """
         # pylint: disable=unused-argument
         t = "Cairo"
@@ -79,10 +89,11 @@ class Object(ABC):
     def pixel_rect(self, trans: Transformer) -> typing.Tuple[float, float, float, float]:
         """Return the pixel rect (left, top, right, bottom) of the object when using the supplied Transformer.
 
-        :param trans:
-        :type trans: Transformer
-        :return: pixel rectangle of object
-        :rtype: typing.Tuple[float, float, float, float]
+        Parameters:
+            trans (Transformer): transformer
+
+        Returns:
+            typing.Tuple[float, float, float, float]: pixel rectangle of object
         """
         bounds = self.bounds()
         se_x, se_y = trans.ll2pixel(bounds.get_vertex(1))

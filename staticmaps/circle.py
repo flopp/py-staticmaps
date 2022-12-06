@@ -1,4 +1,4 @@
-# py-staticmaps
+"""py-staticmaps - circle"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import typing
@@ -14,7 +14,8 @@ from .coordinates import create_latlng
 class Circle(Area):
     """Render a circle using different renderers
 
-    :param master: an area object
+    Parameters:
+        master: an area object
     """
 
     def __init__(
@@ -31,13 +32,12 @@ class Circle(Area):
     def compute_circle(center: s2sphere.LatLng, radius_km: float) -> typing.Iterator[s2sphere.LatLng]:
         """Compute a circle with given center and radius
 
-        :param center: Center of the circle
-        :param radius_km: Radius of the circle
-        :type center: s2sphere.LatLng
-        :type radius_km: float
+        Parameters:
+            center (s2sphere.LatLng): Center of the circle
+            radius_km (float): Radius of the circle
 
-        :return: circle
-        :rtype: typing.Iterator[s2sphere.LatLng]
+        Yields:
+            typing.Iterator[s2sphere.LatLng]: circle
         """
         first = None
         delta_angle = 0.1
@@ -55,6 +55,6 @@ class Circle(Area):
             if first is None:
                 first = latlng
             yield latlng
-            angle = angle + delta_angle
+            angle += delta_angle
         if first:
             yield first

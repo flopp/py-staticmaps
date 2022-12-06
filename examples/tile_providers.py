@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# py-staticmaps
+"""py-staticmaps - Example Tile Providers"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import staticmaps

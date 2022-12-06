@@ -1,4 +1,4 @@
-# py-staticmaps
+"""py-staticmaps - area"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import typing
@@ -17,7 +17,8 @@ from .svg_renderer import SvgRenderer
 class Area(Line):
     """Render an area using different renderers
 
-    :param master: A line object
+    Parameters:
+        master: A line object
     """
 
     def __init__(
@@ -32,16 +33,16 @@ class Area(Line):
     def fill_color(self) -> Color:
         """Return fill color of the area
 
-        :return: color object
-        :rtype: Color
+        Returns:
+            Color: color object
         """
         return self._fill_color
 
     def render_pillow(self, renderer: PillowRenderer) -> None:
         """Render area using PILLOW
 
-        :param renderer: pillow renderer
-        :type renderer: PillowRenderer
+        Parameters:
+            renderer (PillowRenderer): pillow renderer
         """
         xys = [
             (x + renderer.offset_x(), y)
@@ -57,8 +58,8 @@ class Area(Line):
     def render_svg(self, renderer: SvgRenderer) -> None:
         """Render area using svgwrite
 
-        :param renderer: svg renderer
-        :type renderer: SvgRenderer
+        Parameters:
+            renderer (SvgRenderer): svg renderer
         """
         xys = [renderer.transformer().ll2pixel(latlng) for latlng in self.interpolate()]
 
@@ -82,8 +83,8 @@ class Area(Line):
     def render_cairo(self, renderer: CairoRenderer) -> None:
         """Render area using cairo
 
-        :param renderer: cairo renderer
-        :type renderer: CairoRenderer
+        Parameters:
+            renderer (CairoRenderer): cairo renderer
         """
         xys = [renderer.transformer().ll2pixel(latlng) for latlng in self.interpolate()]
 
