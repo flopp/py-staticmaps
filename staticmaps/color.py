@@ -1,4 +1,4 @@
-"""py-staticmaps - color"""
+"""py-staticmaps - Color"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import random

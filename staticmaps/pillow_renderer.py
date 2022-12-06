@@ -1,4 +1,4 @@
-"""py-staticmaps - pillow_renderer"""
+# py-staticmaps
 # Copyright (c) 2021 Florian Pigorsch; see /LICENSE for licensing information
 
 import io
@@ -68,8 +68,8 @@ class PillowRenderer(Renderer):
     def render_objects(
         self,
         objects: typing.List["Object"],
-        bbox: s2sphere.LatLngRect = None,
-        epb: typing.Tuple[int, int, int, int] = None,
+        bbox: typing.Optional[s2sphere.LatLngRect] = None,
+        epb: typing.Optional[typing.Tuple[int, int, int, int]] = None,
     ) -> None:
         """Render all objects of static map
 
@@ -97,8 +97,8 @@ class PillowRenderer(Renderer):
     def render_tiles(
         self,
         download: typing.Callable[[int, int, int], typing.Optional[bytes]],
-        bbox: s2sphere.LatLngRect = None,
-        epb: typing.Tuple[int, int, int, int] = None,
+        bbox: typing.Optional[s2sphere.LatLngRect] = None,
+        epb: typing.Optional[typing.Tuple[int, int, int, int]] = None,
     ) -> None:
         """Render background of static map
 

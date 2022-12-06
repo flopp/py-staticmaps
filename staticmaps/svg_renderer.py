@@ -88,8 +88,8 @@ class SvgRenderer(Renderer):
     def render_tiles(
         self,
         download: typing.Callable[[int, int, int], typing.Optional[bytes]],
-        bbox: s2sphere.LatLngRect = None,
-        epb: typing.Tuple[int, int, int, int] = None,
+        bbox: typing.Optional[s2sphere.LatLngRect] = None,
+        epb: typing.Optional[typing.Tuple[int, int, int, int]] = None,
     ) -> None:
         """Render tiles of static map
 

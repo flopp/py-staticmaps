@@ -35,7 +35,10 @@ class Renderer(ABC):
 
     @abstractmethod
     def render_objects(
-        self, objects: typing.List["Object"], bbox: s2sphere.LatLngRect, epb: typing.Tuple[int, int, int, int] = None
+        self,
+        objects: typing.List["Object"],
+        bbox: s2sphere.LatLngRect,
+        epb: typing.Optional[typing.Tuple[int, int, int, int]] = None,
     ) -> None:
         """Render all objects of static map
 
@@ -58,7 +61,7 @@ class Renderer(ABC):
         self,
         download: typing.Callable[[int, int, int], typing.Optional[bytes]],
         bbox: s2sphere.LatLngRect,
-        epb: typing.Tuple[int, int, int, int] = None,
+        epb: typing.Optional[typing.Tuple[int, int, int, int]] = None,
     ) -> None:
         """Render tiles of static map
 
