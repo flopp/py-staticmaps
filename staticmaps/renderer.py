@@ -1,8 +1,10 @@
-# py-staticmaps
+"""py-staticmaps - renderer"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
-from abc import ABC, abstractmethod
 import typing
+from abc import ABC, abstractmethod
+
+import s2sphere  # type: ignore
 
 from .color import Color
 from .transformer import Transformer
@@ -26,67 +28,82 @@ class Renderer(ABC):
     def transformer(self) -> Transformer:
         """Return transformer object
 
-        :return: transformer
-        :rtype: Transformer
+        Returns:
+            Transformer: transformer
         """
         return self._trans
 
     @abstractmethod
-    def render_objects(self, objects: typing.List["Object"]) -> None:
+    def render_objects(
+        self,
+        objects: typing.List["Object"],
+        bbox: s2sphere.LatLngRect,
+        epb: typing.Optional[typing.Tuple[int, int, int, int]] = None,
+    ) -> None:
         """Render all objects of static map
 
-        :param objects: objects of static map
-        :type objects: typing.List["Object"]
+        Parameters:
+            objects (typing.List["Object"]): objects of static map
+            bbox (s2sphere.LatLngRect): boundary box of all objects
+            epb (typing.Tuple[int, int, int, int]): extra pixel bounds
         """
 
     @abstractmethod
     def render_background(self, color: typing.Optional[Color]) -> None:
         """Render background of static map
 
-        :param color: background color
-        :type color: typing.Optional[Color]
+        Parameters:
+            color (typing.Optional[Color]): background color
         """
 
     @abstractmethod
-    def render_tiles(self, download: typing.Callable[[int, int, int], typing.Optional[bytes]]) -> None:
-        """Render background of static map
+    def render_tiles(
+        self,
+        download: typing.Callable[[int, int, int], typing.Optional[bytes]],
+        bbox: s2sphere.LatLngRect,
+        epb: typing.Optional[typing.Tuple[int, int, int, int]] = None,
+    ) -> None:
+        """Render tiles of static map
 
-        :param download: url of tiles provider
-        :type download: typing.Callable[[int, int, int], typing.Optional[bytes]]
+        Parameters:
+            download (typing.Callable[[int, int, int], typing.Optional[bytes]]): url of tiles provider
+            bbox (s2sphere.LatLngRect): boundary box of all objects
+            epb (typing.Tuple[int, int, int, int]): extra pixel bounds
         """
 
     def render_marker_object(self, marker: "Marker") -> None:
         """Render marker object of static map
 
-        :param marker: marker object
-        :type marker: Marker
+        Parameters:
+            marker (Marker): marker object
         """
 
     def render_image_marker_object(self, marker: "ImageMarker") -> None:
         """Render image marker object of static map
 
-        :param marker: image marker object
-        :type marker: ImageMarker
+        Parameters:
+            marker (ImageMarker): image marker object
         """
 
     def render_line_object(self, line: "Line") -> None:
         """Render line object of static map
 
-        :param line: line object
-        :type line: Line
+        Parameters:
+            line (Line): line object
         """
 
     def render_area_object(self, area: "Area") -> None:
         """Render area object of static map
 
-        :param area: area object
-        :type area: Area
+        Parameters:
+            area (Area): area object
         """
 
     @abstractmethod
     def render_attribution(self, attribution: typing.Optional[str]) -> None:
         """Render attribution from given tiles provider
 
-        :param attribution: Attribution for the given tiles provider
-        :type attribution: typing.Optional[str]:
+        Parameters:
+            attribution (typing.Optional[str]:): Attribution for the
+                given tiles provider
         """
