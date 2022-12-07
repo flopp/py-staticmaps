@@ -48,7 +48,7 @@ jobs:
     needs: "lint_and_test"
     steps:
     - name: Install cairo
-      run: apt-get install libcairo2-dev
+      run: sudo apt-get install libcairo2-dev
     - name: Git config
       run: git config --global core.autocrlf input
     - uses: actions/checkout@v3
