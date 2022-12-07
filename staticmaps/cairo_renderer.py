@@ -15,7 +15,7 @@ except ImportError:
 
 from PIL import Image as PIL_Image  # type: ignore
 
-from .color import Color, BLACK, WHITE
+from .color import BLACK, WHITE, Color
 from .renderer import Renderer
 from .transformer import Transformer
 

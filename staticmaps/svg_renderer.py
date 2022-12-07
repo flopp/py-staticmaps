@@ -10,7 +10,7 @@ import typing
 import s2sphere  # type: ignore
 import svgwrite  # type: ignore
 
-from .color import Color, BLACK, WHITE
+from .color import BLACK, WHITE, Color
 from .renderer import Renderer
 from .transformer import Transformer
 

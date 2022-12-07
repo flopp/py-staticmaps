@@ -5,9 +5,9 @@ import math
 
 import s2sphere  # type: ignore
 
-from .color import Color, RED
-from .object import Object, PixelBoundsT
 from .cairo_renderer import CairoRenderer
+from .color import RED, Color
+from .object import Object, PixelBoundsT
 from .pillow_renderer import PillowRenderer
 from .svg_renderer import SvgRenderer
 

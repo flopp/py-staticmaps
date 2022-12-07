@@ -1,5 +1,5 @@
-# py-staticmaps
-# Copyright (c) 2021 Florian Pigorsch; see /LICENSE for licensing information
+"""py-staticmaps pillow_renderer"""
+# Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import io
 import math

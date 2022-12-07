@@ -4,13 +4,13 @@
 import math
 import typing
 
-from geographiclib.geodesic import Geodesic  # type: ignore
 import s2sphere  # type: ignore
+from geographiclib.geodesic import Geodesic  # type: ignore
 
-from .color import Color, RED
+from .cairo_renderer import CairoRenderer
+from .color import RED, Color
 from .coordinates import create_latlng
 from .object import Object, PixelBoundsT
-from .cairo_renderer import CairoRenderer
 from .pillow_renderer import PillowRenderer
 from .svg_renderer import SvgRenderer
 

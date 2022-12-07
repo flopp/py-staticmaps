@@ -1,8 +1,8 @@
 """py-staticmaps - object"""
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
-from abc import ABC, abstractmethod
 import typing
+from abc import ABC, abstractmethod
 
 import s2sphere  # type: ignore
 
@@ -10,7 +10,6 @@ from .cairo_renderer import CairoRenderer
 from .pillow_renderer import PillowRenderer
 from .svg_renderer import SvgRenderer
 from .transformer import Transformer
-
 
 PixelBoundsT = typing.Tuple[int, int, int, int]
 

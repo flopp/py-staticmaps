@@ -3,11 +3,11 @@
 
 import typing
 
-from geographiclib.geodesic import Geodesic  # type: ignore
 import s2sphere  # type: ignore
+from geographiclib.geodesic import Geodesic  # type: ignore
 
 from .area import Area
-from .color import Color, RED, TRANSPARENT
+from .color import RED, TRANSPARENT, Color
 from .coordinates import create_latlng
 
 

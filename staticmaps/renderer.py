@@ -9,7 +9,6 @@ import s2sphere  # type: ignore
 from .color import Color
 from .transformer import Transformer
 
-
 if typing.TYPE_CHECKING:
     # avoid circlic import
     from .area import Area  # pylint: disable=cyclic-import

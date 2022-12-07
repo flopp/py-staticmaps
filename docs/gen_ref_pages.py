@@ -3,6 +3,7 @@
 from pathlib import Path
 
 import mkdocs_gen_files
+
 TOP_LEVEL_NAME = "staticmaps"
 DIRECTORY = "reference"
 SRC = "staticmaps"

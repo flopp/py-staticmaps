@@ -44,7 +44,7 @@ plugins:
             show_root_heading: true
             show_source: true
       watch:
-        - src/sta_run_all_loadcases
+        - staticmaps
 
 markdown_extensions:
   - pymdownx.highlight

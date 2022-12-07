@@ -2,11 +2,16 @@
 --requirement requirements.txt
 
 # Linting/Tooling
+autopep8
 black
 codespell
 coverage
 flake8
+isort
 mypy
+pur
+pycodestyle
+pyflakes
 pylint
 
 # Testing

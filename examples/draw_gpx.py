@@ -6,6 +6,7 @@
 import sys
 
 import gpxpy  # type: ignore
+
 import staticmaps
 
 context = staticmaps.Context()

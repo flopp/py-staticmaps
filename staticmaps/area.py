@@ -3,12 +3,12 @@
 
 import typing
 
+import s2sphere  # type: ignore
 from PIL import Image as PIL_Image  # type: ignore
 from PIL import ImageDraw as PIL_ImageDraw  # type: ignore
-import s2sphere  # type: ignore
 
 from .cairo_renderer import CairoRenderer
-from .color import Color, RED, TRANSPARENT
+from .color import RED, TRANSPARENT, Color
 from .line import Line
 from .pillow_renderer import PillowRenderer
 from .svg_renderer import SvgRenderer
