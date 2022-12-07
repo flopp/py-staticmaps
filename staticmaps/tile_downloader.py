@@ -11,7 +11,7 @@ import slugify  # type: ignore
 from .meta import GITHUB_URL, LIB_NAME, VERSION
 from .tile_provider import TileProvider
 
-REQUEST_TIMEOUT = 10
+REQUEST_TIMEOUT = 600
 
 
 class TileDownloader:
