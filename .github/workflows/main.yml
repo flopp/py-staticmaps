@@ -8,16 +8,14 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-#        os: [ubuntu-latest, macos-latest, windows-latest]
-#        python-version: ["3.7", "3.8", "3.9", "3.10"]
-        os: [ubuntu-latest]
-        python-version: ["3.7"]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
     steps:
     - name: Git config
       run: git config --global core.autocrlf input
     - uses: actions/checkout@v3
     - name: Set up Python v${{matrix.python-version}} - ${{runner.os}}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       with:
         python-version: ${{matrix.python-version}}
         cache: pip
@@ -44,7 +42,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: [3.7]
+        python-version: [3.8]
     needs: "lint_and_test"
     steps:
     - name: Install cairo
@@ -53,7 +51,7 @@ jobs:
       run: git config --global core.autocrlf input
     - uses: actions/checkout@v3
     - name: Set up Python v${{matrix.python-version}} - ${{runner.os}}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       with:
         python-version: ${{matrix.python-version}}
         cache: pip
