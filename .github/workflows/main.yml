@@ -94,20 +94,14 @@ jobs:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-    - name: Setup SSH Keys and known_hosts
-      env:
-        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-      run: |
-        mkdir -p ~/.ssh
-        ssh-keyscan git.github.com  >> ~/.ssh/known_hosts
-        ssh-agent -a ${{ env.SSH_AUTH_SOCK }} > /dev/null
-        ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
+    - uses: fusion-engineering/setup-git-credentials@v2
+      with:
+        credentials: ${{ secrets.GIT_CREDENTIAL }}
     - name: Setup git and push to remote
-      env:
-        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       run: |
+        export GIT_USER=${{ secrets.GIT_USER }}
         git config --global core.autocrlf input
-        git config --global user.name "github-actions[bot]"
+        git config --global user.name "$GIT_USER"
         git config --global user.email "${{ secrets.GH_MAIL }}"
         git config --global url."git@github.com:".insteadOf "https://github.com/"
     - name: Git clone
@@ -122,3 +116,5 @@ jobs:
         mv *svg assets/.
         cd assets
         git push
+      env:
+        CI: True
