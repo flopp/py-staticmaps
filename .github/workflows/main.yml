@@ -91,9 +91,6 @@ jobs:
         python-version: [3.8]
     needs: "build"
     steps:
-#    - uses: actions/checkout@v3
-#      with:
-#        token: ${{secrets.PAT}}
     - name: Git config
       run: git config --global core.autocrlf input
     - name: Git clone
@@ -103,10 +100,12 @@ jobs:
       with:
         name: build_examples
     - name: Move pictures and push
+      with:
+        global: true
+        actor: '${{ GITHUB_ACTOR }}'
+        token: '${{ GITHUB_TOKEN }}'
       run: |
         mv *png assets/.
         mv *svg assets/.
         cd assets
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "${{ secrets.GH_MAIL }}"
         git push
