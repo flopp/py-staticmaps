@@ -110,7 +110,7 @@ with open("freiburg_area.svg", "w", encoding="utf-8") as f:
     svg_image.write(f, pretty=True)
 ```
 
-![draw_gpx](../assets/freiburg_area.png?raw=true)
+![freiburg_area](../assets/freiburg_area.png?raw=true)
 
 
 ### Drawing a GPX Track + Image Marker (PNG)
