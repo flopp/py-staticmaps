@@ -104,5 +104,5 @@ jobs:
         mv *png assets/.
         mv *svg assets/.
         cd assets
-        git config --global user.name "${{ GITHUB_ACTOR }}"
+        git config --global user.name $env:GITHUB_ACTOR
         git push
