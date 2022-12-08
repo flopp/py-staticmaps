@@ -8,10 +8,8 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-#        os: [ubuntu-latest, macos-latest, windows-latest]
-#        python-version: ["3.7", "3.8", "3.9", "3.10"]
-        os: [ubuntu-latest]
-        python-version: ["3.8"]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
     steps:
     - name: Git config
       run: git config --global core.autocrlf input
@@ -46,6 +44,7 @@ jobs:
         os: [ubuntu-latest]
         python-version: [3.8]
     needs: "lint_and_test"
+    if: github.ref == 'refs/heads/main'
     steps:
     - name: Install cairo
       run: sudo apt-get install libcairo2-dev
@@ -90,6 +89,7 @@ jobs:
         os: [ubuntu-latest]
         python-version: [3.8]
     needs: "build"
+    if: github.ref == 'refs/heads/main'
     steps:
     - uses: actions/checkout@v3
       with:
@@ -109,10 +109,19 @@ jobs:
         mv *.png assets/.
         mv *.svg assets/.
         cd assets
-        git add *.png
-        git add *.svg
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-        git commit -a -m "Automatic update of example image files"
+        git fetch
+        git pull
+        git add *.png
+        git add *.svg
+        git commit -m "Automatic update of example image files"
+        git status
+        pwd
+        ls -lrt
     - name: Push changes
       uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        directory: assets
+        branch: assets

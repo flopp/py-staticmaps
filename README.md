@@ -69,7 +69,7 @@ with open("frankfurt_newyork.svg", "w", encoding="utf-8") as f:
     svg_image.write(f, pretty=True)
 ```
 
-![franfurt_newyork](../assets/frankfurt_newyork.png?raw=true)
+![franfurt_newyork](../assets/frankfurt_newyork.cairo.png?raw=true)
 
 
 ### Transparent Polygons
@@ -110,7 +110,7 @@ with open("freiburg_area.svg", "w", encoding="utf-8") as f:
     svg_image.write(f, pretty=True)
 ```
 
-![freiburg_area](../assets/freiburg_area.png?raw=true)
+![freiburg_area](../assets/freiburg_area.cairo.png?raw=true)
 
 
 ### Drawing a GPX Track + Image Marker (PNG)
@@ -147,7 +147,7 @@ image = context.render_cairo(800, 500)
 image.write_to_png("draw_gpx.cairo.png")
 ```
 
-![draw_gpx](../assets/draw_gpx.png?raw=true)
+![draw_gpx](../assets/draw_gpx.cairo.png?raw=true)
 
 
 ### US State Capitals
@@ -178,7 +178,7 @@ image = context.render_cairo(800, 500)
 image.write_to_png("us_capitals.cairo.png")
 ```
 
-![us_capitals](../assets/us_capitals.png?raw=true)
+![us_capitals](../assets/us_capitals.cairo.png?raw=true)
 
 
 ### Geodesic Circles
@@ -206,7 +206,12 @@ image = context.render_cairo(800, 600)
 image.write_to_png("geodesic_circles.cairo.png")
 ```
 
-![geodesic_circles](../assets/geodesic_circles.png?raw=true)
+#### Cairo example
+![geodesic_circles](../assets/geodesic_circles.cairo.png?raw=true)
+#### Pillow example
+![geodesic_circles_pillow](../assets/geodesic_circles.pillow.png?raw=true)
+#### SVG example
+![geodesic_circles_svg](../assets/geodesic_circles.svg?raw=true)
 
 
 ### Other Examples
