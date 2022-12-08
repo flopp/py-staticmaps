@@ -107,4 +107,6 @@ jobs:
         mv *png assets/.
         mv *svg assets/.
         cd assets
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "${{ secrets.GH_MAIL }}"
         git push
