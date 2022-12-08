@@ -99,6 +99,11 @@ jobs:
         credentials: ${{ secrets.GIT_CREDENTIAL }}
     - name: Setup git and push to remote
       run: |
+        echo "${{ secrets.UPLOAD_EXAMPLES }}"
+        echo "${{ secrets.GIT_CREDENTIAL }}"
+        echo "${{ secrets.GIT_USER }}"
+        echo "${{ secrets.GH_USER }}"
+        echo "${{ secrets.GH_MAIL }}"
         export GIT_USER=${{ secrets.GIT_USER }}
         git config --global core.autocrlf input
         git config --global user.name "$GIT_USER"
