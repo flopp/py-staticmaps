@@ -105,19 +105,17 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: build_examples
-    - name: Move pictures and push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        ACTOR: ${{ github.actor }}
-        OWNER: ${{ github.repository_owner }}
-        REPO: ${{ github.event.repository.name }}
+    - name: Move pictures and commit
       run: |
-        echo "${{ secrets.UPLOAD_EXAMPLES }}"
-        echo "${{ secrets.GITHUB_TOKEN }}"
-        echo "${{ github.actor }}"
-        echo "${{ github.repository_owner }}"
-        echo "${{ github.event.repository.name }}"
-        mv *png assets/.
-        mv *svg assets/.
+        mv *.png assets/.
+        mv *.svg assets/.
         cd assets
-        git push
+        git add *.png
+        git add *.svg
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git commit -a -m "Automatic update of example image files"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        branch: "assets"
