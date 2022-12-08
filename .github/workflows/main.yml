@@ -83,9 +83,22 @@ jobs:
       with:
         name: build_examples
         path: examples/build
-    - name: Display structure
-      run: ls -R
-    - name: Push to assets
+  deploy:
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.8]
+    needs: "build"
+    steps:
+    - name: Git config
+      run: git config --global core.autocrlf input
+    - name: Git clone
+      run: |
+        git clone https://github.com/lowtower/py-staticmaps --branch assets assets
+        cd assets
+        pwd
+    - name: Download artifacts
       uses: actions/download-artifact@v3
       with:
         name: build_examples
