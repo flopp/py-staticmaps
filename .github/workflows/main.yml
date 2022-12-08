@@ -101,13 +101,13 @@ jobs:
         name: build_examples
     - name: Move pictures and push
       env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        username: ${{ github.ACTOR }}
-#        password: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        username: ${{ github.ACTOR }}
+        password: ${{ secrets.GITHUB_TOKEN }}
       run: |
         mv *png assets/.
         mv *svg assets/.
         cd assets
         git config --global user.name "${{ github.actor }}"
-        git config --global url."git@github.com:".insteadOf "https://github.com/"
+#        git config --global url."git@github.com:".insteadOf "https://github.com/"
         git push
