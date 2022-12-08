@@ -100,12 +100,9 @@ jobs:
       with:
         name: build_examples
     - name: Move pictures and push
-      with:
-        global: true
-        actor: '${{ GITHUB_ACTOR }}'
-        token: '${{ GITHUB_TOKEN }}'
       run: |
         mv *png assets/.
         mv *svg assets/.
         cd assets
+        git config --global user.name "${{ GITHUB_ACTOR }}"
         git push
