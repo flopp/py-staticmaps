@@ -5,7 +5,6 @@
 autopep8
 black
 codespell
-coverage
 flake8
 isort
 mypy
