@@ -108,6 +108,6 @@ jobs:
         mv *png assets/.
         mv *svg assets/.
         cd assets
-#        git config --global user.name "${{ github.actor }}"
-#        git config --global url."git@github.com:".insteadOf "https://github.com/"
+        git config --global user.name "${{ github.actor }}"
+        git config --global url."git@github.com:".insteadOf "https://github.com/"
         git push
