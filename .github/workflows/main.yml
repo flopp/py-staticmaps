@@ -8,8 +8,10 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
+#        os: [ubuntu-latest, macos-latest, windows-latest]
+#        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        os: [ubuntu-latest]
+        python-version: ["3.8"]
     steps:
     - name: Git config
       run: git config --global core.autocrlf input
@@ -81,3 +83,11 @@ jobs:
       with:
         name: build_examples
         path: examples/build
+    - name: Display structure
+      run: ls -R
+    - name: Push to assets
+      uses: actions/download-artifact@v3
+      with:
+        name: build_examples
+    - name: Display structure of downloaded files
+      run: ls -R
