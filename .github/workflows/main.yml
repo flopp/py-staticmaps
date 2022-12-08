@@ -102,10 +102,9 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: build_examples
-    - name: Move pictures
+    - name: Move pictures and push
       run: |
         mv *png assets/.
         mv *svg assets/.
-    - name: Git push
-      run: |
+        cd assets
         git push
