@@ -92,12 +92,14 @@ jobs:
     needs: "build"
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
     - name: Setup SSH Keys and known_hosts
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       run: |
         mkdir -p ~/.ssh
-        ssh-keyscan git.something  >> ~/.ssh/known_hosts
+        ssh-keyscan git.github.com  >> ~/.ssh/known_hosts
         ssh-agent -a ${{ env.SSH_AUTH_SOCK }} > /dev/null
         ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
     - name: Setup git and push to remote
