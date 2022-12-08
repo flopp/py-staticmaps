@@ -91,21 +91,24 @@ jobs:
         python-version: [3.8]
     needs: "build"
     steps:
+    - env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      ACTOR: ${{ github.actor }}
+      OWNER: ${{ github.repository_owner }}
+      REPO: ${{ github.event.repository.name }}
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
     - name: Setup git and push to remote
       run: |
         echo "${{ secrets.UPLOAD_EXAMPLES }}"
-        echo "${{ secrets.GIT_CREDENTIAL }}"
-        echo "${{ secrets.GIT_USER }}"
-        echo "${{ secrets.GH_USER }}"
-        echo "${{ secrets.GH_MAIL }}"
-        export GIT_USER=${{ secrets.GIT_USER }}
+        echo "${{ secrets.GITHUB_TOKEN }}"
+        echo "${{ github.actor }}"
+        echo "${{ github.repository_owner }}"
+        echo "${{ github.event.repository.name }}"
+        export GIT_USER=${{ github.actor }}
         git config --global core.autocrlf input
-        git config --global user.name "$GIT_USER"
-        git config --global user.email "${{ secrets.GH_MAIL }}"
-        git config --global url."git@github.com:".insteadOf "https://github.com/"
+        git config --global user.name "${{ github.actor }}"
     - name: Git clone
       run: git clone https://github.com/lowtower/py-staticmaps --branch assets assets
     - name: Download artifacts
