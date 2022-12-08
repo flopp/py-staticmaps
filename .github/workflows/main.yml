@@ -91,10 +91,6 @@ jobs:
         python-version: [3.8]
     needs: "build"
     steps:
-    - with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-#        username: ${{ github.ACTOR }}
-#        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Git config
       run: git config --global core.autocrlf input
     - name: Git clone
@@ -104,10 +100,14 @@ jobs:
       with:
         name: build_examples
     - name: Move pictures and push
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        username: ${{ github.ACTOR }}
+#        password: ${{ secrets.GITHUB_TOKEN }}
       run: |
         mv *png assets/.
         mv *svg assets/.
         cd assets
-        git push
 #        git config --global user.name "${{ github.actor }}"
 #        git config --global url."git@github.com:".insteadOf "https://github.com/"
+        git push
