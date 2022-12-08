@@ -90,6 +90,9 @@ jobs:
         os: [ubuntu-latest]
         python-version: [3.8]
     needs: "build"
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      ACTOR: ${{ github.ACTOR }}
     steps:
     - name: Git config
       run: git config --global core.autocrlf input
@@ -100,9 +103,6 @@ jobs:
       with:
         name: build_examples
     - name: Move pictures and push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        ACTOR: ${{ github.ACTOR }}
       run: |
         mv *png assets/.
         mv *svg assets/.
