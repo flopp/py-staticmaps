@@ -91,6 +91,9 @@ jobs:
         python-version: [3.8]
     needs: "build"
     steps:
+#    - uses: actions/checkout@v3
+#      with:
+#        token: ${{secrets.PAT}}
     - name: Git config
       run: git config --global core.autocrlf input
     - name: Git clone
@@ -99,19 +102,10 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: build_examples
-    - name: Display structure of downloaded files
+    - name: Move pictures
       run: |
-        pwd
         mv *png assets/.
         mv *svg assets/.
-        cd assets
-        pwd
-        ls -R
-        cd
     - name: Git push
       run: |
-        pwd
-        ls -R
-        cd
-        pwd
-        ls -R
+        git push
