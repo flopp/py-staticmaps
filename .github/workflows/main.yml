@@ -104,10 +104,10 @@ jobs:
         mv *png assets/.
         mv *svg assets/.
         cd assets
-        echo "$env.GITHUB_ACTOR"
-        echo "$env.GITHUB_SERVER_URL"
-        echo "$env.GITHUB_REPOSITORY"
-        echo "{{ $env.GITHUB_SERVER_URL }} / {{ $env.GITHUB_REPOSITORY }}"
-        echo "$env.GITHUB_SERVER_URL/$env.GITHUB_REPOSITORY"
-        git config --global user.name $env:GITHUB_ACTOR
+        echo "${{env.GITHUB_ACTOR}}"
+        echo "${{env.GITHUB_SERVER_URL}}"
+        echo "${{env.GITHUB_REPOSITORY}}"
+        echo "${{env.GITHUB_SERVER_URL}}/${{env.GITHUB_REPOSITOR}}"
+        echo "git config --global user.name '${{env.GITHUB_ACTOR}}'"
+        git config --global user.name "${{env.GITHUB_ACTOR}}"
 #        git push
