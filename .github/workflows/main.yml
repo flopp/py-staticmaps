@@ -95,6 +95,17 @@ jobs:
       with:
         fetch-depth: 0
     - name: Setup git and push to remote
+      run: |
+        export GIT_USER=${{ github.actor }}
+        git config --global core.autocrlf input
+        git config --global user.name "${{ github.actor }}"
+    - name: Git clone
+      run: git clone https://github.com/lowtower/py-staticmaps --branch assets assets
+    - name: Download artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: build_examples
+    - name: Move pictures and push
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         ACTOR: ${{ github.actor }}
@@ -106,17 +117,6 @@ jobs:
         echo "${{ github.actor }}"
         echo "${{ github.repository_owner }}"
         echo "${{ github.event.repository.name }}"
-        export GIT_USER=${{ github.actor }}
-        git config --global core.autocrlf input
-        git config --global user.name "${{ github.actor }}"
-    - name: Git clone
-      run: git clone https://github.com/lowtower/py-staticmaps --branch assets assets
-    - name: Download artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: build_examples
-    - name: Move pictures and push
-      run: |
         mv *png assets/.
         mv *svg assets/.
         cd assets
