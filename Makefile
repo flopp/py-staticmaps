@@ -29,6 +29,7 @@ clean: ## Cleanup
 	@rm -rf ./.pytest_cache
 	@rm -rf ./.mypy_cache
 	@rm -rf ./site
+	@rm -rf ./reports
 
 .PHONY: setup
 setup: ## Setup virtual environment
