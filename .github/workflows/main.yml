@@ -91,15 +91,15 @@ jobs:
         python-version: [3.8]
     needs: "build"
     steps:
-    - env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      ACTOR: ${{ github.actor }}
-      OWNER: ${{ github.repository_owner }}
-      REPO: ${{ github.event.repository.name }}
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
     - name: Setup git and push to remote
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ACTOR: ${{ github.actor }}
+        OWNER: ${{ github.repository_owner }}
+        REPO: ${{ github.event.repository.name }}
       run: |
         echo "${{ secrets.UPLOAD_EXAMPLES }}"
         echo "${{ secrets.GITHUB_TOKEN }}"
@@ -121,5 +121,3 @@ jobs:
         mv *svg assets/.
         cd assets
         git push
-      env:
-        CI: True
