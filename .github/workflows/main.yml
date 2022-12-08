@@ -94,7 +94,7 @@ jobs:
     - name: Git config
       run: git config --global core.autocrlf input
     - name: Git clone
-      run: git clone https://github.com/lowtower/py-staticmaps --branch assets assets
+      run: git clone git@github.com:lowtower/py-staticmaps.git --branch assets assets
     - name: Download artifacts
       uses: actions/download-artifact@v3
       with:
@@ -102,12 +102,11 @@ jobs:
     - name: Move pictures and push
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        username: ${{ github.ACTOR }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        ACTOR: ${{ github.ACTOR }}
       run: |
         mv *png assets/.
         mv *svg assets/.
         cd assets
-        git config --global user.name "${{ github.actor }}"
+        git config --global user.name "${{ github.ACTOR }}"
         git push
 #        git config --global url."git@github.com:".insteadOf "https://github.com/"
