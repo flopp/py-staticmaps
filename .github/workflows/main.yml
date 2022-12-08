@@ -90,23 +90,37 @@ jobs:
         os: [ubuntu-latest]
         python-version: [3.8]
     needs: "build"
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      ACTOR: ${{ github.ACTOR }}
     steps:
-    - name: Git config
-      run: git config --global core.autocrlf input
+    - uses: actions/checkout@v3
+    - name: Setup SSH Keys and known_hosts
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan git.something  >> ~/.ssh/known_hosts
+        ssh-agent -a ${{ env.SSH_AUTH_SOCK }} > /dev/null
+        ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
+    - name: Setup git and push to remote
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      run: |
+        git config --global core.autocrlf input
+        git config --global user.name "github-actions[bot]"
+#        git config --global user.name "${{ github.ACTOR }}"
+        git config --global user.email "${{ secrets.GH_MAIL }}"
+        git config --global url."git@github.com:".insteadOf "https://github.com/"
     - name: Git clone
-      run: git clone git@github.com:lowtower/py-staticmaps.git --branch assets assets
+      run: git clone https://github.com/lowtower/py-staticmaps --branch assets assets
     - name: Download artifacts
       uses: actions/download-artifact@v3
       with:
         name: build_examples
     - name: Move pictures and push
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        ACTOR: ${{ github.ACTOR }}
       run: |
         mv *png assets/.
         mv *svg assets/.
         cd assets
-        git config --global user.name "${{ github.ACTOR }}"
         git push
-#        git config --global url."git@github.com:".insteadOf "https://github.com/"
