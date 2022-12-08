@@ -104,13 +104,15 @@ jobs:
         mv *png assets/.
         mv *svg assets/.
         cd assets
-        echo "${{ env.GITHUB_ACTOR }}"
-        echo "${{ env.GITHUB_SERVER_URL }}"
-        echo "${{ env.GITHUB_REPOSITORY }}"
-        echo "${{ env.GITHUB_SERVER_URL}}/${{env.GITHUB_REPOSITOR }}"
-        echo "git config --global user.name '${{env.GITHUB_ACTOR}}'"
+        echo "git config --global user.name '${{ github.actor }}'"
         echo "GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}"
         echo "OWNER: ${{ github.repository_owner }}"
         echo "REPO: ${{ github.event.repository.name }}"
-        git config --global user.name "${{ env.GITHUB_ACTOR }}"
+        echo "ACTOR: ${{ github.actor }}"
+        echo "HEAD_REF: ${{ github.head_ref }}"
+        echo "REF: ${{ github.ref }}"
+        echo "RUN_ID: ${{ github.run_id }}"
+        echo "GITHUB: ${{ github.repository_url }}"
+        echo "GITHUB: ${{ github }}"
+        git config --global user.name "${{ github.actor }}"
 #        git push
