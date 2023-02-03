@@ -35,7 +35,11 @@ def _read_descr(rel_path: str) -> str:
 def _read_reqs(rel_path: str) -> typing.List[str]:
     abs_path = os.path.join(os.path.dirname(__file__), rel_path)
     with open(abs_path, encoding="utf-8") as f:
-        return [s.strip() for s in f.readlines() if s.strip() and not s.strip().startswith("#")]
+        return [
+            s.strip()
+            for s in f.readlines()
+            if s.strip() and not s.strip().startswith("#") and not s.strip().startswith("--requirement")
+        ]
 
 
 PACKAGE = "staticmaps"
