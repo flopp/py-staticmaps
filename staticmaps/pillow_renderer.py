@@ -97,9 +97,10 @@ class PillowRenderer(Renderer):
         if (attribution is None) or (attribution == ""):
             return
         margin = 2
-        _, th = self.draw().textsize(attribution)
         w = self._trans.image_width()
         h = self._trans.image_height()
+        left, top, right, bottom = self.draw().textbbox((margin, h - margin), attribution)
+        th = bottom - top
         overlay = PIL_Image.new("RGBA", self._image.size, (255, 255, 255, 0))
         draw = PIL_ImageDraw.Draw(overlay)
         draw.rectangle([(0, h - th - 2 * margin), (w, h)], fill=(255, 255, 255, 204))
