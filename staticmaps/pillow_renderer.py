@@ -97,7 +97,7 @@ class PillowRenderer(Renderer):
         if (attribution is None) or (attribution == ""):
             return
         margin = 2
-        _, th = self.draw().textsize(attribution)
+        _, th = self.draw().textlength(attribution)
         w = self._trans.image_width()
         h = self._trans.image_height()
         overlay = PIL_Image.new("RGBA", self._image.size, (255, 255, 255, 0))
