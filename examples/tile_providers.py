@@ -29,6 +29,13 @@ for name, provider in staticmaps.default_tile_providers.items():
         image.write_to_png(f"provider_{name}.cairo.png")
 
     # render svg
+    context.set_tighten_to_bounds()
     svg_image = context.render_svg(800, 500)
     with open(f"provider_{name}.svg", "w", encoding="utf-8") as f:
+        svg_image.write(f, pretty=True)
+
+    # render svg - tight boundaries
+    context.set_tighten_to_bounds(True)
+    svg_image = context.render_svg(800, 500)
+    with open(f"provider_{name}.tight.svg", "w", encoding="utf-8") as f:
         svg_image.write(f, pretty=True)

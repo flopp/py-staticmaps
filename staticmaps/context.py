@@ -164,8 +164,8 @@ class Context:
 
         renderer = CairoRenderer(trans)
         renderer.render_background(self._background_color)
-        renderer.render_tiles(self._fetch_tile)
-        renderer.render_objects(self._objects)
+        renderer.render_tiles(self._fetch_tile, self._objects, self._tighten_to_bounds)
+        renderer.render_objects(self._objects, self._tighten_to_bounds)
         renderer.render_attribution(self._tile_provider.attribution())
 
         return renderer.image_surface()
@@ -191,8 +191,8 @@ class Context:
 
         renderer = PillowRenderer(trans)
         renderer.render_background(self._background_color)
-        renderer.render_tiles(self._fetch_tile)
-        renderer.render_objects(self._objects)
+        renderer.render_tiles(self._fetch_tile, self._objects, self._tighten_to_bounds)
+        renderer.render_objects(self._objects, self._tighten_to_bounds)
         renderer.render_attribution(self._tile_provider.attribution())
 
         return renderer.image()
@@ -215,16 +215,11 @@ class Context:
             raise RuntimeError("Cannot render map without center/zoom.")
 
         trans = Transformer(width, height, zoom, center, self._tile_provider.tile_size())
-        bbox = None
-        epb = None
-        if self._tighten_to_bounds:
-            bbox = self.object_bounds()
-            epb = self.extra_pixel_bounds()
 
         renderer = SvgRenderer(trans)
         renderer.render_background(self._background_color)
-        renderer.render_tiles(self._fetch_tile, bbox, epb)
-        renderer.render_objects(self._objects, bbox, epb)
+        renderer.render_tiles(self._fetch_tile, self._objects, self._tighten_to_bounds)
+        renderer.render_objects(self._objects, self._tighten_to_bounds)
         renderer.render_attribution(self._tile_provider.attribution())
 
         return renderer.drawing()

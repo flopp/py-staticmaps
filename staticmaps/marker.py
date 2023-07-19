@@ -14,14 +14,19 @@ from .svg_renderer import SvgRenderer
 
 class Marker(Object):
     """
-    Marker A marker object
+    Marker A marker object.
+    The given parameter size is the radius of the rounded head of the marker
+    The final marker object size is:
+        width = 2 * size
+        height = 3 * size
     """
 
-    def __init__(self, latlng: s2sphere.LatLng, color: Color = RED, size: int = 10) -> None:
+    def __init__(self, latlng: s2sphere.LatLng, color: Color = RED, size: int = 10, stroke_width: int = 1) -> None:
         Object.__init__(self)
         self._latlng = latlng
         self._color = color
         self._size = size
+        self._stroke_width = stroke_width
 
     def latlng(self) -> s2sphere.LatLng:
         """Return LatLng of the marker
@@ -47,13 +52,21 @@ class Marker(Object):
         """
         return self._size
 
+    def stroke_width(self) -> int:
+        """Return stroke width of the marker
+
+        Returns:
+            int: stroke width of the marker
+        """
+        return self._stroke_width
+
     def bounds(self) -> s2sphere.LatLngRect:
         """Return bounds of the marker
 
         Returns:
             s2sphere.LatLngRect: bounds of the marker
         """
-        return s2sphere.LatLngRect.from_point(self._latlng)
+        return s2sphere.LatLngRect.from_point(self.latlng())
 
     def extra_pixel_bounds(self) -> PixelBoundsT:
         """Return extra pixel bounds of the marker
@@ -61,7 +74,12 @@ class Marker(Object):
         Returns:
             PixelBoundsT: extra pixel bounds of the marker
         """
-        return self._size, self._size, self._size, 0
+        return (
+            int(self.size() + 0.5 * self.stroke_width()),
+            int(3 * self.size() + 0.5 * self.stroke_width()),
+            int(self.size() + 0.5 * self.stroke_width()),
+            int(0.5 * self.stroke_width()),
+        )
 
     def render_pillow(self, renderer: PillowRenderer) -> None:
         """Render marker using PILLOW
@@ -103,7 +121,7 @@ class Marker(Object):
         path = renderer.drawing().path(
             fill=self.color().hex_rgb(),
             stroke=self.color().text_color().hex_rgb(),
-            stroke_width=1,
+            stroke_width=self.stroke_width(),
             opacity=self.color().float_a(),
         )
         path.push(f"M {x} {y}")

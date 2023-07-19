@@ -1,4 +1,6 @@
-"""py-staticmaps cairo_renderer"""
+"""py-staticmaps CairoRenderer"""
+
+# py-staticmaps
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import io
@@ -6,7 +8,7 @@ import math
 import sys
 import typing
 
-import s2sphere  # type: ignore
+# import s2sphere  # type: ignore
 
 try:
     import cairo  # type: ignore
@@ -86,15 +88,13 @@ class CairoRenderer(Renderer):
     def render_objects(
         self,
         objects: typing.List["Object"],
-        bbox: typing.Optional[s2sphere.LatLngRect] = None,
-        epb: typing.Optional[typing.Tuple[int, int, int, int]] = None,
+        tighten: bool,
     ) -> None:
         """Render all objects of static map
 
         Parameters:
             objects (typing.List["Object"]): objects of static map
-            bbox (s2sphere.LatLngRect): boundary box of all objects
-            epb (typing.Tuple[int, int, int, int]): extra pixel bounds
+            tighten (bool): tighten to boundaries
         """
         x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
         for obj in objects:
@@ -119,16 +119,15 @@ class CairoRenderer(Renderer):
     def render_tiles(
         self,
         download: typing.Callable[[int, int, int], typing.Optional[bytes]],
-        bbox: typing.Optional[s2sphere.LatLngRect] = None,
-        epb: typing.Optional[typing.Tuple[int, int, int, int]] = None,
+        objects: typing.List["Object"],
+        tighten: bool,
     ) -> None:
-        """Render background of static map
+        """Render tiles of static map
 
         Parameters:
-            download (typing.Callable[[int, int, int], typing.Optional[bytes]]):
-                url of tiles provider
-            bbox (s2sphere.LatLngRect): boundary box of all objects
-            epb (typing.Tuple[int, int, int, int]): extra pixel bounds
+            download (typing.Callable[[int, int, int], typing.Optional[bytes]]): url of tiles provider
+            objects (typing.List["Object"]): objects of static map
+            tighten (bool): tighten to boundaries
         """
         for yy in range(0, self._trans.tiles_y()):
             y = self._trans.first_tile_y() + yy
@@ -142,8 +141,8 @@ class CairoRenderer(Renderer):
                         continue
                     self._context.save()
                     self._context.translate(
-                        xx * self._trans.tile_size() + self._trans.tile_offset_x(),
-                        yy * self._trans.tile_size() + self._trans.tile_offset_y(),
+                        int(xx * self._trans.tile_size() + self._trans.tile_offset_x()),
+                        int(yy * self._trans.tile_size() + self._trans.tile_offset_y()),
                     )
                     self._context.set_source_surface(tile_img)
                     self._context.paint()
@@ -155,8 +154,7 @@ class CairoRenderer(Renderer):
         """Render attribution from given tiles provider
 
         Parameters:
-            attribution (typing.Optional[str]:): Attribution for the
-                given tiles provider
+            attribution (typing.Optional[str]:): Attribution for the given tiles provider
         """
         if (attribution is None) or (attribution == ""):
             return

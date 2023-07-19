@@ -65,7 +65,7 @@ class Line(Object):
         Returns:
             PixelBoundsT: extra pixel bounds
         """
-        return self._width, self._width, self._width, self._width
+        return int(0.5 * self._width), int(0.5 * self._width), int(0.5 * self._width), int(0.5 * self._width)
 
     def interpolate(self) -> typing.List[s2sphere.LatLng]:
         """Interpolate bounds

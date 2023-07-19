@@ -52,15 +52,13 @@ class SvgRenderer(Renderer):
     def render_objects(
         self,
         objects: typing.List["Object"],
-        bbox: typing.Optional[s2sphere.LatLngRect] = None,
-        epb: typing.Optional[typing.Tuple[int, int, int, int]] = None,
+        tighten: bool,
     ) -> None:
         """Render all objects of static map
 
         Parameters:
             objects (typing.List["Object"]): objects of static map
-            bbox (s2sphere.LatLngRect): boundary box of all objects
-            epb (typing.Tuple[int, int, int, int]): extra pixel bounds
+            tighten (bool): tighten to boundaries
         """
         self._group = self._draw.g(clip_path="url(#page)")
         x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
@@ -69,7 +67,7 @@ class SvgRenderer(Renderer):
                 group = self._draw.g(clip_path="url(#page)", transform=f"translate({p * self._trans.world_width()}, 0)")
                 obj.render_svg(self)
                 self._group.add(group)
-        objects_group = self._tighten_to_boundary(self._group, bbox, epb)
+        objects_group = self._tighten_to_boundary(self._group, objects, tighten)
         self._draw.add(objects_group)
         self._group = None
 
@@ -88,15 +86,15 @@ class SvgRenderer(Renderer):
     def render_tiles(
         self,
         download: typing.Callable[[int, int, int], typing.Optional[bytes]],
-        bbox: typing.Optional[s2sphere.LatLngRect] = None,
-        epb: typing.Optional[typing.Tuple[int, int, int, int]] = None,
+        objects: typing.List["Object"],
+        tighten: bool,
     ) -> None:
         """Render tiles of static map
 
         Parameters:
             download (typing.Callable[[int, int, int], typing.Optional[bytes]]): url of tiles provider
-            bbox (s2sphere.LatLngRect): boundary box of all objects
-            epb (typing.Tuple[int, int, int, int]): extra pixel bounds
+            objects (typing.List["Object"]): objects of static map
+            tighten (bool): tighten to boundaries
         """
         self._group = self._draw.g(clip_path="url(#page)")
         for yy in range(0, self._trans.tiles_y()):
@@ -113,43 +111,51 @@ class SvgRenderer(Renderer):
                         self._draw.image(
                             tile_img,
                             insert=(
-                                xx * self._trans.tile_size() + self._trans.tile_offset_x(),
-                                yy * self._trans.tile_size() + self._trans.tile_offset_y(),
+                                int(xx * self._trans.tile_size() + self._trans.tile_offset_x()),
+                                int(yy * self._trans.tile_size() + self._trans.tile_offset_y()),
                             ),
                             size=(self._trans.tile_size(), self._trans.tile_size()),
                         )
                     )
                 except RuntimeError:
                     pass
-        tiles_group = self._tighten_to_boundary(self._group, bbox, epb)
+        tiles_group = self._tighten_to_boundary(self._group, objects, tighten)
         self._draw.add(tiles_group)
         self._group = None
 
     def _tighten_to_boundary(
-        self,
-        group: svgwrite.container.Group,
-        bbox: typing.Optional[s2sphere.LatLngRect] = None,
-        epb: typing.Optional[typing.Tuple[int, int, int, int]] = None,
+        self, group: svgwrite.container.Group, objects: typing.List["Object"], tighten: bool = False
     ) -> svgwrite.container.Group:
-        """Calculate scale and offset for tight rendering on the boundary"""
+        """Calculate scale and offset for tight rendering on the boundary
+
+        Parameters:
+            group (svgwrite.container.Group): svg group
+            objects (typing.List["Object"]): objects of static map
+            tighten (bool): tighten to boundaries
+        Returns:
+            svgwrite.container.Group: svg group
+        """
         # pylint: disable=too-many-locals
-        if not bbox or not epb:
+        if not tighten:
             return group
+
         # boundary points
-        nw_x, nw_y = self._trans.ll2pixel(s2sphere.LatLng.from_angles(bbox.lat_lo(), bbox.lng_lo()))
-        se_x, se_y = self._trans.ll2pixel(s2sphere.LatLng.from_angles(bbox.lat_hi(), bbox.lng_hi()))
-        epb_l, epb_t, epb_r, epb_b = 0, 0, 0, 0
-        if epb:
-            epb_l, epb_t, epb_r, epb_b = epb
+        bounds = self.get_object_bounds(objects)
+        nw_x, nw_y = self._trans.ll2pixel(s2sphere.LatLng.from_angles(bounds.lat_lo(), bounds.lng_lo()))
+        se_x, se_y = self._trans.ll2pixel(s2sphere.LatLng.from_angles(bounds.lat_hi(), bounds.lng_hi()))
         # boundary size
-        size_x = se_x - nw_x + epb_r + epb_l
-        size_y = nw_y - se_y + epb_t + epb_b
+        size_x = se_x - nw_x
+        size_y = nw_y - se_y
         # scale to boundaries
         width = self._trans.image_width()
         height = self._trans.image_height()
-        scale_x = size_x / width
-        scale_y = size_y / height
-        scale = 1 / max(scale_x, scale_y)
+        # scale = 1, if division by zero
+        try:
+            scale_x = size_x / width
+            scale_y = size_y / height
+            scale = 1 / max(scale_x, scale_y)
+        except ZeroDivisionError:
+            scale = 1
         # translate new center to old center
         off_x = -0.5 * width * (scale - 1)
         off_y = -0.5 * height * (scale - 1)
@@ -162,8 +168,7 @@ class SvgRenderer(Renderer):
         """Render attribution from given tiles provider
 
         Parameters:
-            attribution (typing.Optional[str]:): Attribution for the
-                given tiles provider
+            attribution (typing.Optional[str]:): Attribution for the given tiles provider
         """
         if (attribution is None) or (attribution == ""):
             return

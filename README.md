@@ -67,9 +67,19 @@ image.write_to_png("frankfurt_newyork.cairo.png")
 svg_image = context.render_svg(800, 500)
 with open("frankfurt_newyork.svg", "w", encoding="utf-8") as f:
     svg_image.write(f, pretty=True)
+
+# render svg - tight boundaries
+context.set_tighten_to_bounds(True)
+svg_image = context.render_svg(800, 500)
+with open("frankfurt_newyork.tight.svg", "w", encoding="utf-8") as f:
+    svg_image.write(f, pretty=True)
 ```
 
 ![franfurt_newyork](../assets/frankfurt_newyork.cairo.png?raw=true)
+
+![franfurt_newyork](../assets/frankfurt_newyork.svg?raw=true)
+
+![franfurt_newyork](../assets/frankfurt_newyork.tight.svg?raw=true)
 
 
 ### Transparent Polygons

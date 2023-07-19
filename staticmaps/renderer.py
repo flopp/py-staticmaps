@@ -36,15 +36,13 @@ class Renderer(ABC):
     def render_objects(
         self,
         objects: typing.List["Object"],
-        bbox: s2sphere.LatLngRect,
-        epb: typing.Optional[typing.Tuple[int, int, int, int]] = None,
+        tighten: bool,
     ) -> None:
         """Render all objects of static map
 
         Parameters:
             objects (typing.List["Object"]): objects of static map
-            bbox (s2sphere.LatLngRect): boundary box of all objects
-            epb (typing.Tuple[int, int, int, int]): extra pixel bounds
+            tighten (bool): tighten to boundaries
         """
 
     @abstractmethod
@@ -59,15 +57,15 @@ class Renderer(ABC):
     def render_tiles(
         self,
         download: typing.Callable[[int, int, int], typing.Optional[bytes]],
-        bbox: s2sphere.LatLngRect,
-        epb: typing.Optional[typing.Tuple[int, int, int, int]] = None,
+        objects: typing.List["Object"],
+        tighten: bool,
     ) -> None:
         """Render tiles of static map
 
         Parameters:
             download (typing.Callable[[int, int, int], typing.Optional[bytes]]): url of tiles provider
-            bbox (s2sphere.LatLngRect): boundary box of all objects
-            epb (typing.Tuple[int, int, int, int]): extra pixel bounds
+            objects (typing.List["Object"]): objects of static map
+            tighten (bool): tighten to boundaries
         """
 
     def render_marker_object(self, marker: "Marker") -> None:
@@ -103,6 +101,25 @@ class Renderer(ABC):
         """Render attribution from given tiles provider
 
         Parameters:
-            attribution (typing.Optional[str]:): Attribution for the
-                given tiles provider
+            attribution (typing.Optional[str]): Attribution for the given tiles provider
         """
+
+    def get_object_bounds(self, objects: typing.List["Object"]) -> s2sphere.LatLngRect:
+        """Return "cumulated" boundaries of all objects
+
+        Parameters:
+            objects typing.List["Object"]): list of all objects to be rendered in the static map
+
+        Returns:
+            s2sphere.LatLngRect: LatLngRect object with "cumulated" boundaries of all objects
+        """
+
+        new_bounds: typing.Optional[s2sphere.LatLngRect] = None
+        for obj in objects:
+            bounds_epb = obj.bounds_epb(self._trans)
+            if new_bounds:
+                new_bounds = new_bounds.union(bounds_epb)
+            else:
+                new_bounds = bounds_epb
+
+        return new_bounds

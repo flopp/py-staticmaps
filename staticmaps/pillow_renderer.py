@@ -1,11 +1,13 @@
-"""py-staticmaps pillow_renderer"""
+"""py-staticmaps PillowRenderer"""
+
+# py-staticmaps
 # Copyright (c) 2020 Florian Pigorsch; see /LICENSE for licensing information
 
 import io
 import math
 import typing
 
-import s2sphere  # type: ignore
+# import s2sphere  # type: ignore
 from PIL import Image as PIL_Image  # type: ignore
 from PIL import ImageDraw as PIL_ImageDraw  # type: ignore
 
@@ -68,15 +70,13 @@ class PillowRenderer(Renderer):
     def render_objects(
         self,
         objects: typing.List["Object"],
-        bbox: typing.Optional[s2sphere.LatLngRect] = None,
-        epb: typing.Optional[typing.Tuple[int, int, int, int]] = None,
+        tighten: bool,
     ) -> None:
         """Render all objects of static map
 
         Parameters:
             objects (typing.List["Object"]): objects of static map
-            bbox (s2sphere.LatLngRect): boundary box of all objects
-            epb (typing.Tuple[int, int, int, int]): extra pixel bounds
+            tighten (bool): tighten to boundaries
         """
         x_count = math.ceil(self._trans.image_width() / (2 * self._trans.world_width()))
         for obj in objects:
@@ -97,15 +97,15 @@ class PillowRenderer(Renderer):
     def render_tiles(
         self,
         download: typing.Callable[[int, int, int], typing.Optional[bytes]],
-        bbox: typing.Optional[s2sphere.LatLngRect] = None,
-        epb: typing.Optional[typing.Tuple[int, int, int, int]] = None,
+        objects: typing.List["Object"],
+        tighten: bool,
     ) -> None:
-        """Render background of static map
+        """Render tiles of static map
 
         Parameters:
             download (typing.Callable[[int, int, int], typing.Optional[bytes]]): url of tiles provider
-            bbox (s2sphere.LatLngRect): boundary box of all objects
-            epb (typing.Tuple[int, int, int, int]): extra pixel bounds
+            objects (typing.List["Object"]): objects of static map
+            tighten (bool): tighten to boundaries
         """
         for yy in range(0, self._trans.tiles_y()):
             y = self._trans.first_tile_y() + yy
@@ -136,9 +136,10 @@ class PillowRenderer(Renderer):
         if (attribution is None) or (attribution == ""):
             return
         margin = 2
-        _, th = self.draw().textsize(attribution)
         w = self._trans.image_width()
         h = self._trans.image_height()
+        left, top, right, bottom = self.draw().textbbox((margin, h - margin), attribution)
+        th = bottom - top
         overlay = PIL_Image.new("RGBA", self._image.size, (255, 255, 255, 0))
         draw = PIL_ImageDraw.Draw(overlay)
         draw.rectangle(((0, h - th - 2 * margin), (w, h)), fill=(255, 255, 255, 204))

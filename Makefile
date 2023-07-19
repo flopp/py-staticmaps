@@ -24,6 +24,7 @@ clean: ## Cleanup
 	@rm -rf $(SRC_TEST)/__pycache__
 	@rm -f  $(SRC_EXAMPLES)/*.pyc
 	@rm -rf $(SRC_EXAMPLES)/__pycache__
+	@rm -rf $(SRC_EXAMPLES)/build
 	@rm -rf ./.coverage
 	@rm -rf ./coverage.xml
 	@rm -rf ./.pytest_cache
@@ -87,10 +88,10 @@ run-examples: ## Generate example images
 	(cd examples && PYTHONPATH=.. ../.env/bin/python geodesic_circles.py)
 	(cd examples && PYTHONPATH=.. ../.env/bin/python tile_providers.py)
 	(cd examples && PYTHONPATH=.. ../.env/bin/python us_capitals.py)
-	(cd examples && mv *.svg build/.)
-	(cd examples && mv *pillow*png build/.)
-	(cd examples && mv *cairo*png build/.)
-	(cd -)
+	(cd examples && mkdir -p build)
+	(cd examples && ls        *.svg 2>/dev/null && mv        *.svg build/.) || echo "no svg files found!"
+	(cd examples && ls *pillow*.png 2>/dev/null && mv *pillow*.png build/.) || echo "no pillow png files found!"
+	(cd examples && ls  *cairo*.png 2>/dev/null && mv  *cairo*.png build/.) || echo "no cairo png files found!"
 
 .PHONY: test
 test: ## Test the code

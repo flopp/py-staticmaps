@@ -199,3 +199,9 @@ if staticmaps.cairo_is_supported():
 svg_image = context.render_svg(800, 500)
 with open("custom_objects.svg", "w", encoding="utf-8") as f:
     svg_image.write(f, pretty=True)
+
+# render svg - tight boundaries
+context.set_tighten_to_bounds(True)
+svg_image = context.render_svg(800, 500)
+with open("custom_objects.tight.svg", "w", encoding="utf-8") as f:
+    svg_image.write(f, pretty=True)

@@ -99,3 +99,17 @@ class Object(ABC):
         nw_x, nw_y = trans.ll2pixel(bounds.get_vertex(3))
         l, t, r, b = self.extra_pixel_bounds()
         return nw_x - l, nw_y - t, se_x + r, se_y + b
+
+    def bounds_epb(self, trans: Transformer) -> s2sphere.LatLngRect:
+        """Return the object bounds including extra pixel bounds of the object when using the supplied Transformer.
+
+        Parameters:
+            trans (Transformer): transformer
+
+        Returns:
+            s2sphere.LatLngRect: bounds of object
+        """
+        pixel_bounds = self.pixel_rect(trans)
+        return s2sphere.LatLngRect.from_point_pair(
+            trans.pixel2ll(pixel_bounds[0], pixel_bounds[1]), trans.pixel2ll(pixel_bounds[2], pixel_bounds[3])
+        )
