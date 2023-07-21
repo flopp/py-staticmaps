@@ -44,7 +44,7 @@ class Bounds(Object):
         return self._extra_pixel_bounds
 
     def render_pillow(self, renderer: PillowRenderer) -> None:
-        """Do not render custom bounds
+        """Do not render custom bounds for pillow
 
         Parameters:
             renderer (PillowRenderer): pillow renderer
@@ -52,7 +52,7 @@ class Bounds(Object):
         return
 
     def render_svg(self, renderer: SvgRenderer) -> None:
-        """Do not render custom bounds
+        """Do not render custom bounds for svg
 
         Parameters:
             renderer (SvgRenderer): svg renderer
@@ -60,7 +60,7 @@ class Bounds(Object):
         return
 
     def render_cairo(self, renderer: CairoRenderer) -> None:
-        """Do not render custom bounds
+        """Do not render custom bounds for cairo
 
         Parameters:
             renderer (CairoRenderer): cairo renderer

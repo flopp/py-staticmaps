@@ -107,7 +107,7 @@ def test_bounds() -> None:
         staticmaps.create_latlng(47, 7), staticmaps.create_latlng(48, 8)
     )
 
-    context.add_bounds(s2sphere.LatLngRect(staticmaps.create_latlng(46, 6), staticmaps.create_latlng(49, 9)))
+    context.add_object(staticmaps.Bounds([staticmaps.create_latlng(46, 6), staticmaps.create_latlng(49, 9)]))
     assert context.object_bounds() is not None
     assert context.object_bounds() == s2sphere.LatLngRect(
         staticmaps.create_latlng(46, 6), staticmaps.create_latlng(49, 9)
@@ -122,7 +122,7 @@ def test_add_greater_custom_bound_extends_bounds() -> None:
     context.add_object(staticmaps.Marker(staticmaps.create_latlng(48, 8)))
     assert context.object_bounds() is not None
 
-    context.add_bounds(s2sphere.LatLngRect(staticmaps.create_latlng(49, 7.5), staticmaps.create_latlng(49, 8)))
+    context.add_object(staticmaps.Bounds([staticmaps.create_latlng(49, 7.5), staticmaps.create_latlng(49, 8)]))
     assert context.object_bounds() == s2sphere.LatLngRect(
         staticmaps.create_latlng(47, 7), staticmaps.create_latlng(49, 8)
     )
@@ -136,7 +136,7 @@ def test_add_smaller_custom_bound_keeps_bounds() -> None:
     context.add_object(staticmaps.Marker(staticmaps.create_latlng(48, 8)))
     assert context.object_bounds() is not None
 
-    context.add_bounds(s2sphere.LatLngRect(staticmaps.create_latlng(47.5, 7.5), staticmaps.create_latlng(48, 8)))
+    context.add_object(staticmaps.Bounds([staticmaps.create_latlng(47.5, 7.5), staticmaps.create_latlng(48, 8)]))
     assert context.object_bounds() is not None
     assert context.object_bounds() == s2sphere.LatLngRect(
         staticmaps.create_latlng(47, 7), staticmaps.create_latlng(48, 8)

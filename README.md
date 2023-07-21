@@ -60,8 +60,9 @@ image = context.render_pillow(800, 500)
 image.save("frankfurt_newyork.pillow.png")
 
 # render anti-aliased png (this only works if pycairo is installed)
-image = context.render_cairo(800, 500)
-image.write_to_png("frankfurt_newyork.cairo.png")
+if staticmaps.cairo_is_supported():
+    image = context.render_cairo(800, 500)
+    image.write_to_png("frankfurt_newyork.cairo.png")
 
 # render svg
 svg_image = context.render_svg(800, 500)

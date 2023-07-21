@@ -31,8 +31,6 @@ class Context:
         self._background_color: typing.Optional[Color] = None
         self._objects: typing.List[Object] = []
         self._center: typing.Optional[s2sphere.LatLng] = None
-        self._bounds: typing.Optional[s2sphere.LatLngRect] = None
-        self._extra_pixel_bounds: typing.Tuple[int, int, int, int] = (0, 0, 0, 0)
         self._zoom: typing.Optional[int] = None
         self._tile_provider = tile_provider_OSM
         self._tile_downloader = TileDownloader()
@@ -110,33 +108,6 @@ class Context:
             obj (Object): map object
         """
         self._objects.append(obj)
-
-    def add_bounds(
-        self,
-        latlngrect: s2sphere.LatLngRect,
-        extra_pixel_bounds: typing.Optional[typing.Union[int, typing.Tuple[int, int, int, int]]] = None,
-    ) -> None:
-        """Add boundaries that shall be respected by the static map
-
-        Parameters:
-            latlngrect (s2sphere.LatLngRect): boundaries to be respected
-            extra_pixel_bounds (int, tuple): extra pixel bounds to be
-                respected
-        """
-        if self._bounds:
-            self._bounds = self._bounds.union(latlngrect)
-        else:
-            self._bounds = latlngrect
-        if extra_pixel_bounds:
-            if isinstance(extra_pixel_bounds, tuple):
-                self._extra_pixel_bounds = extra_pixel_bounds
-            else:
-                self._extra_pixel_bounds = (
-                    extra_pixel_bounds,
-                    extra_pixel_bounds,
-                    extra_pixel_bounds,
-                    extra_pixel_bounds,
-                )
 
     def render_cairo(self, width: int, height: int) -> typing.Any:
         """Render area using cairo
@@ -236,22 +207,7 @@ class Context:
             for obj in self._objects:
                 assert bounds
                 bounds = bounds.union(obj.bounds())
-        return self._custom_bounds(bounds)
-
-    def _custom_bounds(self, bounds: typing.Optional[s2sphere.LatLngRect]) -> typing.Optional[s2sphere.LatLngRect]:
-        """check for additional bounds and return the union with object bounds
-
-        Parameters:
-            bounds (s2sphere.LatLngRect): boundaries from objects
-
-        Returns:
-            s2sphere.LatLngRect: maximum of additional and object bounds
-        """
-        if not self._bounds:
-            return bounds
-        if not bounds:
-            return self._bounds
-        return bounds.union(self._bounds)
+        return bounds
 
     def extra_pixel_bounds(self) -> PixelBoundsT:
         """return extra pixel bounds from all objects
@@ -259,7 +215,7 @@ class Context:
         Returns:
             PixelBoundsT: extra pixel object bounds
         """
-        max_l, max_t, max_r, max_b = self._extra_pixel_bounds
+        max_l, max_t, max_r, max_b = 0, 0, 0, 0
         attribution = self._tile_provider.attribution()
         if (attribution is None) or (attribution == ""):
             max_b = max(max_b, 12)

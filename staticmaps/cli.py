@@ -151,7 +151,7 @@ def main() -> None:
         for coords in args.marker:
             context.add_object(staticmaps.Marker(staticmaps.parse_latlng(coords)))
     if args.bounds is not None:
-        context.add_bounds(staticmaps.parse_latlngs2rect(args.bounds))
+        context.add_object(staticmaps.Bounds(staticmaps.parse_latlngs(args.bounds)))
     context.set_tighten_to_bounds(args.tighten_to_bounds)
 
     file_name = args.filename[0]
