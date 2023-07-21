@@ -74,13 +74,33 @@ context.set_tighten_to_bounds(True)
 svg_image = context.render_svg(800, 500)
 with open("frankfurt_newyork.tight.svg", "w", encoding="utf-8") as f:
     svg_image.write(f, pretty=True)
+
+context2 = staticmaps.Context()
+context2.set_tile_provider(staticmaps.tile_provider_StamenToner)
+context2.add_object(staticmaps.Bounds([frankfurt, newyork]))
+
+# render svg
+svg_image = context2.render_svg(800, 500)
+with open("frankfurt_newyork.bounds.svg", "w", encoding="utf-8") as f:
+    svg_image.write(f, pretty=True)
+
+# render svg - tight boundaries
+context2.set_tighten_to_bounds(True)
+svg_image = context2.render_svg(800, 500)
+with open("frankfurt_newyork.bounds.tight.svg", "w", encoding="utf-8") as f:
+    svg_image.write(f, pretty=True)
 ```
 
-![franfurt_newyork](../assets/frankfurt_newyork.cairo.png?raw=true)
-
-![franfurt_newyork](../assets/frankfurt_newyork.svg?raw=true)
-
-![franfurt_newyork](../assets/frankfurt_newyork.tight.svg?raw=true)
+#### Cairo example
+![frankfurt_newyork](../assets/frankfurt_newyork.cairo.png?raw=true)
+#### SVG example
+![frankfurt_newyork_svg](../assets/frankfurt_newyork.svg?raw=true)
+#### SVG tight example
+![frankfurt_newyork_svg_tight](../assets/frankfurt_newyork.tight.svg?raw=true)
+#### SVG custom bounds example
+![frankfurt_newyork_bounds_svg](../assets/frankfurt_newyork.bounds.svg?raw=true)
+#### SVG custom bounds tight example
+![frankfurt_newyork_bounds_svg_tight](../assets/frankfurt_newyork.bounds.tight.svg?raw=true)
 
 
 ### Transparent Polygons
@@ -120,8 +140,10 @@ svg_image = context.render_svg(800, 500)
 with open("freiburg_area.svg", "w", encoding="utf-8") as f:
     svg_image.write(f, pretty=True)
 ```
-
+#### Cairo example
 ![freiburg_area](../assets/freiburg_area.cairo.png?raw=true)
+#### SVG tight example
+![freiburg_area_svg_tight](../assets/freiburg_area.tight.svg?raw=true)
 
 
 ### Drawing a GPX Track + Image Marker (PNG)
@@ -157,8 +179,10 @@ image.save("draw_gpx.pillow.png")
 image = context.render_cairo(800, 500)
 image.write_to_png("draw_gpx.cairo.png")
 ```
-
+#### Cairo example
 ![draw_gpx](../assets/draw_gpx.cairo.png?raw=true)
+#### SVG tight example
+![draw_gpx_svg_tight](../assets/draw_gpx.tight.svg?raw=true)
 
 
 ### US State Capitals
@@ -188,8 +212,10 @@ image.save("us_capitals.pillow.png")
 image = context.render_cairo(800, 500)
 image.write_to_png("us_capitals.cairo.png")
 ```
-
+#### Cairo example
 ![us_capitals](../assets/us_capitals.cairo.png?raw=true)
+#### SVG tight example
+![us_capitals_svg_tight](../assets/us_capitals.tight.svg?raw=true)
 
 
 ### Geodesic Circles
@@ -223,6 +249,8 @@ image.write_to_png("geodesic_circles.cairo.png")
 ![geodesic_circles_pillow](../assets/geodesic_circles.pillow.png?raw=true)
 #### SVG example
 ![geodesic_circles_svg](../assets/geodesic_circles.svg?raw=true)
+#### SVG tight example
+![geodesic_circles_svg_tight](../assets/geodesic_circles.tight.svg?raw=true)
 
 
 ### Other Examples
