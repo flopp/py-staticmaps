@@ -29,20 +29,20 @@ for p in gpx.walk(only_points=True):
 
 # render png via pillow
 image = context.render_pillow(800, 500)
-image.save("running.pillow.png")
+image.save("draw_gpx.pillow.png")
 
 # render png via cairo
 if staticmaps.cairo_is_supported():
     image = context.render_cairo(800, 500)
-    image.write_to_png("running.cairo.png")
+    image.write_to_png("draw_gpx.cairo.png")
 
 # render svg
 svg_image = context.render_svg(800, 500)
-with open("running.svg", "w", encoding="utf-8") as f:
+with open("draw_gpx.svg", "w", encoding="utf-8") as f:
     svg_image.write(f, pretty=True)
 
 # render svg - tight boundaries
 context.set_tighten_to_bounds(True)
 svg_image = context.render_svg(800, 500)
-with open("running.tight.svg", "w", encoding="utf-8") as f:
+with open("draw_gpx.tight.svg", "w", encoding="utf-8") as f:
     svg_image.write(f, pretty=True)

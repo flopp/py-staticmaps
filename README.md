@@ -171,13 +171,25 @@ for p in gpx.walk(only_points=True):
     context.add_object(marker)
     break
 
-# render non-anti-aliased png
+# render png via pillow
 image = context.render_pillow(800, 500)
 image.save("draw_gpx.pillow.png")
 
-# render anti-aliased png (this only works if pycairo is installed)
-image = context.render_cairo(800, 500)
-image.write_to_png("draw_gpx.cairo.png")
+# render png via cairo
+if staticmaps.cairo_is_supported():
+    image = context.render_cairo(800, 500)
+    image.write_to_png("draw_gpx.cairo.png")
+
+# render svg
+svg_image = context.render_svg(800, 500)
+with open("draw_gpx.svg", "w", encoding="utf-8") as f:
+    svg_image.write(f, pretty=True)
+
+# render svg - tight boundaries
+context.set_tighten_to_bounds(True)
+svg_image = context.render_svg(800, 500)
+with open("draw_gpx.tight.svg", "w", encoding="utf-8") as f:
+    svg_image.write(f, pretty=True)
 ```
 #### Cairo example
 ![draw_gpx](../assets/draw_gpx.cairo.png?raw=true)
