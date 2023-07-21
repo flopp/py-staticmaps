@@ -3,6 +3,7 @@
 
 # flake8: noqa
 from .area import Area
+from .bounds import Bounds
 from .cairo_renderer import CairoRenderer, cairo_is_supported
 from .circle import Circle
 from .color import (
@@ -46,6 +47,7 @@ from .transformer import Transformer
 
 __all__ = [
     "Area",
+    "Bounds",
     "CairoRenderer",
     "cairo_is_supported",
     "Circle",
