@@ -16,13 +16,17 @@ class Bounds(Object):
     Custom bounds object to be respected for the final static map. Nothing is being rendered.
     """
 
-    def __init__(self, latlngs: typing.List[s2sphere.LatLng], extra_pixel_bounds: PixelBoundsT = (0, 0, 0, 0)) -> None:
+    def __init__(
+        self, latlngs: typing.List[s2sphere.LatLng], extra_pixel_bounds: typing.Union[int, PixelBoundsT] = 0
+    ) -> None:
         Object.__init__(self)
         if latlngs is None or len(latlngs) < 2:
             raise ValueError("Trying to create custom bounds with less than 2 coordinates")
-
         self._latlngs = latlngs
-        self._extra_pixel_bounds = extra_pixel_bounds
+        if isinstance(extra_pixel_bounds, int):
+            self._extra_pixel_bounds = (extra_pixel_bounds, extra_pixel_bounds, extra_pixel_bounds, extra_pixel_bounds)
+        else:
+            self._extra_pixel_bounds = extra_pixel_bounds
 
     def bounds(self) -> s2sphere.LatLngRect:
         """Return bounds of bounds object
