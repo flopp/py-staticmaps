@@ -200,15 +200,12 @@ tile_provider_None = TileProvider(
 )
 
 default_tile_providers = {
-    tile_provider_OSM.name(): tile_provider_OSM,
-    tile_provider_StamenTerrain.name(): tile_provider_StamenTerrain,
-    tile_provider_StamenToner.name(): tile_provider_StamenToner,
-    tile_provider_StamenTonerLite.name(): tile_provider_StamenTonerLite,
     tile_provider_ArcGISWorldImagery.name(): tile_provider_ArcGISWorldImagery,
     tile_provider_Carto.name(): tile_provider_Carto,
     tile_provider_CartoNoLabels.name(): tile_provider_CartoNoLabels,
     tile_provider_CartoDark.name(): tile_provider_CartoDark,
     tile_provider_CartoDarkNoLabels.name(): tile_provider_CartoDarkNoLabels,
+    tile_provider_OSM.name(): tile_provider_OSM,
     tile_provider_StadiaAlidadeSmooth.name(): tile_provider_StadiaAlidadeSmooth,
     tile_provider_StadiaAlidadeSmoothDark.name(): tile_provider_StadiaAlidadeSmoothDark,
     tile_provider_JawgLight.name(): tile_provider_JawgLight,
