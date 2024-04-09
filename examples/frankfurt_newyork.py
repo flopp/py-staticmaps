@@ -6,7 +6,7 @@
 import staticmaps
 
 context = staticmaps.Context()
-context.set_tile_provider(staticmaps.tile_provider_StamenToner)
+context.set_tile_provider(staticmaps.tile_provider_ArcGISWorldImagery)
 
 frankfurt = staticmaps.create_latlng(50.110644, 8.682092)
 newyork = staticmaps.create_latlng(40.712728, -74.006015)

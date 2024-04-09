@@ -6,7 +6,7 @@
 import staticmaps
 
 context = staticmaps.Context()
-context.set_tile_provider(staticmaps.tile_provider_StamenToner)
+context.set_tile_provider(staticmaps.tile_provider_OSM)
 
 center1 = staticmaps.create_latlng(66, 0)
 center2 = staticmaps.create_latlng(0, 0)
