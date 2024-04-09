@@ -54,7 +54,7 @@ class TileDownloader:
         url = provider.url(zoom, x, y)
         if url is None:
             return None
-        res = requests.get(url, headers={"user-agent": self._user_agent})
+        res = requests.get(url, headers={"user-agent": self._user_agent}, timeout=10)
         if res.status_code == 200:
             data = res.content
         else:
