@@ -32,8 +32,8 @@ def cairo_is_supported() -> bool:
 
 
 # Dummy types, so that type annotation works if cairo is missing.
-cairo_Context = typing.Any
-cairo_ImageSurface = typing.Any
+cairo_Context = typing.Any  # pylint: disable=invalid-name
+cairo_ImageSurface = typing.Any  # pylint: disable=invalid-name
 
 
 class CairoRenderer(Renderer):
