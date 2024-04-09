@@ -96,7 +96,7 @@ class Line(Object):
                 current.lng().degrees,
             )
             n = 2 + math.ceil(line.a13)
-            for i in range(1, n+1):
+            for i in range(1, n + 1):
                 a = (i * line.a13) / n
                 g = line.ArcPosition(a, Geodesic.LATITUDE | Geodesic.LONGITUDE | Geodesic.LONG_UNROLL)
                 self._interpolation_cache.append(create_latlng(g["lat2"], g["lon2"]))
