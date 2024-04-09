@@ -22,8 +22,8 @@ image.save("geodesic_circles.pillow.png")
 
 # render png via cairo
 if staticmaps.cairo_is_supported():
-    image = context.render_cairo(800, 600)
-    image.write_to_png("geodesic_circles.cairo.png")
+    cairo_image = context.render_cairo(800, 600)
+    cairo_image.write_to_png("geodesic_circles.cairo.png")
 
 # render svg
 svg_image = context.render_svg(800, 600)

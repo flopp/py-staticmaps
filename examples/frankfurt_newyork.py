@@ -21,8 +21,8 @@ image.save("frankfurt_newyork.pillow.png")
 
 # render png via cairo
 if staticmaps.cairo_is_supported():
-    image = context.render_cairo(800, 500)
-    image.write_to_png("frankfurt_newyork.cairo.png")
+    cairo_image = context.render_cairo(800, 500)
+    cairo_image.write_to_png("frankfurt_newyork.cairo.png")
 
 # render svg
 svg_image = context.render_svg(800, 500)

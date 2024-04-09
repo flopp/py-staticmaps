@@ -26,7 +26,7 @@ class PillowRenderer(Renderer):
         self._draw = PIL_ImageDraw.Draw(self._image)
         self._offset_x = 0
 
-    def draw(self) -> PIL_ImageDraw.Draw:
+    def draw(self) -> PIL_ImageDraw.ImageDraw:
         return self._draw
 
     def image(self) -> PIL_Image.Image:
@@ -99,7 +99,7 @@ class PillowRenderer(Renderer):
         margin = 2
         w = self._trans.image_width()
         h = self._trans.image_height()
-        left, top, right, bottom = self.draw().textbbox((margin, h - margin), attribution)
+        _, top, _, bottom = self.draw().textbbox((margin, h - margin), attribution)
         th = bottom - top
         overlay = PIL_Image.new("RGBA", self._image.size, (255, 255, 255, 0))
         draw = PIL_ImageDraw.Draw(overlay)
@@ -128,7 +128,7 @@ class PillowRenderer(Renderer):
         return PIL_Image.open(io.BytesIO(image_data))
 
     @staticmethod
-    def create_image(image_data: bytes) -> PIL_Image:
+    def create_image(image_data: bytes) -> PIL_Image.Image:
         """Create a pillow image
 
         :param image_data: Image data
