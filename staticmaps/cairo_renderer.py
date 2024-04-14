@@ -150,7 +150,7 @@ class CairoRenderer(Renderer):
         while True:
             self._context.set_font_size(font_size)
             _, f_descent, f_height, _, _ = self._context.font_extents()
-            t_width = self._context.text_extents(attribution)[3]
+            t_width = self._context.text_extents(attribution).width
             if t_width < width - 4:
                 break
             font_size = font_size - 0.25
