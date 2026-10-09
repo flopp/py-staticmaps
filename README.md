@@ -51,10 +51,11 @@ context.set_tile_provider(staticmaps.tile_provider_StamenToner)
 frankfurt = staticmaps.create_latlng(50.110644, 8.682092)
 newyork = staticmaps.create_latlng(40.712728, -74.006015)
 
-context.add_object(staticmaps.Line([frankfurt, newyork], color=staticmaps.BLUE, width=4))
+context.add_object(staticmaps.Line([frankfurt, newyork], color=staticmaps.BLUE, width=4, dash_array=[10, 5]))
 context.add_object(staticmaps.Marker(frankfurt, color=staticmaps.GREEN, size=12))
 context.add_object(staticmaps.Marker(newyork, color=staticmaps.RED, size=12))
 
+# Use dash_array on a Line or Area to alternate dash and gap lengths, in pixels.
 # render non-anti-aliased png
 image = context.render_pillow(800, 500)
 image.save("frankfurt_newyork.pillow.png")
@@ -73,6 +74,8 @@ with open("frankfurt_newyork.svg", "w", encoding="utf-8") as f:
 
 
 ### Transparent Polygons
+
+`Area` supports the same `dash_array` option for its outline.
 
 ```python
 import staticmaps
@@ -93,6 +96,7 @@ context.add_object(
         fill_color=staticmaps.parse_color("#00FF003F"),
         width=2,
         color=staticmaps.BLUE,
+        dash_array=[10, 5],
     )
 )
 
